@@ -1,0 +1,16 @@
+# Core AI/ML
+torch
+torchvision
+transformers
+ultralytics
+moondream
+einops
+accelerate
+
+# Image Processing
+opencv-python
+pillow
+
+# Hardware (Raspberry Pi Only - Comment out on Windows)
+RPi.GPIO
+gpiozero
