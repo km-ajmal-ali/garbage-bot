@@ -1,0 +1,16 @@
+# garbage_data.yaml
+
+# 1. Path to your dataset root directory
+# Can be absolute path or relative to where you run the python script
+path: ./Dataset 
+
+# 2. paths to the train and validation key images inside the root directory
+train: images/train
+val: images/val
+
+# 3. Number of classes
+nc: 2
+
+# 4. Class names (Order matters! Must match your annotation class IDs)
+# 0: garbage, 1: qr_code
+names: ['garbage', 'qr_code']

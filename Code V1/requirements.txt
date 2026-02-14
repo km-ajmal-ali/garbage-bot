@@ -1,5 +1,6 @@
 # Core AI/ML
 torch
+torchao
 torchvision
 transformers
 ultralytics
