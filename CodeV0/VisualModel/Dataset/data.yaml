@@ -1,0 +1,13 @@
+train: train/images
+val: valid/images
+test: test/images
+
+nc: 1
+names: ['garbage']
+
+roboflow:
+  workspace: wastebot-pjzwe
+  project: my-first-project-ajndg
+  version: 1
+  license: Private
+  url: https://app.roboflow.com/wastebot-pjzwe/my-first-project-ajndg/1
