@@ -5,7 +5,7 @@ from Local.motors import MotorControl
 from Local.servos import CameraServo
 
 # Initialize
-detector = HailoDetector("garbage_qr_model.hef")
+detector = HailoDetector("./VisualModel/yolo11n.har")
 # brain = MoondreamBrain("moondream.bin")
 motors = MotorControl(pins=[17, 18, 22, 23, 12, 13])
 eye = CameraServo(pin=25)
