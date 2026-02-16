@@ -1,8 +1,8 @@
 import time
 from VisualModel.detector import HailoDetector
 # from Brain.moondream_brain import MoondreamBrain
-from Local.motors import MotorControl
-from Local.servos import CameraServo
+from Common.motors import MotorControl
+from Common.servos import CameraServo
 
 # Initialize
 detector = HailoDetector("./VisualModel/yolo11n.har")
