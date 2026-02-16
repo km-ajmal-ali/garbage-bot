@@ -1,0 +1,739 @@
+2026-02-16 19:38:14,589 - INFO - main.py:34 - Current Time: 19:38:14, 02/16/26
+2026-02-16 19:38:15,612 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.8%
+2026-02-16 19:38:15,613 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 19:38:15,613 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 19:38:15,615 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 19:38:15,616 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 19:38:15,628 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 19:38:15,651 - INFO - main.py:109 - Running `hailo parser onnx yolo11n.onnx --hw-arch hailo8l`
+2026-02-16 19:38:15,695 - INFO - parser.py:158 - Translation started on ONNX model yolo11n
+2026-02-16 19:38:16,154 - INFO - parser.py:193 - Restored ONNX model yolo11n (completion time: 00:00:00.46)
+2026-02-16 19:38:16,418 - INFO - parser.py:216 - Extracted ONNXRuntime meta-data for Hailo model (completion time: 00:00:00.72)
+2026-02-16 19:38:17,224 - INFO - parser.py:274 - Simplified ONNX model for a parsing retry attempt (completion time: 00:00:01.53)
+2026-02-16 19:38:36,273 - INFO - parser_cli.py:247 - According to recommendations, retrying parsing with end node names: ['/model.23/Concat', '/model.23/Sigmoid'].
+2026-02-16 19:38:36,274 - INFO - parser.py:158 - Translation started on ONNX model yolo11n
+2026-02-16 19:38:36,576 - INFO - parser.py:193 - Restored ONNX model yolo11n (completion time: 00:00:00.30)
+2026-02-16 19:38:36,755 - INFO - parser.py:216 - Extracted ONNXRuntime meta-data for Hailo model (completion time: 00:00:00.48)
+2026-02-16 19:38:37,633 - INFO - parser.py:366 - Start nodes mapped from original model: 'images': 'yolo11n/input_layer1'.
+2026-02-16 19:38:37,634 - INFO - parser.py:367 - End nodes mapped from original model: '/model.23/Concat', '/model.23/Sigmoid'.
+2026-02-16 19:38:37,757 - INFO - parser.py:288 - Translation completed on ONNX model yolo11n (completion time: 00:00:01.48)
+2026-02-16 19:38:39,593 - INFO - client_runner.py:1881 - Saved HAR to: /workspace/yolo11n.har
+2026-02-16 19:39:48,246 - INFO - main.py:34 - Current Time: 19:39:48, 02/16/26
+2026-02-16 19:39:49,263 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.3%
+2026-02-16 19:39:49,265 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 19:39:49,267 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 19:39:49,270 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 19:39:49,275 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 19:39:49,292 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 19:39:49,292 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calibration_images.npy --hw-arch hailo8l`
+2026-02-16 19:39:51,882 - IMPORTANT - sdk_backend.py:1133 - Starting Model Optimization
+2026-02-16 19:47:37,722 - INFO - main.py:34 - Current Time: 19:47:37, 02/16/26
+2026-02-16 19:47:38,755 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.2%
+2026-02-16 19:47:38,756 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 19:47:38,756 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 19:47:38,757 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 19:47:38,760 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 19:47:38,772 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 19:47:38,772 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --hw-arch hailo8l`
+2026-02-16 19:47:41,345 - IMPORTANT - sdk_backend.py:1133 - Starting Model Optimization
+2026-02-16 19:47:41,524 - WARNING - mo_config.py:168 - Reducing optimization level to 0 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024), and there's no available GPU
+2026-02-16 19:47:41,622 - WARNING - mo_config.py:233 - Running model optimization with zero level of optimization is not recommended for production use and might lead to suboptimal accuracy results
+2026-02-16 19:47:41,625 - INFO - mo_script_parser.py:91 - Model received quantization params from the hn
+2026-02-16 19:47:46,788 - INFO - algorithm_base.py:149 - MatmulDecompose skipped
+2026-02-16 19:47:46,997 - INFO - algorithm_base.py:152 - Starting Mixed Precision
+2026-02-16 19:47:47,936 - INFO - algorithm_base.py:168 - Model Optimization Algorithm Mixed Precision is done (completion time is 00:00:00.94)
+2026-02-16 19:47:48,303 - INFO - algorithm_base.py:149 - LayerNorm Decomposition skipped
+2026-02-16 19:47:49,862 - INFO - algorithm_base.py:152 - Starting Statistics Collector
+2026-02-16 19:47:49,865 - INFO - stats_collection.py:89 - Using dataset with 6 entries for calibration
+2026-02-16 19:48:30,398 - INFO - algorithm_base.py:168 - Model Optimization Algorithm Statistics Collector is done (completion time is 00:00:40.53)
+2026-02-16 19:48:32,271 - INFO - create_io_encoding.py:138 - Output layer yolo11n/activation2 with sigmoid activation was detected. Forcing its output range to be [0, 1] (original range was [0.0, 0.9909082055091858]).
+2026-02-16 19:48:32,276 - INFO - algorithm_base.py:152 - Starting Fix zp_comp Encoding
+2026-02-16 19:48:32,278 - INFO - algorithm_base.py:168 - Model Optimization Algorithm Fix zp_comp Encoding is done (completion time is 00:00:00.00)
+2026-02-16 19:48:32,279 - INFO - algorithm_base.py:152 - Starting Matmul Equalization
+2026-02-16 19:48:32,312 - INFO - algorithm_base.py:168 - Model Optimization Algorithm Matmul Equalization is done (completion time is 00:00:00.03)
+2026-02-16 19:48:32,313 - INFO - algorithm_base.py:152 - Starting MatmulDecomposeFix
+2026-02-16 19:48:32,314 - INFO - algorithm_base.py:168 - Model Optimization Algorithm MatmulDecomposeFix is done (completion time is 00:00:00.00)
+2026-02-16 19:49:31,829 - INFO - algorithm_base.py:149 - Finetune encoding skipped
+2026-02-16 19:49:31,836 - INFO - algorithm_base.py:149 - Bias Correction skipped
+2026-02-16 19:49:31,868 - INFO - algorithm_base.py:149 - Adaround skipped
+2026-02-16 19:49:31,900 - INFO - algorithm_base.py:149 - Quantization-Aware Fine-Tuning skipped
+2026-02-16 19:49:48,698 - INFO - algorithm_base.py:149 - Layer Noise Analysis skipped
+2026-02-16 19:50:03,447 - IMPORTANT - sdk_backend.py:1145 - Model Optimization is done
+2026-02-16 19:50:05,646 - INFO - client_runner.py:1881 - Saved HAR to: /workspace/yolo11n_optimized.har
+2026-02-16 19:51:49,941 - INFO - main.py:34 - Current Time: 19:51:49, 02/16/26
+2026-02-16 19:51:50,954 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.2%
+2026-02-16 19:51:50,956 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 19:51:50,963 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 19:51:50,965 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 19:51:50,966 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 19:51:50,971 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 19:51:50,972 - INFO - main.py:109 - Running `hailo compiler yolo11n.har --hw-arch hailo8l --output-path yolo11n.hef`
+2026-02-16 19:55:37,469 - INFO - main.py:34 - Current Time: 19:55:37, 02/16/26
+2026-02-16 19:55:38,482 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 3.3%
+2026-02-16 19:55:38,483 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 19:55:38,483 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 19:55:38,485 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 19:55:38,486 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 19:55:38,493 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 19:55:38,494 - INFO - main.py:109 - Running `hailo parser onnx yolo11n.onnx --hw-arch hailo8l`
+2026-02-16 19:55:38,534 - INFO - parser.py:158 - Translation started on ONNX model yolo11n
+2026-02-16 19:55:39,052 - INFO - parser.py:193 - Restored ONNX model yolo11n (completion time: 00:00:00.52)
+2026-02-16 19:55:39,281 - INFO - parser.py:216 - Extracted ONNXRuntime meta-data for Hailo model (completion time: 00:00:00.75)
+2026-02-16 19:55:40,090 - INFO - parser.py:274 - Simplified ONNX model for a parsing retry attempt (completion time: 00:00:01.56)
+2026-02-16 19:58:12,868 - INFO - parser_cli.py:247 - According to recommendations, retrying parsing with end node names: ['/model.23/Concat', '/model.23/Sigmoid'].
+2026-02-16 19:58:12,869 - INFO - parser.py:158 - Translation started on ONNX model yolo11n
+2026-02-16 19:58:13,196 - INFO - parser.py:193 - Restored ONNX model yolo11n (completion time: 00:00:00.33)
+2026-02-16 19:58:13,401 - INFO - parser.py:216 - Extracted ONNXRuntime meta-data for Hailo model (completion time: 00:00:00.53)
+2026-02-16 19:58:14,291 - INFO - parser.py:366 - Start nodes mapped from original model: 'images': 'yolo11n/input_layer1'.
+2026-02-16 19:58:14,291 - INFO - parser.py:367 - End nodes mapped from original model: '/model.23/Concat', '/model.23/Sigmoid'.
+2026-02-16 19:58:14,438 - INFO - parser.py:288 - Translation completed on ONNX model yolo11n (completion time: 00:00:01.57)
+2026-02-16 19:58:16,232 - INFO - client_runner.py:1881 - Saved HAR to: /workspace/yolo11n.har
+2026-02-16 19:58:26,852 - INFO - main.py:34 - Current Time: 19:58:26, 02/16/26
+2026-02-16 19:58:27,866 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.1%
+2026-02-16 19:58:27,868 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 19:58:27,870 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 19:58:27,873 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 19:58:27,874 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 19:58:27,880 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 19:58:27,880 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --model-script yolo11n.alls --hw-arch hailo8l`
+2026-02-16 19:59:24,997 - INFO - main.py:34 - Current Time: 19:59:24, 02/16/26
+2026-02-16 19:59:26,010 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 1.4%
+2026-02-16 19:59:26,011 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 19:59:26,012 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 19:59:26,013 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 19:59:26,014 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 19:59:26,019 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 19:59:26,020 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --model-script yolo11n.alls --hw-arch hailo8l`
+2026-02-16 19:59:27,729 - INFO - client_runner.py:501 - Loading model script commands to yolo11n from yolo11n.alls
+2026-02-16 20:00:51,787 - INFO - main.py:34 - Current Time: 20:00:51, 02/16/26
+2026-02-16 20:00:52,801 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 1.7%
+2026-02-16 20:00:52,802 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 20:00:52,802 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 20:00:52,803 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 20:00:52,804 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 20:00:52,809 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 20:00:52,810 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --model-script yolo11n.alls --hw-arch hailo8l`
+2026-02-16 20:00:54,449 - INFO - client_runner.py:501 - Loading model script commands to yolo11n from yolo11n.alls
+2026-02-16 20:00:54,461 - INFO - commands.py:4270 - ParsedPerformanceParam command, setting optimization_level(max=2)
+2026-02-16 20:06:45,563 - INFO - main.py:34 - Current Time: 20:06:45, 02/16/26
+2026-02-16 20:06:46,576 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.2%
+2026-02-16 20:06:46,577 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 20:06:46,578 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 20:06:46,579 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 20:06:46,581 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 20:06:46,586 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 20:06:46,586 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --hw-arch hailo8l`
+2026-02-16 20:06:49,200 - IMPORTANT - sdk_backend.py:1133 - Starting Model Optimization
+2026-02-16 20:06:49,617 - WARNING - mo_config.py:168 - Reducing optimization level to 0 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024), and there's no available GPU
+2026-02-16 20:06:49,618 - WARNING - mo_config.py:233 - Running model optimization with zero level of optimization is not recommended for production use and might lead to suboptimal accuracy results
+2026-02-16 20:06:49,620 - INFO - mo_script_parser.py:91 - Model received quantization params from the hn
+2026-02-16 20:06:55,171 - INFO - algorithm_base.py:149 - MatmulDecompose skipped
+2026-02-16 20:06:55,409 - INFO - algorithm_base.py:152 - Starting Mixed Precision
+2026-02-16 20:06:56,526 - INFO - algorithm_base.py:168 - Model Optimization Algorithm Mixed Precision is done (completion time is 00:00:01.11)
+2026-02-16 20:06:57,044 - INFO - algorithm_base.py:149 - LayerNorm Decomposition skipped
+2026-02-16 20:06:58,521 - INFO - algorithm_base.py:152 - Starting Statistics Collector
+2026-02-16 20:06:58,525 - INFO - stats_collection.py:89 - Using dataset with 6 entries for calibration
+2026-02-16 20:07:47,354 - INFO - algorithm_base.py:168 - Model Optimization Algorithm Statistics Collector is done (completion time is 00:00:48.83)
+2026-02-16 20:07:49,626 - INFO - create_io_encoding.py:138 - Output layer yolo11n/activation2 with sigmoid activation was detected. Forcing its output range to be [0, 1] (original range was [0.0, 0.9909082055091858]).
+2026-02-16 20:07:49,631 - INFO - algorithm_base.py:152 - Starting Fix zp_comp Encoding
+2026-02-16 20:07:49,632 - INFO - algorithm_base.py:168 - Model Optimization Algorithm Fix zp_comp Encoding is done (completion time is 00:00:00.00)
+2026-02-16 20:07:49,633 - INFO - algorithm_base.py:152 - Starting Matmul Equalization
+2026-02-16 20:07:49,669 - INFO - algorithm_base.py:168 - Model Optimization Algorithm Matmul Equalization is done (completion time is 00:00:00.03)
+2026-02-16 20:07:49,670 - INFO - algorithm_base.py:152 - Starting MatmulDecomposeFix
+2026-02-16 20:07:49,670 - INFO - algorithm_base.py:168 - Model Optimization Algorithm MatmulDecomposeFix is done (completion time is 00:00:00.00)
+2026-02-16 20:11:35,414 - INFO - main.py:34 - Current Time: 20:11:35, 02/16/26
+2026-02-16 20:11:36,433 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 1.4%
+2026-02-16 20:11:36,434 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 20:11:36,435 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 20:11:36,436 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 20:11:36,438 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 20:11:36,444 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 20:11:36,445 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --model-script yolo11n.alls --hw-arch hailo8l`
+2026-02-16 20:11:37,946 - INFO - client_runner.py:501 - Loading model script commands to yolo11n from yolo11n.alls
+2026-02-16 20:11:37,960 - INFO - commands.py:4270 - ParsedPerformanceParam command, setting optimization_level(max=2)
+2026-02-16 20:12:40,540 - INFO - main.py:34 - Current Time: 20:12:40, 02/16/26
+2026-02-16 20:12:41,557 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.2%
+2026-02-16 20:12:41,558 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 20:12:41,566 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 20:12:41,567 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 20:12:41,568 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 20:12:41,574 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 20:12:41,574 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --model-script yolo11n.alls --hw-arch hailo8l`
+2026-02-16 20:12:43,139 - INFO - client_runner.py:501 - Loading model script commands to yolo11n from yolo11n.alls
+2026-02-16 20:12:43,153 - INFO - commands.py:4270 - ParsedPerformanceParam command, setting optimization_level(max=2)
+2026-02-16 20:13:25,837 - INFO - main.py:34 - Current Time: 20:13:25, 02/16/26
+2026-02-16 20:13:26,851 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.2%
+2026-02-16 20:13:26,854 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 20:13:26,856 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 20:13:26,861 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 20:13:26,864 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 20:13:26,879 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 20:13:26,880 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --model-script yolo11n.alls --hw-arch hailo8l`
+2026-02-16 20:13:28,354 - INFO - client_runner.py:501 - Loading model script commands to yolo11n from yolo11n.alls
+2026-02-16 20:13:28,366 - INFO - commands.py:4270 - ParsedPerformanceParam command, setting optimization_level(max=2)
+2026-02-16 20:20:48,903 - INFO - main.py:34 - Current Time: 20:20:48, 02/16/26
+2026-02-16 20:20:49,918 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 1.2%
+2026-02-16 20:20:49,919 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 20:20:49,920 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 20:20:49,921 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 20:20:49,922 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 20:20:49,926 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 20:20:49,927 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --model-script yolo11n.alls --hw-arch hailo8l`
+2026-02-16 20:20:51,462 - INFO - client_runner.py:501 - Loading model script commands to yolo11n from yolo11n.alls
+2026-02-16 20:22:12,939 - INFO - main.py:34 - Current Time: 20:22:12, 02/16/26
+2026-02-16 20:22:13,954 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.3%
+2026-02-16 20:22:13,955 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 20:22:13,955 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 20:22:13,957 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 20:22:13,958 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 20:22:13,965 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 20:22:13,966 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --model-script yolo11n.alls --hw-arch hailo8l`
+2026-02-16 20:22:15,372 - INFO - client_runner.py:501 - Loading model script commands to yolo11n from yolo11n.alls
+2026-02-16 20:23:42,504 - INFO - main.py:34 - Current Time: 20:23:42, 02/16/26
+2026-02-16 20:23:43,545 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.1%
+2026-02-16 20:23:43,547 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 20:23:43,547 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 20:23:43,548 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 20:23:43,557 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 20:23:43,571 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 20:23:43,571 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --model-script yolo11n.alls --hw-arch hailo8l`
+2026-02-16 20:23:45,226 - INFO - client_runner.py:501 - Loading model script commands to yolo11n from yolo11n.alls
+2026-02-16 20:25:05,814 - INFO - main.py:34 - Current Time: 20:25:05, 02/16/26
+2026-02-16 20:25:06,830 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.1%
+2026-02-16 20:25:06,831 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 20:25:06,831 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 20:25:06,832 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 20:25:06,833 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 20:25:06,844 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 20:25:06,844 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --model-script yolo11n.alls --hw-arch hailo8l`
+2026-02-16 20:25:08,733 - INFO - client_runner.py:501 - Loading model script commands to yolo11n from yolo11n.alls
+2026-02-16 20:25:54,843 - INFO - main.py:34 - Current Time: 20:25:54, 02/16/26
+2026-02-16 20:25:55,859 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.1%
+2026-02-16 20:25:55,860 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 20:25:55,860 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 20:25:55,862 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 20:25:55,863 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 20:25:55,868 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 20:25:55,869 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --model-script yolo11n.alls --hw-arch hailo8l`
+2026-02-16 20:25:57,368 - INFO - client_runner.py:501 - Loading model script commands to yolo11n from yolo11n.alls
+2026-02-16 20:33:31,021 - INFO - main.py:34 - Current Time: 20:33:31, 02/16/26
+2026-02-16 20:33:32,034 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.3%
+2026-02-16 20:33:32,036 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 20:33:32,036 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 20:33:32,038 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 20:33:32,040 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 20:33:32,045 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 20:33:32,046 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --model-script yolo11n.alls --hw-arch hailo8l`
+2026-02-16 20:33:33,590 - INFO - client_runner.py:501 - Loading model script commands to yolo11n from yolo11n.alls
+2026-02-16 20:33:33,603 - INFO - commands.py:4270 - ParsedPerformanceParam command, setting optimization_level(max=2)
+2026-02-16 20:37:30,537 - INFO - main.py:34 - Current Time: 20:37:30, 02/16/26
+2026-02-16 20:37:31,571 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.1%
+2026-02-16 20:37:31,572 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 20:37:31,572 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 20:37:31,573 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 20:37:31,583 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 20:37:31,595 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 20:37:31,596 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --model-script yolo11n.alls --hw-arch hailo8l`
+2026-02-16 20:37:33,619 - INFO - client_runner.py:501 - Loading model script commands to yolo11n from yolo11n.alls
+2026-02-16 20:37:33,631 - INFO - commands.py:4270 - ParsedPerformanceParam command, setting optimization_level(max=2)
+2026-02-16 20:51:08,228 - INFO - main.py:34 - Current Time: 20:51:08, 02/16/26
+2026-02-16 20:51:09,246 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.2%
+2026-02-16 20:51:09,248 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 20:51:09,251 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 20:51:09,254 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 20:51:09,264 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 20:51:09,277 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 20:51:09,278 - INFO - main.py:109 - Running `hailo parser onnx yolo11n.onnx --hw-arch hailo8l`
+2026-02-16 20:51:09,326 - INFO - parser.py:158 - Translation started on ONNX model yolo11n
+2026-02-16 20:51:09,767 - INFO - parser.py:193 - Restored ONNX model yolo11n (completion time: 00:00:00.44)
+2026-02-16 20:51:10,011 - INFO - parser.py:216 - Extracted ONNXRuntime meta-data for Hailo model (completion time: 00:00:00.68)
+2026-02-16 20:51:10,838 - INFO - parser.py:274 - Simplified ONNX model for a parsing retry attempt (completion time: 00:00:01.51)
+2026-02-16 20:51:44,192 - INFO - main.py:34 - Current Time: 20:51:44, 02/16/26
+2026-02-16 20:51:45,207 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.2%
+2026-02-16 20:51:45,208 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 20:51:45,208 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 20:51:45,210 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 20:51:45,211 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 20:51:45,216 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 20:51:45,217 - INFO - main.py:109 - Running `hailo parser onnx yolo11n.onnx --hw-arch hailo8l`
+2026-02-16 20:51:45,255 - INFO - parser.py:158 - Translation started on ONNX model yolo11n
+2026-02-16 20:51:45,621 - INFO - parser.py:193 - Restored ONNX model yolo11n (completion time: 00:00:00.37)
+2026-02-16 20:51:45,859 - INFO - parser.py:216 - Extracted ONNXRuntime meta-data for Hailo model (completion time: 00:00:00.60)
+2026-02-16 20:51:46,635 - INFO - parser.py:274 - Simplified ONNX model for a parsing retry attempt (completion time: 00:00:01.38)
+2026-02-16 20:53:16,744 - INFO - main.py:34 - Current Time: 20:53:16, 02/16/26
+2026-02-16 20:53:17,778 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 1.9%
+2026-02-16 20:53:17,780 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 20:53:17,781 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 20:53:17,784 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 20:53:17,793 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 20:53:17,806 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 20:53:17,806 - INFO - main.py:109 - Running `hailo parser onnx yolo11n.onnx --hw-arch hailo8l --end-node-names /model.23/cv2.0/cv2.0.2/Conv /model.23/cv3.0/cv3.0.2/Conv /model.23/cv2.1/cv2.1.2/Conv /model.23/cv3.1/cv3.1.2/Conv /model.23/cv2.2/cv2.2.2/Conv /model.23/cv3.2/cv3.2.2/Conv`
+2026-02-16 20:53:17,845 - INFO - parser.py:158 - Translation started on ONNX model yolo11n
+2026-02-16 20:53:18,248 - INFO - parser.py:193 - Restored ONNX model yolo11n (completion time: 00:00:00.40)
+2026-02-16 20:53:18,516 - INFO - parser.py:216 - Extracted ONNXRuntime meta-data for Hailo model (completion time: 00:00:00.67)
+2026-02-16 20:53:19,397 - INFO - parser.py:366 - Start nodes mapped from original model: 'images': 'yolo11n/input_layer1'.
+2026-02-16 20:53:19,398 - INFO - parser.py:367 - End nodes mapped from original model: '/model.23/cv2.0/cv2.0.2/Conv', '/model.23/cv3.0/cv3.0.2/Conv', '/model.23/cv2.1/cv2.1.2/Conv', '/model.23/cv3.1/cv3.1.2/Conv', '/model.23/cv2.2/cv2.2.2/Conv', '/model.23/cv3.2/cv3.2.2/Conv'.
+2026-02-16 20:53:19,548 - INFO - parser.py:288 - Translation completed on ONNX model yolo11n (completion time: 00:00:01.70)
+2026-02-16 20:53:21,031 - INFO - client_runner.py:1881 - Saved HAR to: /workspace/yolo11n.har
+2026-02-16 20:54:57,528 - INFO - main.py:34 - Current Time: 20:54:57, 02/16/26
+2026-02-16 20:54:58,545 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.2%
+2026-02-16 20:54:58,546 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 20:54:58,547 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 20:54:58,548 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 20:54:58,549 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 20:54:58,557 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 20:54:58,558 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --model-script yolo11n.alls --hw-arch hailo8l`
+2026-02-16 20:55:00,018 - INFO - client_runner.py:501 - Loading model script commands to yolo11n from yolo11n.alls
+2026-02-16 20:55:00,034 - INFO - commands.py:4270 - ParsedPerformanceParam command, setting optimization_level(max=2)
+2026-02-16 20:55:00,496 - INFO - nms_postprocess_command.py:720 - The layer yolo11n/conv51 was detected as reg_layer.
+2026-02-16 20:55:00,497 - INFO - nms_postprocess_command.py:720 - The layer yolo11n/conv62 was detected as reg_layer.
+2026-02-16 20:55:00,498 - INFO - nms_postprocess_command.py:720 - The layer yolo11n/conv77 was detected as reg_layer.
+2026-02-16 20:55:00,498 - INFO - nms_postprocess_command.py:514 - Using the default score threshold of 0.3 (range is [0-1], where 1 performs maximum suppression) and IoU threshold of 0.45 (range is [0-1], where 0 performs maximum suppression).
+Changing the values is possible using the nms_postprocess model script command.
+2026-02-16 20:59:45,287 - INFO - main.py:34 - Current Time: 20:59:45, 02/16/26
+2026-02-16 20:59:46,303 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.1%
+2026-02-16 20:59:46,304 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 20:59:46,305 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 20:59:46,307 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 20:59:46,308 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 20:59:46,316 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 20:59:46,316 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --model-script yolo11n.alls --hw-arch hailo8l`
+2026-02-16 20:59:48,020 - INFO - client_runner.py:501 - Loading model script commands to yolo11n from yolo11n.alls
+2026-02-16 20:59:48,034 - INFO - commands.py:4270 - ParsedPerformanceParam command, setting optimization_level(max=2)
+2026-02-16 20:59:48,386 - INFO - nms_postprocess_command.py:385 - For NMS architecture yolov8 the default engine is cpu. For other engine please use the 'engine' flag in the nms_postprocess model script command. If the NMS has been added during parsing, please parse the model again without confirming the addition of the NMS, and add the command manually with the desired engine.
+2026-02-16 20:59:48,387 - INFO - nms_postprocess_command.py:720 - The layer yolo11n/conv51 was detected as reg_layer.
+2026-02-16 20:59:48,388 - INFO - nms_postprocess_command.py:720 - The layer yolo11n/conv62 was detected as reg_layer.
+2026-02-16 20:59:48,388 - INFO - nms_postprocess_command.py:720 - The layer yolo11n/conv77 was detected as reg_layer.
+2026-02-16 20:59:48,389 - INFO - nms_postprocess_command.py:514 - Using the default score threshold of 0.3 (range is [0-1], where 1 performs maximum suppression) and IoU threshold of 0.45 (range is [0-1], where 0 performs maximum suppression).
+Changing the values is possible using the nms_postprocess model script command.
+2026-02-16 21:07:19,273 - INFO - main.py:34 - Current Time: 21:07:19, 02/16/26
+2026-02-16 21:07:20,307 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 2.7%
+2026-02-16 21:07:20,308 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 21:07:20,308 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 21:07:20,309 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 21:07:20,319 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 21:07:20,332 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 21:07:20,332 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --model-script yolo11n.alls --hw-arch hailo8l`
+2026-02-16 21:07:21,912 - INFO - client_runner.py:501 - Loading model script commands to yolo11n from yolo11n.alls
+2026-02-16 21:07:21,930 - INFO - commands.py:4270 - ParsedPerformanceParam command, setting optimization_level(max=2)
+2026-02-16 21:07:22,275 - INFO - nms_postprocess_command.py:385 - For NMS architecture yolov8 the default engine is cpu. For other engine please use the 'engine' flag in the nms_postprocess model script command. If the NMS has been added during parsing, please parse the model again without confirming the addition of the NMS, and add the command manually with the desired engine.
+2026-02-16 21:07:22,276 - INFO - nms_postprocess_command.py:720 - The layer yolo11n/conv51 was detected as reg_layer.
+2026-02-16 21:07:22,277 - INFO - nms_postprocess_command.py:720 - The layer yolo11n/conv62 was detected as reg_layer.
+2026-02-16 21:07:22,278 - INFO - nms_postprocess_command.py:720 - The layer yolo11n/conv77 was detected as reg_layer.
+2026-02-16 21:07:22,278 - INFO - nms_postprocess_command.py:514 - Using the default score threshold of 0.3 (range is [0-1], where 1 performs maximum suppression) and IoU threshold of 0.45 (range is [0-1], where 0 performs maximum suppression).
+Changing the values is possible using the nms_postprocess model script command.
+2026-02-16 21:08:30,915 - INFO - main.py:34 - Current Time: 21:08:30, 02/16/26
+2026-02-16 21:08:31,934 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.1%
+2026-02-16 21:08:31,936 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 21:08:31,938 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 21:08:31,941 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 21:08:31,943 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 21:08:31,957 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 21:08:31,958 - INFO - main.py:109 - Running `hailo parser onnx yolo11n.onnx --hw-arch hailo8l --end-node-names /model.23/cv2.0/cv2.0.2/Conv /model.23/cv3.0/cv3.0.2/Conv /model.23/cv2.1/cv2.1.2/Conv /model.23/cv3.1/cv3.1.2/Conv /model.23/cv2.2/cv2.2.2/Conv /model.23/cv3.2/cv3.2.2/Conv`
+2026-02-16 21:08:32,004 - INFO - parser.py:158 - Translation started on ONNX model yolo11n
+2026-02-16 21:08:32,541 - INFO - parser.py:193 - Restored ONNX model yolo11n (completion time: 00:00:00.54)
+2026-02-16 21:08:32,847 - INFO - parser.py:216 - Extracted ONNXRuntime meta-data for Hailo model (completion time: 00:00:00.84)
+2026-02-16 21:08:33,694 - INFO - parser.py:366 - Start nodes mapped from original model: 'images': 'yolo11n/input_layer1'.
+2026-02-16 21:08:33,695 - INFO - parser.py:367 - End nodes mapped from original model: '/model.23/cv2.0/cv2.0.2/Conv', '/model.23/cv3.0/cv3.0.2/Conv', '/model.23/cv2.1/cv2.1.2/Conv', '/model.23/cv3.1/cv3.1.2/Conv', '/model.23/cv2.2/cv2.2.2/Conv', '/model.23/cv3.2/cv3.2.2/Conv'.
+2026-02-16 21:08:33,834 - INFO - parser.py:288 - Translation completed on ONNX model yolo11n (completion time: 00:00:01.83)
+2026-02-16 21:08:35,411 - INFO - client_runner.py:1881 - Saved HAR to: /workspace/yolo11n.har
+2026-02-16 21:08:45,773 - INFO - main.py:34 - Current Time: 21:08:45, 02/16/26
+2026-02-16 21:08:46,788 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.2%
+2026-02-16 21:08:46,791 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 21:08:46,793 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 21:08:46,796 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 21:08:46,799 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 21:08:46,813 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 21:08:46,814 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --model-script yolo11n.alls --hw-arch hailo8l`
+2026-02-16 21:08:48,347 - INFO - client_runner.py:501 - Loading model script commands to yolo11n from yolo11n.alls
+2026-02-16 21:08:48,368 - INFO - commands.py:4270 - ParsedPerformanceParam command, setting optimization_level(max=2)
+2026-02-16 21:08:48,838 - INFO - nms_postprocess_command.py:385 - For NMS architecture yolov8 the default engine is cpu. For other engine please use the 'engine' flag in the nms_postprocess model script command. If the NMS has been added during parsing, please parse the model again without confirming the addition of the NMS, and add the command manually with the desired engine.
+2026-02-16 21:08:48,840 - INFO - nms_postprocess_command.py:720 - The layer yolo11n/conv51 was detected as reg_layer.
+2026-02-16 21:08:48,841 - INFO - nms_postprocess_command.py:720 - The layer yolo11n/conv62 was detected as reg_layer.
+2026-02-16 21:08:48,842 - INFO - nms_postprocess_command.py:720 - The layer yolo11n/conv77 was detected as reg_layer.
+2026-02-16 21:08:48,843 - INFO - nms_postprocess_command.py:514 - Using the default score threshold of 0.3 (range is [0-1], where 1 performs maximum suppression) and IoU threshold of 0.45 (range is [0-1], where 0 performs maximum suppression).
+Changing the values is possible using the nms_postprocess model script command.
+2026-02-16 21:09:53,011 - INFO - main.py:34 - Current Time: 21:09:53, 02/16/26
+2026-02-16 21:09:54,032 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 1.7%
+2026-02-16 21:09:54,033 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 21:09:54,034 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 21:09:54,035 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 21:09:54,036 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 21:09:54,043 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 21:09:54,044 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --hw-arch hailo8l`
+2026-02-16 21:10:22,184 - INFO - main.py:34 - Current Time: 21:10:22, 02/16/26
+2026-02-16 21:10:23,199 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.2%
+2026-02-16 21:10:23,200 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 21:10:23,201 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 21:10:23,202 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 21:10:23,203 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 21:10:23,209 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 21:10:23,210 - INFO - main.py:109 - Running `hailo compiler yolo11n.har --hw-arch hailo8l --output-dir .`
+2026-02-16 21:10:24,633 - INFO - compiler_cli.py:81 - Compiling network
+2026-02-16 21:10:24,633 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/input_layer1 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,634 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv1 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,635 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv2 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,636 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv3 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,637 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter1 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,637 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut1 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,638 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv4 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,639 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv5 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,641 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add1 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,642 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat1 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,643 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv6 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,644 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv7 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,645 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv8 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,647 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter2 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,648 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut2 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,649 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv9 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,650 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv10 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,651 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add2 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,652 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat2 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,653 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv11 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,654 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv12 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,656 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv13 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,657 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter3 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,659 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut3 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,659 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv14 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,660 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv15 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,661 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv16 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,662 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv17 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,663 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add3 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,664 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv18 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,665 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv19 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,666 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add4 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,667 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat3 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,667 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv20 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,668 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat4 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,669 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv21 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,670 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv22 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,671 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv23 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,672 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter4 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,673 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut4 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,674 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv24 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,675 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv25 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,675 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv26 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,676 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv27 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,677 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add5 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,678 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv28 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,679 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv29 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,680 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add6 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,682 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat5 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,683 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv30 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,684 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat6 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,685 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv31 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,686 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv32 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,687 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/maxpool1 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,688 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/maxpool2 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,689 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/maxpool3 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,691 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat7 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,692 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv33 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,693 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv34 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,694 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter5 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,695 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut5 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,696 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv35 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,697 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/format_conversion1 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,699 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter6 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,700 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut6 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,701 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/matmul1 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,702 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/mul_and_add1 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,704 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut7 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,705 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/activation1 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,705 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/format_conversion2 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,706 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/dw1 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,707 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/softmax1 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,708 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/matmul2 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,709 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/format_conversion3 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,709 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add7 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,710 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv36 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,711 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add8 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,712 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv37 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,713 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv38 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,714 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add9 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,715 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat8 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,716 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv39 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,717 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/resize1 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,718 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat9 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,719 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv40 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,720 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter7 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,721 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut8 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,722 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv41 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,723 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv42 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,724 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add10 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,725 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat10 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,727 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv43 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,728 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/resize2 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,729 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat11 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,731 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv44 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,732 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter8 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,733 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut9 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,734 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv45 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,736 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv46 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,738 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add11 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,739 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat12 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,741 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv47 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,742 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv48 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,744 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat13 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,745 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv49 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,747 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv50 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,749 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv51 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,750 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv55 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,753 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/dw2 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,756 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv52 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,757 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/dw3 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,759 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv53 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,760 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv54 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,761 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter9 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,762 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/output_layer1 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,764 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/output_layer2 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,765 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut10 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,766 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv56 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,769 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv57 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,771 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add12 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,772 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat14 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,773 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv58 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,774 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv59 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,776 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat15 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,777 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv60 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,779 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv61 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,781 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv62 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,783 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv66 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,784 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/dw4 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,786 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv63 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,787 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/dw5 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,788 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv64 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,790 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv65 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,793 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter10 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,794 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/output_layer3 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,795 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/output_layer4 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,796 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut11 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,797 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv67 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,799 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv68 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,800 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv69 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,802 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv70 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,803 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add13 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,804 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv71 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,806 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv72 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,808 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add14 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,810 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat16 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,811 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv73 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,813 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat17 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,814 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv74 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,816 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv75 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,817 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv76 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,818 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv77 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,820 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/dw6 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,821 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv78 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,822 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/dw7 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,823 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv79 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,825 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv80 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,826 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/output_layer5 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:24,827 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/output_layer6 has implicit precision config during compilation, filling default values
+2026-02-16 21:10:41,989 - INFO - main.py:34 - Current Time: 21:10:41, 02/16/26
+2026-02-16 21:10:43,003 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.1%
+2026-02-16 21:10:43,004 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 21:10:43,004 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 21:10:43,005 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 21:10:43,007 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 21:10:43,012 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 21:10:43,012 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --hw-arch hailo8l`
+2026-02-16 21:11:27,226 - INFO - main.py:34 - Current Time: 21:11:27, 02/16/26
+2026-02-16 21:11:28,241 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 1.6%
+2026-02-16 21:11:28,242 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 21:11:28,242 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 21:11:28,243 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 21:11:28,244 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 21:11:28,249 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 21:11:28,250 - INFO - main.py:109 - Running `hailo optimize yolo11n.har --calib-set-path calib_set.npy --hw-arch hailo8l`
+2026-02-16 21:11:30,937 - IMPORTANT - sdk_backend.py:1133 - Starting Model Optimization
+2026-02-16 21:11:31,259 - WARNING - mo_config.py:168 - Reducing optimization level to 0 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024), and there's no available GPU
+2026-02-16 21:11:31,260 - WARNING - mo_config.py:233 - Running model optimization with zero level of optimization is not recommended for production use and might lead to suboptimal accuracy results
+2026-02-16 21:11:31,261 - INFO - mo_script_parser.py:91 - Model received quantization params from the hn
+2026-02-16 21:11:36,346 - INFO - algorithm_base.py:149 - MatmulDecompose skipped
+2026-02-16 21:11:36,548 - INFO - algorithm_base.py:152 - Starting Mixed Precision
+2026-02-16 21:11:37,444 - INFO - algorithm_base.py:168 - Model Optimization Algorithm Mixed Precision is done (completion time is 00:00:00.89)
+2026-02-16 21:11:37,800 - INFO - algorithm_base.py:149 - LayerNorm Decomposition skipped
+2026-02-16 21:11:38,934 - INFO - algorithm_base.py:152 - Starting Statistics Collector
+2026-02-16 21:11:38,987 - INFO - stats_collection.py:89 - Using dataset with 6 entries for calibration
+2026-02-16 21:12:18,761 - INFO - algorithm_base.py:168 - Model Optimization Algorithm Statistics Collector is done (completion time is 00:00:39.77)
+2026-02-16 21:12:20,968 - INFO - algorithm_base.py:152 - Starting Fix zp_comp Encoding
+2026-02-16 21:12:20,970 - INFO - algorithm_base.py:168 - Model Optimization Algorithm Fix zp_comp Encoding is done (completion time is 00:00:00.00)
+2026-02-16 21:12:20,971 - INFO - algorithm_base.py:152 - Starting Matmul Equalization
+2026-02-16 21:12:21,020 - INFO - algorithm_base.py:168 - Model Optimization Algorithm Matmul Equalization is done (completion time is 00:00:00.05)
+2026-02-16 21:12:21,021 - INFO - algorithm_base.py:152 - Starting MatmulDecomposeFix
+2026-02-16 21:12:21,022 - INFO - algorithm_base.py:168 - Model Optimization Algorithm MatmulDecomposeFix is done (completion time is 00:00:00.00)
+2026-02-16 21:13:09,092 - INFO - algorithm_base.py:149 - Finetune encoding skipped
+2026-02-16 21:13:09,099 - INFO - algorithm_base.py:149 - Bias Correction skipped
+2026-02-16 21:13:09,127 - INFO - algorithm_base.py:149 - Adaround skipped
+2026-02-16 21:13:09,151 - INFO - algorithm_base.py:149 - Quantization-Aware Fine-Tuning skipped
+2026-02-16 21:13:25,599 - INFO - algorithm_base.py:149 - Layer Noise Analysis skipped
+2026-02-16 21:13:40,923 - IMPORTANT - sdk_backend.py:1145 - Model Optimization is done
+2026-02-16 21:13:42,971 - INFO - client_runner.py:1881 - Saved HAR to: /workspace/yolo11n_optimized.har
+2026-02-16 21:13:59,122 - INFO - main.py:34 - Current Time: 21:13:59, 02/16/26
+2026-02-16 21:14:00,141 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.7%
+2026-02-16 21:14:00,144 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-16 21:14:00,146 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-16 21:14:00,149 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-16 21:14:00,152 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-16 21:14:00,166 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-16 21:14:00,167 - INFO - main.py:109 - Running `hailo compiler yolo11n.har --hw-arch hailo8l --output-dir .`
+2026-02-16 21:14:01,712 - INFO - compiler_cli.py:81 - Compiling network
+2026-02-16 21:14:01,713 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/input_layer1 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,714 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv1 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,715 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv2 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,716 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv3 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,717 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter1 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,717 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut1 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,718 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv4 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,719 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv5 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,720 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add1 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,721 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat1 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,722 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv6 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,723 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv7 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,724 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv8 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,725 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter2 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,726 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut2 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,727 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv9 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,728 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv10 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,729 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add2 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,730 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat2 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,731 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv11 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,732 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv12 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,734 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv13 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,735 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter3 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,736 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut3 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,737 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv14 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,739 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv15 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,740 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv16 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,742 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv17 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,743 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add3 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,744 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv18 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,746 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv19 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,747 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add4 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,748 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat3 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,749 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv20 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,749 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat4 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,750 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv21 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,751 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv22 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,753 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv23 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,754 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter4 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,755 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut4 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,755 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv24 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,757 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv25 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,758 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv26 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,759 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv27 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,760 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add5 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,761 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv28 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,762 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv29 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,763 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add6 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,764 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat5 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,765 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv30 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,765 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat6 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,767 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv31 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,768 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv32 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,769 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/maxpool1 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,770 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/maxpool2 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,772 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/maxpool3 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,773 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat7 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,774 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv33 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,775 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv34 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,776 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter5 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,777 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut5 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,778 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv35 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,779 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/format_conversion1 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,781 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter6 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,781 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut6 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,783 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/matmul1 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,784 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/mul_and_add1 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,785 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut7 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,786 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/activation1 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,787 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/format_conversion2 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,788 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/dw1 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,789 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/softmax1 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,791 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/matmul2 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,792 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/format_conversion3 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,793 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add7 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,794 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv36 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,796 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add8 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,797 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv37 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,798 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv38 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,799 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add9 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,800 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat8 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,802 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv39 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,803 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/resize1 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,804 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat9 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,805 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv40 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,807 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter7 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,808 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut8 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,809 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv41 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,810 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv42 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,811 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add10 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,812 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat10 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,813 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv43 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,814 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/resize2 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,815 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat11 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,816 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv44 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,817 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter8 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,818 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut9 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,819 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv45 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,821 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv46 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,822 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add11 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,823 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat12 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,824 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv47 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,825 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv48 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,826 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat13 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,828 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv49 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,829 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv50 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,830 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv51 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,831 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv55 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,832 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/dw2 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,833 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv52 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,834 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/dw3 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,836 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv53 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,837 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv54 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,838 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter9 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,839 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/output_layer1 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,840 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/output_layer2 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,841 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut10 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,842 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv56 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,843 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv57 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,844 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add12 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,845 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat14 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,846 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv58 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,847 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv59 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,849 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat15 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,850 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv60 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,851 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv61 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,852 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv62 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,853 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv66 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,854 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/dw4 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,855 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv63 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,856 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/dw5 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,857 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv64 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,857 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv65 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,859 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/feature_splitter10 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,860 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/output_layer3 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,860 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/output_layer4 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,861 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/shortcut11 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,862 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv67 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,863 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv68 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,864 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv69 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,865 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv70 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,867 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add13 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,868 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv71 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,869 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv72 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,871 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/ew_add14 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,872 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat16 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,873 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv73 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,874 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/concat17 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,875 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv74 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,876 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv75 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,877 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv76 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,878 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv77 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,879 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/dw6 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,880 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv78 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,881 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/dw7 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,883 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv79 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,884 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv80 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,885 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/output_layer5 has implicit precision config during compilation, filling default values
+2026-02-16 21:14:01,886 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/output_layer6 has implicit precision config during compilation, filling default values
