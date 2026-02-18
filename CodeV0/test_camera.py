@@ -1,46 +1,67 @@
-import cv2
-import glob
-import os
 
-def check_camera_indices():
-    # Find all /dev/video* devices
-    devices = glob.glob('/dev/video*')
-    print(f"Found video devices: {devices}")
+import cv2
+import sys
+
+def check_cameras():
+    print("Checking for available cameras...")
     
-    # Try indices 0 to 10
-    for i in range(10):
-        cap = cv2.VideoCapture(i, cv2.CAP_V4L2)
+    # Check if we are on Windows or Linux
+    is_windows = sys.platform.startswith('win')
+    
+    # List of backends to try
+    backends = []
+    if is_windows:
+        backends.append((cv2.CAP_DSHOW, "DirectShow"))
+        backends.append((cv2.CAP_MSMF, "Media Foundation"))
+    else:
+        backends.append((cv2.CAP_V4L2, "V4L2"))
+        backends.append((cv2.CAP_GSTREAMER, "GStreamer"))
+    
+    backends.append((cv2.CAP_ANY, "Any/Auto"))
+
+    # Try indices 0 to 5
+    found_any = False
+    for index in range(5):
+        print(f"\n--- Checking Camera Index {index} ---")
+        for backend_id, backend_name in backends:
+            cap = cv2.VideoCapture(index, backend_id)
+            if cap.isOpened():
+                print(f"  [SUCCESS] Opened with backend: {backend_name}")
+                
+                # Try to read a frame
+                ret, frame = cap.read()
+                if ret:
+                    h, w = frame.shape[:2]
+                    print(f"    Frame read successful! Resolution: {w}x{h}")
+                    found_any = True
+                else:
+                    print(f"    Opened, but failed to read frame.")
+                
+                cap.release()
+            else:
+                # print(f"  [FAILED] Could not open with backend: {backend_name}")
+                pass
+
+    # Additionally check specific GStreamer pipeline for RPi
+    if not is_windows:
+        print("\n--- Checking RPi Libcamera (GStreamer) ---")
+        pipeline = "libcamerasrc ! video/x-raw, width=640, height=480, framerate=30/1 ! videoconvert ! appsink"
+        cap = cv2.VideoCapture(pipeline, cv2.CAP_GSTREAMER)
         if cap.isOpened():
-            print(f"\nChecking Camera Index {i}:")
-            backend = cap.getBackendName()
-            print(f"  Backend: {backend}")
-            
-            # Read a frame without setting anything
+            print(f"  [SUCCESS] Opened with GStreamer pipeline")
             ret, frame = cap.read()
             if ret:
-                print("  Success: Captured frame!")
-                print(f"  Resolution: {frame.shape[1]}x{frame.shape[0]}")
+                h, w = frame.shape[:2]
+                print(f"    Frame read successful! Resolution: {w}x{h}")
+                found_any = True
             else:
-                print("  Failed to capture frame (default settings).")
-            
-            # Releases
-            cap.release()
-            
-            # Try with MJPG settings as in detector.py
-            print(f"  Retrying Index {i} with MJPG settings...")
-            cap = cv2.VideoCapture(i, cv2.CAP_V4L2)
-            cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
-            cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-            cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-            
-            ret, frame = cap.read()
-            if ret:
-                print("  Success: Captured frame with MJPG!")
-            else:
-                print("  Failed to capture frame with MJPG.")
+                print(f"    Opened, but failed to read frame.")
             cap.release()
         else:
-            pass # Index not available
+            print("  [FAILED] Could not open GStreamer pipeline")
+
+    if not found_any:
+        print("\nNo working cameras found on tested configurations.")
 
 if __name__ == "__main__":
-    check_camera_indices()
+    check_cameras()

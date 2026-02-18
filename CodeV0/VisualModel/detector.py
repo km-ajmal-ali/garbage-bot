@@ -37,21 +37,31 @@ class HailoDetector:
                 print("  -> Camera opened and reading successfully.")
                 return cap
 
-            # Attempt 1: V4L2 with MJPG (Preferred)
-            self.cap = try_open_camera(0, cv2.CAP_V4L2, True)
-            
-            # Attempt 2: V4L2 with Default Settings (Fallback)
-            if self.cap is None:
-                print("Retrying with default settings...")
-                self.cap = try_open_camera(0, cv2.CAP_V4L2, False)
+            # Define a list of potential camera configurations to test
+            # Format: (source, backend, use_mjpg, description)
+            configs = [
+                # 1. Try GStreamer pipeline for RPi (libcamera)
+                ("libcamerasrc ! video/x-raw, width=640, height=480, framerate=30/1 ! videoconvert ! appsink", getattr(cv2, 'CAP_GSTREAMER', 1800), False, "GStreamer (libcamera)"),
+                # 2. Try V4L2 (Linux/RPi legacy) - Index 0
+                (0, getattr(cv2, 'CAP_V4L2', 200), True, "V4L2 Index 0 (MJPG)"),
+                (0, getattr(cv2, 'CAP_V4L2', 200), False, "V4L2 Index 0 (Default)"),
+                # 3. Try DirectShow (Windows) - Index 0 and 1
+                (0, getattr(cv2, 'CAP_DSHOW', 700), False, "DirectShow Index 0"),
+                (1, getattr(cv2, 'CAP_DSHOW', 700), False, "DirectShow Index 1"),
+                # 4. Try Generic/Any - Index 0 and 1
+                (0, cv2.CAP_ANY, False, "Any Index 0"),
+                (1, cv2.CAP_ANY, False, "Any Index 1"),
+            ]
 
-            # Attempt 3: Any Backend (Last Resort)
-            if self.cap is None:
-                print("Retrying with CAP_ANY...")
-                self.cap = try_open_camera(0, cv2.CAP_ANY, False)
+            for source, backend, mjpg, desc in configs:
+                self.cap = try_open_camera(source, backend, mjpg)
+                if self.cap:
+                    print(f"Success: Initialized camera using {desc}")
+                    break
+
 
             if self.cap is None:
-                print("Error: Could not initialize camera on any tested configuration.")
+                print("Error: Could not initialize camera on any tested configuration.")print("Error: Could not initialize camera on any tested configuration.")
             else:
                 self.qr_detector = cv2.QRCodeDetector()
         except ImportError:
