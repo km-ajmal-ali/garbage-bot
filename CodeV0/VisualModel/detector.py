@@ -13,18 +13,51 @@ class HailoDetector:
         try:
             import cv2
             self.cv2 = cv2
-            # Use V4L2 backend to avoid GStreamer memory issues and set low res immediately
-            self.cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
+            # Initialize Camera with Robust Fallback
+            self.cv2 = cv2
+            self.cap = None
             
-            # Force MJPG to reduce bandwidth/memory usage
-            self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
-            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+            def try_open_camera(index, backend, use_mjpg):
+                print(f"Attempting to open camera index {index} with backend {backend} (MJPG={use_mjpg})...")
+                cap = cv2.VideoCapture(index, backend)
+                if not cap.isOpened():
+                    return None
+                
+                if use_mjpg:
+                    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
+                    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+                    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+                
+                # Try to read a frame to verify it works
+                ret, _ = cap.read()
+                if not ret:
+                    print("  -> device opened but failed to read frame.")
+                    cap.release()
+                    return None
+                print("  -> Camera opened and reading successfully.")
+                return cap
+
+            # Attempt 1: V4L2 with MJPG (Preferred)
+            self.cap = try_open_camera(0, cv2.CAP_V4L2, True)
             
-            self.qr_detector = cv2.QRCodeDetector()
+            # Attempt 2: V4L2 with Default Settings (Fallback)
+            if self.cap is None:
+                print("Retrying with default settings...")
+                self.cap = try_open_camera(0, cv2.CAP_V4L2, False)
+
+            # Attempt 3: Any Backend (Last Resort)
+            if self.cap is None:
+                print("Retrying with CAP_ANY...")
+                self.cap = try_open_camera(0, cv2.CAP_ANY, False)
+
+            if self.cap is None:
+                print("Error: Could not initialize camera on any tested configuration.")
+            else:
+                self.qr_detector = cv2.QRCodeDetector()
         except ImportError:
             print("OpenCV not installed. Camera functions will fail.")
             self.cap = None
+
 
     def detect(self, frame):
         # Pre-process frame to match model input (e.g., 640x640)
