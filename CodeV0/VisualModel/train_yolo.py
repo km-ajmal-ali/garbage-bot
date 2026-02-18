@@ -13,6 +13,6 @@ results = model.train(
 )
 
 # 3. Export to ONNX (Requirement for Hailo Dataflow Compiler)
-model.export(format="onnx")
+model.export(format="onnx", imgsz=640, dynamic=False, opset=11, simplify=True, end2end=False) # added 4 params at last to correct the export model.
 
 print("Training complete. Now use Hailo DFS Tool to convert ONNX to HEF.")

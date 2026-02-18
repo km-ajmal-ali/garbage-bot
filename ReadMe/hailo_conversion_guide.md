@@ -153,3 +153,93 @@ Once you have `yolo11n.hef`, move it to your Pi and run a quick benchmark:
 hailortcli benchmark yolo11n.hef
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################
+
+# To generate a **.hef** (Hailo Executable Format) file for your Raspberry Pi 5 with the **AI HAT+ (26 TOPS / Hailo-8)**, you need to use the **Hailo Dataflow Compiler (DFC)**.
+
+Since the DFC requires an x86_64 environment (Ubuntu 20.04/22.04), you generally cannot run the conversion directly on the Raspberry Pi. You should perform these steps on a PC or via a Docker container.
+
+### The Conversion Workflow
+
+The process follows a three-step pipeline: **Parse** (ONNX to HAR)  **Optimize** (Quantization)  **Compile** (HAR to HEF).
+
+---
+
+## Step 1: Parse the ONNX Model
+
+This converts your ONNX file into a Hailo Archive (**.har**) file.
+
+* **Hardware Architecture:** Use `hailo8` (not `hailo8l`), as your HAT+ is the 26 TOPS version.
+
+```bash
+hailo parser onnx model.onnx \
+    --hw-arch hailo8 \
+    --har-path model.har \
+    --tensor-shapes "images=[1,3,640,640]" \
+    --end-node-names "/model.23/Concat" "/model.23/Sigmoid"
+```
+
+> **Note:** Replace `[1,3,640,640]` with the actual input shape of your trained model.
+
+## Step 2: Optimize & Quantize
+
+Hailo chips run on **INT8** precision. You need a small set of "calibration images" (around 64–100 images from your training/val set) to minimize accuracy loss during quantization.
+
+```bash
+hailo optimize model.har \
+    --hw-arch hailo8 \
+    --calib-set-path /path/to/calibration_images/ \
+    --performance \
+    --output-har model_quantized.har
+
+```
+
+## Step 3: Compile to .hef
+
+This is the final step that generates the binary file used by the Raspberry Pi 5.
+
+```bash
+hailo compiler model_quantized.har \
+    --hw-arch hailo8 \
+    --output-hef your_model.hef
+
+```
+
+---
+
+### Key Requirements & Tips
+
+* **Environment:** It is highly recommended to use the [Hailo Software Suite Docker](https://github.com/hailo-ai/hailo-rpi5-examples) which pre-installs the Dataflow Compiler and Model Zoo.
+* **Model Script (.alls):** If your model has custom layers or requires specific optimizations (like input normalization or NMS offloading), you may need to include a model script (`.alls`) during the `optimize` or `compile` step.
+* **Check Compatibility:** Ensure your ONNX opset is compatible (usually **opset 11** is the safest for Hailo).
+
+### Moving to the Raspberry Pi
+
+Once you have the `.hef` file, copy it to your Pi 5. You can then run it using the `hailortcli` or the `rpicam-apps` suite:
+
+```bash
+# To test if the file is valid on the Pi
+hailortcli run your_model.hef
+
+```
+
+**Would you like me to help you create a specific `.alls` script for a YOLO model or another architecture?**

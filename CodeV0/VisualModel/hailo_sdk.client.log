@@ -737,3 +737,201 @@ Changing the values is possible using the nms_postprocess model script command.
 2026-02-16 21:14:01,884 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/conv80 has implicit precision config during compilation, filling default values
 2026-02-16 21:14:01,885 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/output_layer5 has implicit precision config during compilation, filling default values
 2026-02-16 21:14:01,886 - DEPRECATION_WARNING - hailo_nn.py:1625 - Layer yolo11n/output_layer6 has implicit precision config during compilation, filling default values
+2026-02-17 19:03:04,359 - INFO - __init__.py:84 - First time Hailo Dataflow Compiler is being used. Checking system requirements... (this might take a few seconds)
+2026-02-17 19:03:05,341 - INFO - main.py:34 - Current Time: 19:03:05, 02/17/26
+2026-02-17 19:03:06,353 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.2%
+2026-02-17 19:03:06,355 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:03:06,356 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:03:06,357 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:03:06,362 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:03:06,376 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:03:06,377 - INFO - main.py:109 - Running `hailo parser onnx model.onnx --hw-arch hailo8 --net-input-shapes [1,3,640,640] --output-har model.har`
+2026-02-17 19:04:13,020 - INFO - main.py:34 - Current Time: 19:04:13, 02/17/26
+2026-02-17 19:04:14,055 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.1%
+2026-02-17 19:04:14,056 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:04:14,057 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:04:14,058 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:04:14,068 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:04:14,083 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:04:14,084 - INFO - main.py:109 - Running `hailo parser onnx model.onnx --hw-arch hailo8 --net-input-shapes 1 3 640 640 --output-har model.har`
+2026-02-17 19:04:43,696 - INFO - main.py:34 - Current Time: 19:04:43, 02/17/26
+2026-02-17 19:04:44,710 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.3%
+2026-02-17 19:04:44,711 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:04:44,712 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:04:44,713 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:04:44,715 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:04:44,722 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:04:44,723 - INFO - main.py:109 - Running `hailo parser onnx model.onnx --hw-arch hailo8 --net-input-shapes 1 3 640 640 --output-har model.har`
+2026-02-17 19:05:16,078 - INFO - main.py:34 - Current Time: 19:05:16, 02/17/26
+2026-02-17 19:05:17,094 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.3%
+2026-02-17 19:05:17,095 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:05:17,095 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:05:17,097 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:05:17,099 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:05:17,104 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:05:17,104 - INFO - main.py:109 - Running `hailo parser onnx --hw-arch hailo8 --net-input-shapes 640 640 3 --output-har model.har model.onnx`
+2026-02-17 19:05:26,457 - INFO - main.py:34 - Current Time: 19:05:26, 02/17/26
+2026-02-17 19:05:27,476 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 2.2%
+2026-02-17 19:05:27,477 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:05:27,478 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:05:27,479 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:05:27,481 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:05:27,487 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:05:27,488 - INFO - main.py:109 - Running `hailo parser onnx --help`
+2026-02-17 19:06:54,014 - INFO - main.py:34 - Current Time: 19:06:54, 02/17/26
+2026-02-17 19:06:55,031 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.1%
+2026-02-17 19:06:55,032 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:06:55,033 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:06:55,034 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:06:55,035 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:06:55,040 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:06:55,041 - INFO - main.py:109 - Running `hailo parser onnx model.onnx --hw-arch hailo8 --har-path model.har --tensor-shapes input_node_name=[1,3,640,640]`
+2026-02-17 19:06:55,089 - INFO - parser.py:158 - Translation started on ONNX model model
+2026-02-17 19:06:55,671 - INFO - parser.py:193 - Restored ONNX model model (completion time: 00:00:00.58)
+2026-02-17 19:06:55,934 - INFO - parser.py:216 - Extracted ONNXRuntime meta-data for Hailo model (completion time: 00:00:00.85)
+2026-02-17 19:07:59,249 - INFO - main.py:34 - Current Time: 19:07:59, 02/17/26
+2026-02-17 19:08:00,268 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.1%
+2026-02-17 19:08:00,269 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:08:00,269 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:08:00,272 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:08:00,274 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:08:00,281 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:08:00,281 - INFO - main.py:109 - Running `hailo parser onnx model.onnx --hw-arch hailo8 --har-path model.har --tensor-shapes images=[1,3,640,640]`
+2026-02-17 19:08:00,323 - INFO - parser.py:158 - Translation started on ONNX model model
+2026-02-17 19:08:00,955 - INFO - parser.py:193 - Restored ONNX model model (completion time: 00:00:00.63)
+2026-02-17 19:08:01,222 - INFO - parser.py:216 - Extracted ONNXRuntime meta-data for Hailo model (completion time: 00:00:00.90)
+2026-02-17 19:08:02,779 - INFO - parser.py:274 - Simplified ONNX model for a parsing retry attempt (completion time: 00:00:02.46)
+2026-02-17 19:09:08,875 - INFO - main.py:34 - Current Time: 19:09:08, 02/17/26
+2026-02-17 19:09:09,888 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 1.6%
+2026-02-17 19:09:09,890 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:09:09,890 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:09:09,891 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:09:09,893 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:09:09,898 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:09:09,899 - INFO - main.py:109 - Running `hailo parser onnx model.onnx --hw-arch hailo8 --har-path model.har --tensor-shapes images=[1,3,640,640] --end-node-names /model.23/Concat /model.23/Sigmoid`
+2026-02-17 19:09:09,983 - INFO - parser.py:158 - Translation started on ONNX model model
+2026-02-17 19:09:10,590 - INFO - parser.py:193 - Restored ONNX model model (completion time: 00:00:00.61)
+2026-02-17 19:09:10,829 - INFO - parser.py:216 - Extracted ONNXRuntime meta-data for Hailo model (completion time: 00:00:00.85)
+2026-02-17 19:09:12,511 - INFO - parser.py:366 - Start nodes mapped from original model: 'images': 'model/input_layer1'.
+2026-02-17 19:09:12,511 - INFO - parser.py:367 - End nodes mapped from original model: '/model.23/Concat', '/model.23/Sigmoid'.
+2026-02-17 19:09:12,708 - INFO - parser.py:288 - Translation completed on ONNX model model (completion time: 00:00:02.73)
+2026-02-17 19:09:14,380 - INFO - client_runner.py:1881 - Saved HAR to: /workspace/model.har
+2026-02-17 19:12:26,114 - INFO - main.py:34 - Current Time: 19:12:26, 02/17/26
+2026-02-17 19:12:27,127 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.1%
+2026-02-17 19:12:27,128 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:12:27,129 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:12:27,130 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:12:27,131 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:12:27,137 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:12:27,138 - INFO - main.py:109 - Running `hailo optimize model.har --hw-arch hailo8 --calib-set-path /Dataset/train/  --performance --output-har model_quantized.har`
+2026-02-17 19:13:15,204 - INFO - main.py:34 - Current Time: 19:13:15, 02/17/26
+2026-02-17 19:13:16,219 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.2%
+2026-02-17 19:13:16,220 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:13:16,220 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:13:16,221 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:13:16,222 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:13:16,227 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:13:16,228 - INFO - main.py:109 - Running `hailo optimize model.har --hw-arch hailo8 --calib-set-path /Dataset/train/ --performance --output-har model_quantized.har`
+2026-02-17 19:15:12,932 - INFO - main.py:34 - Current Time: 19:15:12, 02/17/26
+2026-02-17 19:15:13,946 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.0%
+2026-02-17 19:15:13,947 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:15:13,948 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:15:13,949 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:15:13,950 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:15:13,956 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:15:13,956 - INFO - main.py:109 - Running `hailo optimize model.har --hw-arch hailo8 --calib-set-path /Dataset/train/ --output-har-path model_quantized.har`
+2026-02-17 19:15:16,904 - IMPORTANT - sdk_backend.py:1133 - Starting Model Optimization
+2026-02-17 19:17:35,007 - INFO - main.py:34 - Current Time: 19:17:35, 02/17/26
+2026-02-17 19:17:36,020 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 1.5%
+2026-02-17 19:17:36,021 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:17:36,021 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:17:36,022 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:17:36,023 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:17:36,028 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:17:36,028 - INFO - main.py:109 - Running `hailo optimize model.har --hw-arch hailo8 --calib-set-path /Dataset/ --output-har-path model_quantized.har`
+2026-02-17 19:17:38,573 - IMPORTANT - sdk_backend.py:1133 - Starting Model Optimization
+2026-02-17 19:20:31,623 - INFO - main.py:34 - Current Time: 19:20:31, 02/17/26
+2026-02-17 19:20:32,637 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.1%
+2026-02-17 19:20:32,638 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:20:32,646 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:20:32,648 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:20:32,649 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:20:32,655 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:20:32,655 - INFO - main.py:109 - Running `hailo optimize model.har --calib-set-path calib_set.npy --model-script yolo11n.alls --hw-arch hailo8l --output-har-path model_quantized.har`
+2026-02-17 19:20:32,860 - WARNING - client_runner.py:1904 - hw_arch from HAR is hailo8 but client runner was initialized with hailo8l. Using hailo8l
+2026-02-17 19:20:34,122 - INFO - client_runner.py:501 - Loading model script commands to model from yolo11n.alls
+2026-02-17 19:20:34,135 - INFO - commands.py:4270 - ParsedPerformanceParam command, setting optimization_level(max=2)
+2026-02-17 19:20:34,480 - INFO - nms_postprocess_command.py:385 - For NMS architecture yolov8 the default engine is cpu. For other engine please use the 'engine' flag in the nms_postprocess model script command. If the NMS has been added during parsing, please parse the model again without confirming the addition of the NMS, and add the command manually with the desired engine.
+2026-02-17 19:28:23,011 - INFO - main.py:34 - Current Time: 19:28:23, 02/17/26
+2026-02-17 19:28:24,048 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.2%
+2026-02-17 19:28:24,049 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:28:24,050 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:28:24,052 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:28:24,062 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:28:24,082 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:28:24,083 - INFO - main.py:109 - Running `hailo optimize model.har --hw-arch hailo8l --calib-set-path ./calib_set.npy --model-script default_model_script.all`
+2026-02-17 19:28:24,304 - WARNING - client_runner.py:1904 - hw_arch from HAR is hailo8 but client runner was initialized with hailo8l. Using hailo8l
+2026-02-17 19:28:25,535 - INFO - client_runner.py:501 - Loading model script commands to model from default_model_script.all
+2026-02-17 19:30:47,539 - INFO - main.py:34 - Current Time: 19:30:47, 02/17/26
+2026-02-17 19:30:48,566 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.2%
+2026-02-17 19:30:48,566 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:30:48,567 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:30:48,568 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:30:48,570 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:30:48,582 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:30:48,583 - INFO - main.py:109 - Running `hailo optimize model.har --hw-arch hailo8l --calib-set-path ./calib_set.npy --model-script default_model_script.all`
+2026-02-17 19:30:48,830 - WARNING - client_runner.py:1904 - hw_arch from HAR is hailo8 but client runner was initialized with hailo8l. Using hailo8l
+2026-02-17 19:30:49,972 - INFO - client_runner.py:501 - Loading model script commands to model from default_model_script.all
+2026-02-17 19:33:41,085 - INFO - main.py:34 - Current Time: 19:33:41, 02/17/26
+2026-02-17 19:33:42,116 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 2.9%
+2026-02-17 19:33:42,117 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:33:42,118 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:33:42,119 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:33:42,128 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:33:42,138 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:33:42,139 - INFO - main.py:109 - Running `hailo parser onnx model.onnx -y --hw-arch hailo8l --har-path model2.har`
+2026-02-17 19:33:42,184 - INFO - parser.py:158 - Translation started on ONNX model model
+2026-02-17 19:33:42,659 - INFO - parser.py:193 - Restored ONNX model model (completion time: 00:00:00.47)
+2026-02-17 19:33:42,884 - INFO - parser.py:216 - Extracted ONNXRuntime meta-data for Hailo model (completion time: 00:00:00.70)
+2026-02-17 19:33:43,721 - INFO - parser.py:274 - Simplified ONNX model for a parsing retry attempt (completion time: 00:00:01.54)
+2026-02-17 19:33:44,509 - INFO - parser_cli.py:247 - According to recommendations, retrying parsing with end node names: ['/model.23/Sigmoid', '/model.23/Concat'].
+2026-02-17 19:33:44,510 - INFO - parser.py:158 - Translation started on ONNX model model
+2026-02-17 19:33:44,853 - INFO - parser.py:193 - Restored ONNX model model (completion time: 00:00:00.34)
+2026-02-17 19:33:45,037 - INFO - parser.py:216 - Extracted ONNXRuntime meta-data for Hailo model (completion time: 00:00:00.53)
+2026-02-17 19:33:45,956 - INFO - parser.py:366 - Start nodes mapped from original model: 'images': 'model/input_layer1'.
+2026-02-17 19:33:45,957 - INFO - parser.py:367 - End nodes mapped from original model: '/model.23/Sigmoid', '/model.23/Concat'.
+2026-02-17 19:33:46,086 - INFO - parser.py:288 - Translation completed on ONNX model model (completion time: 00:00:01.58)
+2026-02-17 19:33:47,781 - INFO - client_runner.py:1881 - Saved HAR to: /workspace/model2.har
+2026-02-17 19:34:03,677 - INFO - main.py:34 - Current Time: 19:34:03, 02/17/26
+2026-02-17 19:34:04,692 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.1%
+2026-02-17 19:34:04,695 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:34:04,697 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:34:04,701 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:34:04,704 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:34:04,708 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:34:04,709 - INFO - main.py:109 - Running `hailo optimize model2.har --hw-arch hailo8l --calib-set-path ./calib_set.npy --model-script default_model_script.all`
+2026-02-17 19:34:06,130 - INFO - client_runner.py:501 - Loading model script commands to model from default_model_script.all
+2026-02-17 19:35:12,550 - INFO - main.py:34 - Current Time: 19:35:12, 02/17/26
+2026-02-17 19:35:13,565 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.1%
+2026-02-17 19:35:13,566 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:35:13,567 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:35:13,568 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:35:13,569 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:35:13,575 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:35:13,575 - INFO - main.py:109 - Running `hailo optimize model2.har --hw-arch hailo8l --calib-set-path ./calib_set.npy --model-script default_model_script.all --model-script yolo11n.alls`
+2026-02-17 19:35:15,003 - INFO - client_runner.py:501 - Loading model script commands to model from yolo11n.alls
+2026-02-17 19:35:15,015 - INFO - commands.py:4270 - ParsedPerformanceParam command, setting optimization_level(max=2)
+2026-02-17 19:35:15,365 - INFO - nms_postprocess_command.py:385 - For NMS architecture yolov8 the default engine is cpu. For other engine please use the 'engine' flag in the nms_postprocess model script command. If the NMS has been added during parsing, please parse the model again without confirming the addition of the NMS, and add the command manually with the desired engine.
+2026-02-17 19:36:16,185 - INFO - main.py:34 - Current Time: 19:36:16, 02/17/26
+2026-02-17 19:36:17,199 - INFO - main.py:46 - CPU: Architecture: x86_64, Model: Intel(R) Core(TM) i7-9750H CPU @ 2.60GHz, Number Of Cores: 12, Utilization: 0.1%
+2026-02-17 19:36:17,200 - INFO - main.py:50 - Memory: Total: 19GB, Available: 18GB
+2026-02-17 19:36:17,200 - INFO - main.py:54 - System info: OS: Linux, Kernel: 6.6.87.2-microsoft-standard-WSL2
+2026-02-17 19:36:17,202 - INFO - main.py:55 - Hailo DFC Version: 3.33.0
+2026-02-17 19:36:17,203 - INFO - main.py:60 - HailoRT Version: 4.23.0
+2026-02-17 19:36:17,210 - INFO - main.py:76 - PCIe: No Hailo PCIe device was found
+2026-02-17 19:36:17,211 - INFO - main.py:109 - Running `hailo compiler yolo11n_optimized.har --hw-arch hailo8l`
+2026-02-17 19:36:25,693 - INFO - compiler_cli.py:81 - Compiling network
+2026-02-17 19:36:25,755 - INFO - hailo_tools_runner.py:510 - To achieve optimal performance, set the compiler_optimization_level to "max" by adding performance_param(compiler_optimization_level=max) to the model script. Note that this may increase compilation time.
+2026-02-17 19:47:33,976 - INFO - compiler_cli.py:86 - Compilation complete
+2026-02-17 19:47:34,170 - INFO - compiler_cli.py:91 - Saved HEF to: /workspace/yolo11n.hef
+2026-02-17 19:47:36,665 - INFO - client_runner.py:1881 - Saved HAR to: /workspace/yolo11n_compiled.har

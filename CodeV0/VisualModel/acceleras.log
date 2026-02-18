@@ -33,3 +33,24 @@
 2026-02-16 21:11:23,568 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
 2026-02-16 21:12:23,579 - INFO - activation_op.py:1813 - activation fitting started for yolo11n/reduce_sum_softmax1/act_op
 2026-02-16 21:13:55,153 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 18:59:47,519 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:02:56,240 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:04:04,818 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:04:39,784 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:05:11,809 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:05:22,825 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:06:49,961 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:07:55,604 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:09:05,361 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:12:22,070 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:13:11,414 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:15:08,909 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:17:31,404 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:19:46,046 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:20:27,637 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:28:13,985 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:30:39,189 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:33:32,816 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:33:59,818 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:35:08,710 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-17 19:36:12,635 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
