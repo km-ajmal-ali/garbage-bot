@@ -10,12 +10,61 @@ class HailoDetector:
         self.output_vstream_info = self.hef.get_output_vstream_infos()
         
         # Initialize Camera
+        self.cap = None
+        
+        # Ensure OpenCV is available for image processing (resize, draw, etc.)
         try:
             import cv2
             self.cv2 = cv2
-            # Initialize Camera with Robust Fallback
+        except ImportError:
+            print("OpenCV not installed. Camera functions will fail.")
+            self.cv2 = None
+            return
+
+        # 1. Try Picamera2 (Native Libcamera Interface)
+        try:
+            from picam2 import Picamera2
+            print("Attempting to initialize Picamera2...")
+            
+            class Picamera2Wrapper:
+                def __init__(self):
+                    self.picam2 = Picamera2()
+                    # Configure for 640x640 or close to it (480p is standard, let's go with 640x480)
+                    config = self.picam2.create_preview_configuration(main={"size": (640, 480), "format": "BGR888"})
+                    self.picam2.configure(config)
+                    self.picam2.start()
+                    # Warmup
+                    self.picam2.capture_array()
+                    print("  -> Picamera2 initialized successfully.")
+
+                def read(self):
+                    try:
+                        # Capture array typically returns RGB/BGR based on config
+                        frame = self.picam2.capture_array()
+                        return True, frame
+                    except Exception as e:
+                        print(f"Picamera2 read error: {e}")
+                        return False, None
+
+                def release(self):
+                    self.picam2.stop()
+                    self.picam2.close()
+                
+                def isOpened(self):
+                    return True
+
+            self.cap = Picamera2Wrapper()
+            print("Success: Initialized camera using Picamera2")
+            
+        except ImportError:
+            print("Picamera2 library not found. Falling back to OpenCV.")
+        except Exception as e:
+            print(f"Picamera2 failed to initialize: {e}. Falling back to OpenCV.")
+
+        # 2. Fallback to OpenCV if Picamera2 failed
+        if self.cap is None:
+            import cv2
             self.cv2 = cv2
-            self.cap = None
             
             def try_open_camera(index, backend, use_mjpg):
                 print(f"Attempting to open camera index {index} with backend {backend} (MJPG={use_mjpg})...")
@@ -61,12 +110,9 @@ class HailoDetector:
 
 
             if self.cap is None:
-                print("Error: Could not initialize camera on any tested configuration.")print("Error: Could not initialize camera on any tested configuration.")
+                print("Error: Could not initialize camera on any tested configuration.")
             else:
                 self.qr_detector = cv2.QRCodeDetector()
-        except ImportError:
-            print("OpenCV not installed. Camera functions will fail.")
-            self.cap = None
 
 
     def detect(self, frame):
