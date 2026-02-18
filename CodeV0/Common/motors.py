@@ -18,6 +18,22 @@ class MotorControl:
         elif direction == "left":
             GPIO.output(self.pins[0], False); GPIO.output(self.pins[1], True)
             GPIO.output(self.pins[2], True); GPIO.output(self.pins[3], False)
-        # Add right, back, and stop...
+        elif direction == "right":
+            GPIO.output(self.pins[0], True); GPIO.output(self.pins[1], False)
+            GPIO.output(self.pins[2], False); GPIO.output(self.pins[3], True)
+        elif direction == "backward":
+            GPIO.output(self.pins[0], False); GPIO.output(self.pins[1], True)
+            GPIO.output(self.pins[2], False); GPIO.output(self.pins[3], True)
+        
         self.pwm_a.ChangeDutyCycle(speed)
         self.pwm_b.ChangeDutyCycle(speed)
+
+    def stop(self):
+        GPIO.output(self.pins[0], False); GPIO.output(self.pins[1], False)
+        GPIO.output(self.pins[2], False); GPIO.output(self.pins[3], False)
+        self.pwm_a.ChangeDutyCycle(0)
+        self.pwm_b.ChangeDutyCycle(0)
+        
+    def cleanup(self):
+        self.stop()
+        GPIO.cleanup()

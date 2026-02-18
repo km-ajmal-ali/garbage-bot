@@ -57,4 +57,7 @@ if __name__ == "__main__":
     try:
         mission_control()
     except KeyboardInterrupt:
-        motors.stop()
+        motors.cleanup()
+        print("Mission Aborted.")
+    finally:
+        motors.cleanup()
