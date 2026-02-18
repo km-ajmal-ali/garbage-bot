@@ -35,5 +35,9 @@ class MotorControl:
         self.pwm_b.ChangeDutyCycle(0)
         
     def cleanup(self):
+        if GPIO.getmode() is None:
+            return
         self.stop()
+        self.pwm_a.stop()
+        self.pwm_b.stop()
         GPIO.cleanup()

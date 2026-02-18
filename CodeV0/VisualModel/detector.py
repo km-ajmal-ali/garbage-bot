@@ -13,7 +13,14 @@ class HailoDetector:
         try:
             import cv2
             self.cv2 = cv2
-            self.cap = cv2.VideoCapture(0)
+            # Use V4L2 backend to avoid GStreamer memory issues and set low res immediately
+            self.cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
+            
+            # Force MJPG to reduce bandwidth/memory usage
+            self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
+            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+            
             self.qr_detector = cv2.QRCodeDetector()
         except ImportError:
             print("OpenCV not installed. Camera functions will fail.")
@@ -42,6 +49,7 @@ class HailoDetector:
 
         ret, frame = self.cap.read()
         if not ret:
+            print("Error: Failed to capture frame from camera")
             return []
 
         # Resize to 640x640 for consistent processing and display
