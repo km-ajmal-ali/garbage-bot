@@ -44,49 +44,60 @@ class HailoDetector:
         if not ret:
             return []
 
+        # Resize to 640x640 for consistent processing and display
+        frame = self.cv2.resize(frame, (640, 640))
+
         # 1. Detect QR Codes
         detections = []
         data, bbox, _ = self.qr_detector.detectAndDecode(frame)
         if data and bbox is not None:
             # bbox is usually [[x1,y1], [x2,y2], ...]
-            x, y, w, h = self.cv2.boundingRect(bbox)
-            detections.append({'label': 'qr', 'x': x + w//2, 'w': w})
+            # Convert to int for drawing
+            if bbox is not None:
+                bbox_ints = bbox.astype(int)
+                x, y, w, h = self.cv2.boundingRect(bbox_ints)
+                detections.append({'label': 'qr', 'x': x + w//2, 'w': w})
+                
+                # Draw QR Box
+                self.cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                self.cv2.putText(frame, f"QR: {data}", (x, y-10), self.cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
         # 2. Detect Waste (YOLO)
         raw_output = self.detect(frame)
-        # Parse YOLO output (Assuming shape [1, 5, 8400] for 1 class)
-        # This is a simplified parser. For robust use, NMS is needed.
+        
+        # Parse YOLO output
         for name, tensor in raw_output.items():
             # tensor shape (1, 5, 8400) -> 5 rows: x, y, w, h, conf
-            # We transpose to (8400, 5) to iterate
             preds = tensor[0].T 
             
             # Simple threshold filtering
             confidence_threshold = 0.5
-            start_idx = 4 # 0=x, 1=y, 2=w, 3=h, 4=conf (if 1 class)
-            
-            # Filter by confidence
-            # Note: This index logic assumes specific YOLO export format.
-            # If classes > 1, preds would be 4 + num_classes
+            start_idx = 4 
             
             # Check for high confidence detections
             high_conf = preds[preds[:, 4] > confidence_threshold]
             
             for det in high_conf:
                 x, y, w, h, conf = det[:5]
-                # Scale coordinates back to original frame size if needed
-                # (Training was 640, Camera usually 640x480 or 1080p)
-                # Here we assume resize in detect() aligns or we just return 640-scale coords
-                # main.py logic handles x < 300 (center of 640 is 320), so 640 scale is good.
+                
+                # Visualize
+                # YOLO output is usually center_x, center_y, w, h
+                x_tl = int(x - w / 2)
+                y_tl = int(y - h / 2)
+                w_px = int(w)
+                h_px = int(h)
+                
+                self.cv2.rectangle(frame, (x_tl, y_tl), (x_tl + w_px, y_tl + h_px), (0, 0, 255), 2)
+                self.cv2.putText(frame, f"Waste: {conf:.2f}", (x_tl, y_tl-10), self.cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
                 
                 detections.append({
                     'label': 'waste',
                     'x': int(x),
                     'w': int(w)
                 })
-                
-                # Limit to one detection for now to avoid noise flood without NMS
-                # Or keep reliable ones. 
-                break # Just return the strongest one per frame for simplicity
+        
+        # Show what the camera sees
+        self.cv2.imshow("WasteBot View", frame)
+        self.cv2.waitKey(1)
         
         return detections
