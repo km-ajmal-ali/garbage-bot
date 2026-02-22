@@ -29,6 +29,8 @@ from hailo_platform import (
     HailoStreamInterface,
     InferVStreams,
     ConfigureParams,
+    InputVStreamParams,
+    OutputVStreamParams,
     FormatType,
 )
 
@@ -122,6 +124,14 @@ class HailoYOLOv8:
         self.input_vstream_info = self.hef.get_input_vstream_infos()
         self.output_vstream_info = self.hef.get_output_vstream_infos()
 
+        # Create VStream params (required by InferVStreams API)
+        self.input_vstream_params = InputVStreamParams.make(
+            self.network_group, format_type=FormatType.UINT8
+        )
+        self.output_vstream_params = OutputVStreamParams.make(
+            self.network_group, format_type=FormatType.FLOAT32
+        )
+
         # Read model input shape (usually [640, 640, 3])
         self.input_shape = self.input_vstream_info[0].shape
         self.input_h = self.input_shape[0]
@@ -162,8 +172,8 @@ class HailoYOLOv8:
         }
 
         with InferVStreams(self.network_group,
-                          self.input_vstream_info,
-                          self.output_vstream_info) as pipeline:
+                          self.input_vstream_params,
+                          self.output_vstream_params) as pipeline:
             with self.network_group.activate():
                 results = pipeline.infer(input_data)
 
