@@ -226,30 +226,154 @@ def draw_hud(frame: np.ndarray, fps: float, num_detections: int) -> np.ndarray:
 
 
 # ===================================================================
+# Camera Initialisation (IMX219 CSI / USB webcam)
+# ===================================================================
+
+def _try_picamera2(width: int = 640, height: int = 480):
+    """
+    Attempt to open the camera via Picamera2 (native libcamera).
+    Returns a wrapper object with .read() / .release() / .isOpened()
+    matching the OpenCV VideoCapture interface.
+    """
+    try:
+        from picamera2 import Picamera2
+
+        class Picamera2Capture:
+            def __init__(self, w, h):
+                self.picam2 = Picamera2()
+                config = self.picam2.create_preview_configuration(
+                    main={"size": (w, h), "format": "BGR888"}
+                )
+                self.picam2.configure(config)
+                self.picam2.start()
+                # Warm-up frame
+                self.picam2.capture_array()
+                print(f"[INFO] Picamera2 opened ({w}x{h}).")
+
+            def read(self):
+                try:
+                    frame = self.picam2.capture_array()
+                    return True, frame
+                except Exception as e:
+                    print(f"[WARN] Picamera2 read error: {e}")
+                    return False, None
+
+            def release(self):
+                self.picam2.stop()
+                self.picam2.close()
+
+            def isOpened(self):
+                return True
+
+        return Picamera2Capture(width, height)
+
+    except ImportError:
+        print("[INFO] Picamera2 not installed – skipping.")
+    except Exception as e:
+        print(f"[WARN] Picamera2 init failed: {e}")
+    return None
+
+
+def _try_gstreamer_libcamera(width: int = 640, height: int = 480):
+    """
+    Attempt to open via a GStreamer pipeline using libcamerasrc.
+    Works on Raspberry Pi OS when GStreamer is built into OpenCV.
+    """
+    pipeline = (
+        f"libcamerasrc ! "
+        f"video/x-raw,width={width},height={height},framerate=30/1 ! "
+        f"videoconvert ! video/x-raw,format=BGR ! appsink"
+    )
+    try:
+        cap = cv2.VideoCapture(pipeline, cv2.CAP_GSTREAMER)
+        if cap.isOpened():
+            ret, _ = cap.read()
+            if ret:
+                print(f"[INFO] GStreamer libcamera pipeline opened ({width}x{height}).")
+                return cap
+            cap.release()
+    except Exception as e:
+        print(f"[WARN] GStreamer pipeline failed: {e}")
+    return None
+
+
+def _try_opencv_v4l2(camera_index: int = 0, width: int = 640, height: int = 480):
+    """
+    Attempt to open camera via OpenCV V4L2 / generic backend.
+    This is the standard fallback for USB webcams.
+    """
+    backends = [
+        (cv2.CAP_V4L2, "V4L2"),
+        (cv2.CAP_ANY,  "ANY"),
+    ]
+    for backend, name in backends:
+        cap = cv2.VideoCapture(camera_index, backend)
+        if not cap.isOpened():
+            continue
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+        ret, _ = cap.read()
+        if ret:
+            print(f"[INFO] OpenCV {name} backend opened index {camera_index} ({width}x{height}).")
+            return cap
+        cap.release()
+    return None
+
+
+def open_camera(camera_index: int = 0, width: int = 640, height: int = 480):
+    """
+    Try every available camera backend in priority order and return
+    the first one that works.
+
+    Priority:
+        1. Picamera2  (native CSI – IMX219, etc.)
+        2. GStreamer libcamera pipeline
+        3. OpenCV V4L2 / generic (USB webcams)
+
+    Returns:
+        An object with .read(), .release(), .isOpened() methods,
+        or None if nothing works.
+    """
+    print("[INFO] Probing camera backends...")
+
+    cap = _try_picamera2(width, height)
+    if cap:
+        return cap
+
+    cap = _try_gstreamer_libcamera(width, height)
+    if cap:
+        return cap
+
+    cap = _try_opencv_v4l2(camera_index, width, height)
+    if cap:
+        return cap
+
+    return None
+
+
+# ===================================================================
 # Real-time Test Loop
 # ===================================================================
 
 def run_realtime_test(camera_index: int = 0):
     """
-    Open a webcam feed, run YOLOv8m detection, and display the
-    annotated output in a window. Press 'q' to quit.
+    Open a camera feed (CSI or USB), run YOLOv8m detection, and
+    display the annotated output in a window. Press 'q' to quit.
 
     Args:
-        camera_index: Index of the camera device (default 0).
+        camera_index: Index of the camera device (used for USB fallback).
     """
     # Load model
     model = load_model()
 
-    # Open camera
-    cap = cv2.VideoCapture(camera_index)
-    if not cap.isOpened():
-        print("[ERROR] Could not open camera. Check your device index.")
+    # Open camera (auto-detect best backend)
+    cap = open_camera(camera_index, width=640, height=480)
+    if cap is None:
+        print("[ERROR] Could not open camera on any backend.")
+        print("        Ensure Picamera2 is installed:  pip install picamera2")
         return
 
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
-
-    print("[INFO] Camera opened. Press 'q' to quit.")
+    print("[INFO] Camera ready. Press 'q' to quit.")
     print("=" * 50)
 
     prev_time = time.time()
@@ -257,12 +381,13 @@ def run_realtime_test(camera_index: int = 0):
 
     window_name = "YOLOv8m - Bounding Box & Depth Test"
     cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
-    cv2.resizeWindow(window_name, 1280, 720)
+    cv2.resizeWindow(window_name, 960, 540)
 
     while True:
         ret, frame = cap.read()
         if not ret:
             print("[WARN] Failed to read frame. Retrying...")
+            time.sleep(0.1)  # small delay to avoid busy-loop
             continue
 
         # --- Detection ---
