@@ -39,7 +39,7 @@ from hailo_platform import (
 # Configuration
 # ---------------------------------------------------------------------------
 MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                          "..", "models", "yolov8m.hef")
+                          "..", "models", "yolo11n.hef")
 CONFIDENCE_THRESHOLD = 0.5
 INPUT_SIZE = 640  # YOLOv8 input resolution (640x640)
 
