@@ -1,34 +1,66 @@
 """
-Bounding Box & Depth Estimation Test Script
-=============================================
-Uses YOLOv8m model for real-time object detection.
-Calculates bounding boxes, estimated depth, and displays
-all metrics in a live window.
+Bounding Box & Depth Estimation Test Script (Hailo AI HAT+ Accelerated)
+========================================================================
+Uses YOLOv8m HEF model on the Hailo-8L AI HAT+ (26 TOPS) for
+real-time object detection at high FPS.
 
-Functions are written modularly so they can be imported
-and reused after testing.
+Calculates bounding boxes, estimated depth, and displays all metrics
+in a live window.
+
+Functions are written modularly so they can be imported and reused
+later after testing.
 
 Dependencies:
-    pip install ultralytics opencv-python numpy
+    - hailort  (system package: sudo apt install hailort)
+    - hailo_platform  (Python bindings, installed with hailort)
+    - opencv-python
+    - numpy
+    - picamera2  (for IMX219 CSI camera)
 """
 
 import cv2
 import numpy as np
-from ultralytics import YOLO
 import os
 import time
+
+from hailo_platform import (
+    HEF,
+    VDevice,
+    HailoStreamInterface,
+    InferVStreams,
+    ConfigureParams,
+    FormatType,
+)
 
 
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "Models", "yolov8m.pt")
+MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                          "..", "Models", "yolov8m.hef")
 CONFIDENCE_THRESHOLD = 0.5
-INPUT_SIZE = 640  # YOLO input resolution
+INPUT_SIZE = 640  # YOLOv8 input resolution (640x640)
+
+# COCO class names (80 classes) – YOLOv8m default
+COCO_CLASSES = [
+    "person", "bicycle", "car", "motorcycle", "airplane", "bus", "train",
+    "truck", "boat", "traffic light", "fire hydrant", "stop sign",
+    "parking meter", "bench", "bird", "cat", "dog", "horse", "sheep",
+    "cow", "elephant", "bear", "zebra", "giraffe", "backpack", "umbrella",
+    "handbag", "tie", "suitcase", "frisbee", "skis", "snowboard",
+    "sports ball", "kite", "baseball bat", "baseball glove", "skateboard",
+    "surfboard", "tennis racket", "bottle", "wine glass", "cup", "fork",
+    "knife", "spoon", "bowl", "banana", "apple", "sandwich", "orange",
+    "broccoli", "carrot", "hot dog", "pizza", "donut", "cake", "chair",
+    "couch", "potted plant", "bed", "dining table", "toilet", "tv",
+    "laptop", "mouse", "remote", "keyboard", "cell phone", "microwave",
+    "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase",
+    "scissors", "teddy bear", "hair drier", "toothbrush",
+]
 
 # Focal length (pixels) and known average object width (cm) for depth estimation.
 # These are rough defaults – calibrate with your actual camera for accuracy.
-FOCAL_LENGTH_PX = 600       # approximate focal length in pixels (typical webcam)
+FOCAL_LENGTH_PX = 600       # approximate focal length in pixels (IMX219)
 KNOWN_OBJECT_WIDTH_CM = 20  # assumed average real-world width of detected objects (cm)
 
 # Colour palette for different classes (BGR)
@@ -45,39 +77,246 @@ COLORS = [
 
 
 # ===================================================================
-# Core Functions (reusable)
+# Hailo Model Loader (reusable)
 # ===================================================================
 
-def load_model(model_path: str = MODEL_PATH) -> YOLO:
+class HailoYOLOv8:
     """
-    Load a YOLOv8 model from the given path.
-    If the .pt file doesn't exist locally it will be downloaded
-    automatically by ultralytics (e.g. 'yolov8m.pt').
+    Wrapper around the Hailo runtime to load a YOLOv8 HEF model
+    and run inference on the AI HAT+ accelerator.
+
+    The HEF is expected to include on-chip NMS post-processing
+    (compiled with `nms_postprocess(meta_arch=yolov8, ...)`).
+
+    Output format per class: [y_min, x_min, y_max, x_max, score]
+    with coordinates normalised to [0, 1].
+    """
+
+    def __init__(self, hef_path: str = MODEL_PATH):
+        """
+        Load the HEF onto the Hailo device and prepare the
+        inference pipeline.
+
+        Args:
+            hef_path: Path to the compiled .hef file.
+        """
+        if not os.path.isfile(hef_path):
+            raise FileNotFoundError(
+                f"HEF model not found at '{hef_path}'. "
+                f"Ensure yolov8m.hef is in the Models/ directory."
+            )
+
+        print(f"[INFO] Loading HEF: {hef_path}")
+        self.hef = HEF(hef_path)
+
+        # Open a virtual device (auto-discovers the Hailo chip)
+        self.vdevice = VDevice()
+
+        # Configure the network group on the device
+        configure_params = ConfigureParams.create_from_hef(
+            self.hef, interface=HailoStreamInterface.PCIe
+        )
+        self.network_group = self.vdevice.configure(self.hef, configure_params)[0]
+
+        # Get stream info for input / output
+        self.input_vstream_info = self.hef.get_input_vstream_infos()
+        self.output_vstream_info = self.hef.get_output_vstream_infos()
+
+        # Read model input shape (usually [640, 640, 3])
+        self.input_shape = self.input_vstream_info[0].shape
+        self.input_h = self.input_shape[0]
+        self.input_w = self.input_shape[1]
+
+        # Number of classes from the output info
+        self.num_classes = len(COCO_CLASSES)
+
+        print(f"[INFO] Hailo device ready. Input shape: {self.input_shape}")
+        print(f"[INFO] Output layers: {[o.name for o in self.output_vstream_info]}")
+
+    def preprocess(self, frame: np.ndarray) -> np.ndarray:
+        """
+        Resize and format the frame to match the model's expected input.
+
+        Args:
+            frame: BGR image (numpy array).
+
+        Returns:
+            Preprocessed image (uint8, HxWxC).
+        """
+        resized = cv2.resize(frame, (self.input_w, self.input_h))
+        return resized
+
+    def infer(self, preprocessed: np.ndarray) -> dict:
+        """
+        Run inference on the Hailo accelerator.
+
+        Args:
+            preprocessed: Pre-processed image matching input shape.
+
+        Returns:
+            Raw output dict from the Hailo device.
+        """
+        input_data = {
+            self.input_vstream_info[0].name:
+                np.expand_dims(preprocessed, axis=0)
+        }
+
+        with InferVStreams(self.network_group,
+                          self.input_vstream_info,
+                          self.output_vstream_info) as pipeline:
+            with self.network_group.activate():
+                results = pipeline.infer(input_data)
+
+        return results
+
+    def postprocess(self, raw_output: dict,
+                    orig_w: int, orig_h: int,
+                    conf_threshold: float = CONFIDENCE_THRESHOLD) -> list:
+        """
+        Parse the NMS-postprocessed output from the Hailo model
+        and return structured detection results.
+
+        The HEF with on-chip NMS produces output tensors where
+        detections are grouped by class. Each detection contains
+        [y_min, x_min, y_max, x_max, score] normalised to [0, 1].
+
+        Args:
+            raw_output:     Dict of output tensors from infer().
+            orig_w:         Original frame width (for rescaling boxes).
+            orig_h:         Original frame height (for rescaling boxes).
+            conf_threshold: Minimum score to keep a detection.
+
+        Returns:
+            List of detection dicts (same format as detect_objects).
+        """
+        detections = []
+
+        for layer_name, tensor in raw_output.items():
+            # tensor may be shape: (1, num_detections, 5) or
+            # (1, num_classes, max_detections, 5) or a list of arrays
+            # depending on HEF compile options.
+
+            data = np.array(tensor)
+
+            # Remove batch dimension
+            if data.ndim >= 2:
+                data = data[0]
+
+            # --- Handle NMS-postprocessed output (by class) ---
+            # Shape: (num_classes, max_detections_per_class, 5)
+            if data.ndim == 3:
+                num_classes = data.shape[0]
+                for class_id in range(num_classes):
+                    class_dets = data[class_id]
+                    for det in class_dets:
+                        score = det[4]
+                        if score < conf_threshold:
+                            continue
+
+                        y_min, x_min, y_max, x_max = det[0], det[1], det[2], det[3]
+
+                        # Scale normalised coords to original frame size
+                        x1 = int(x_min * orig_w)
+                        y1 = int(y_min * orig_h)
+                        x2 = int(x_max * orig_w)
+                        y2 = int(y_max * orig_h)
+
+                        # Clamp
+                        x1, y1 = max(0, x1), max(0, y1)
+                        x2, y2 = min(orig_w, x2), min(orig_h, y2)
+
+                        w = x2 - x1
+                        h = y2 - y1
+                        if w <= 0 or h <= 0:
+                            continue
+
+                        label = (COCO_CLASSES[class_id]
+                                 if class_id < len(COCO_CLASSES)
+                                 else f"class_{class_id}")
+
+                        detections.append({
+                            'label': label,
+                            'class_id': class_id,
+                            'confidence': float(score),
+                            'bbox': (x1, y1, x2, y2),
+                            'center': ((x1 + x2) // 2, (y1 + y2) // 2),
+                            'width_px': w,
+                            'height_px': h,
+                        })
+
+            # --- Handle raw YOLO output (no on-chip NMS) ---
+            # Shape: (num_proposals, 5+num_classes)  or  (5+C, num_proposals)
+            elif data.ndim == 2:
+                # If shape is (5+C, N) transpose to (N, 5+C)
+                if data.shape[0] < data.shape[1]:
+                    data = data.T
+
+                for row in data:
+                    if len(row) >= 5:
+                        # First check: raw format [cx, cy, w, h, conf, cls_scores...]
+                        if len(row) > 5:
+                            obj_conf = row[4]
+                            class_scores = row[5:]
+                            class_id = int(np.argmax(class_scores))
+                            score = obj_conf * class_scores[class_id]
+                        else:
+                            # [y_min, x_min, y_max, x_max, score]
+                            score = row[4]
+                            class_id = 0
+
+                        if score < conf_threshold:
+                            continue
+
+                        if len(row) > 5:
+                            # cx, cy, w, h format
+                            cx, cy, bw, bh = row[0], row[1], row[2], row[3]
+                            x1 = int((cx - bw / 2))
+                            y1 = int((cy - bh / 2))
+                            x2 = int((cx + bw / 2))
+                            y2 = int((cy + bh / 2))
+                        else:
+                            y_min, x_min, y_max, x_max = row[0], row[1], row[2], row[3]
+                            x1 = int(x_min * orig_w)
+                            y1 = int(y_min * orig_h)
+                            x2 = int(x_max * orig_w)
+                            y2 = int(y_max * orig_h)
+
+                        x1, y1 = max(0, x1), max(0, y1)
+                        x2, y2 = min(orig_w, x2), min(orig_h, y2)
+                        w = x2 - x1
+                        h = y2 - y1
+                        if w <= 0 or h <= 0:
+                            continue
+
+                        label = (COCO_CLASSES[class_id]
+                                 if class_id < len(COCO_CLASSES)
+                                 else f"class_{class_id}")
+
+                        detections.append({
+                            'label': label,
+                            'class_id': class_id,
+                            'confidence': float(score),
+                            'bbox': (x1, y1, x2, y2),
+                            'center': ((x1 + x2) // 2, (y1 + y2) // 2),
+                            'width_px': w,
+                            'height_px': h,
+                        })
+
+        return detections
+
+
+# ===================================================================
+# Standalone Detection Function (reusable)
+# ===================================================================
+
+def detect_objects(model: HailoYOLOv8, frame: np.ndarray,
+                   conf_threshold: float = CONFIDENCE_THRESHOLD) -> list:
+    """
+    Run YOLOv8 inference on the Hailo accelerator and return
+    structured detection results.
 
     Args:
-        model_path: Path to the YOLOv8 weights file (.pt).
-
-    Returns:
-        A YOLO model instance ready for inference.
-    """
-    if not os.path.isfile(model_path):
-        print(f"[INFO] Model not found at '{model_path}'. "
-              f"Falling back to auto-download of 'yolov8m.pt'...")
-        model_path = "yolov8m.pt"  # ultralytics will download it
-
-    model = YOLO(model_path)
-    print(f"[INFO] Model loaded: {model_path}")
-    return model
-
-
-def detect_objects(model: YOLO, frame: np.ndarray,
-                   conf_threshold: float = CONFIDENCE_THRESHOLD):
-    """
-    Run YOLOv8 inference on a single frame and return structured
-    detection results.
-
-    Args:
-        model:          YOLO model instance.
+        model:          HailoYOLOv8 instance.
         frame:          BGR image (numpy array).
         conf_threshold: Minimum confidence to keep a detection.
 
@@ -91,39 +330,16 @@ def detect_objects(model: YOLO, frame: np.ndarray,
             - 'width_px'   : bounding box width in pixels (int)
             - 'height_px'  : bounding box height in pixels (int)
     """
-    results = model.predict(
-        source=frame,
-        conf=conf_threshold,
-        imgsz=INPUT_SIZE,
-        verbose=False,
-    )
-
-    detections = []
-    for result in results:
-        boxes = result.boxes
-        for box in boxes:
-            x1, y1, x2, y2 = box.xyxy[0].cpu().numpy().astype(int)
-            conf = float(box.conf[0].cpu().numpy())
-            cls_id = int(box.cls[0].cpu().numpy())
-            label = model.names[cls_id]
-
-            cx = (x1 + x2) // 2
-            cy = (y1 + y2) // 2
-            w = x2 - x1
-            h = y2 - y1
-
-            detections.append({
-                'label': label,
-                'class_id': cls_id,
-                'confidence': conf,
-                'bbox': (x1, y1, x2, y2),
-                'center': (cx, cy),
-                'width_px': w,
-                'height_px': h,
-            })
-
+    orig_h, orig_w = frame.shape[:2]
+    preprocessed = model.preprocess(frame)
+    raw_output = model.infer(preprocessed)
+    detections = model.postprocess(raw_output, orig_w, orig_h, conf_threshold)
     return detections
 
+
+# ===================================================================
+# Depth Estimation (reusable)
+# ===================================================================
 
 def estimate_depth(bbox_width_px: int,
                    known_width_cm: float = KNOWN_OBJECT_WIDTH_CM,
@@ -139,14 +355,18 @@ def estimate_depth(bbox_width_px: int,
         focal_length_px: Focal length of camera in pixels.
 
     Returns:
-        Estimated depth in centimetres. Returns -1 if calculation is
-        not possible (zero-width box).
+        Estimated depth in centimetres. Returns -1 if calculation
+        is not possible (zero-width box).
     """
     if bbox_width_px <= 0:
         return -1.0
     depth_cm = (known_width_cm * focal_length_px) / bbox_width_px
     return round(depth_cm, 1)
 
+
+# ===================================================================
+# Drawing Functions (reusable)
+# ===================================================================
 
 def draw_bounding_boxes(frame: np.ndarray,
                         detections: list,
@@ -218,9 +438,9 @@ def draw_hud(frame: np.ndarray, fps: float, num_detections: int) -> np.ndarray:
     cv2.rectangle(overlay, (0, 0), (w, 40), (30, 30, 30), -1)
     cv2.addWeighted(overlay, 0.6, frame, 0.4, 0, frame)
 
-    info = f"FPS: {fps:.1f}  |  Objects: {num_detections}"
+    info = f"FPS: {fps:.1f}  |  Objects: {num_detections}  |  Hailo AI HAT+"
     cv2.putText(frame, info, (10, 28),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 200), 2, cv2.LINE_AA)
+                cv2.FONT_HERSHEY_SIMPLEX, 0.65, (0, 255, 200), 2, cv2.LINE_AA)
 
     return frame
 
@@ -357,16 +577,22 @@ def open_camera(camera_index: int = 0, width: int = 640, height: int = 480):
 
 def run_realtime_test(camera_index: int = 0):
     """
-    Open a camera feed (CSI or USB), run YOLOv8m detection, and
-    display the annotated output in a window. Press 'q' to quit.
+    Open a camera feed (CSI or USB), run YOLOv8m detection on the
+    Hailo AI HAT+, and display the annotated output in a window.
+
+    Press 'q' to quit.
 
     Args:
         camera_index: Index of the camera device (used for USB fallback).
     """
-    # Load model
-    model = load_model()
+    # -------------------------------------------
+    # 1. Load the Hailo model
+    # -------------------------------------------
+    model = HailoYOLOv8(MODEL_PATH)
 
-    # Open camera (auto-detect best backend)
+    # -------------------------------------------
+    # 2. Open camera (auto-detect best backend)
+    # -------------------------------------------
     cap = open_camera(camera_index, width=640, height=480)
     if cap is None:
         print("[ERROR] Could not open camera on any backend.")
@@ -374,12 +600,12 @@ def run_realtime_test(camera_index: int = 0):
         return
 
     print("[INFO] Camera ready. Press 'q' to quit.")
-    print("=" * 50)
+    print("=" * 60)
 
     prev_time = time.time()
     fps = 0.0
 
-    window_name = "YOLOv8m - Bounding Box & Depth Test"
+    window_name = "YOLOv8m - Bounding Box & Depth Test (Hailo)"
     cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
     cv2.resizeWindow(window_name, 960, 540)
 
@@ -387,10 +613,10 @@ def run_realtime_test(camera_index: int = 0):
         ret, frame = cap.read()
         if not ret:
             print("[WARN] Failed to read frame. Retrying...")
-            time.sleep(0.1)  # small delay to avoid busy-loop
+            time.sleep(0.1)
             continue
 
-        # --- Detection ---
+        # --- Detection on Hailo AI HAT+ ---
         detections = detect_objects(model, frame)
 
         # --- Draw bounding boxes + depth ---
@@ -407,7 +633,8 @@ def run_realtime_test(camera_index: int = 0):
         # --- Print detections to console (for debugging) ---
         if detections:
             for d in detections:
-                depth_str = f"{d.get('depth_cm', '?')}cm" if d.get('depth_cm', -1) > 0 else "N/A"
+                depth_str = (f"{d.get('depth_cm', '?')}cm"
+                             if d.get('depth_cm', -1) > 0 else "N/A")
                 print(f"  [{d['label']}] conf={d['confidence']:.2f}  "
                       f"bbox={d['bbox']}  depth≈{depth_str}")
 
