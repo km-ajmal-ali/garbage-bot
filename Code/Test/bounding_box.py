@@ -186,9 +186,10 @@ class HailoYOLOv8:
         Parse the NMS-postprocessed output from the Hailo model
         and return structured detection results.
 
-        The HEF with on-chip NMS produces output tensors where
-        detections are grouped by class. Each detection contains
-        [y_min, x_min, y_max, x_max, score] normalised to [0, 1].
+        The HEF with on-chip NMS produces output as:
+            tensor[batch][class_id] -> numpy array of shape (N, 5)
+        where N varies per class (inhomogeneous), and each row is:
+            [y_min, x_min, y_max, x_max, score]  (normalised 0–1)
 
         Args:
             raw_output:     Dict of output tensors from infer().
@@ -202,115 +203,66 @@ class HailoYOLOv8:
         detections = []
 
         for layer_name, tensor in raw_output.items():
-            # tensor may be shape: (1, num_detections, 5) or
-            # (1, num_classes, max_detections, 5) or a list of arrays
-            # depending on HEF compile options.
+            # NMS-postprocessed output: tensor shape is (1, num_classes, ...)
+            # where each class has a variable number of detections.
+            # We CANNOT do np.array(tensor) because it's inhomogeneous.
+            # Instead, iterate by class using Python indexing.
 
-            data = np.array(tensor)
+            # tensor[0] = first batch
+            batch = tensor[0]
+            num_classes = len(batch)
 
-            # Remove batch dimension
-            if data.ndim >= 2:
-                data = data[0]
+            for class_id in range(num_classes):
+                class_dets = batch[class_id]
 
-            # --- Handle NMS-postprocessed output (by class) ---
-            # Shape: (num_classes, max_detections_per_class, 5)
-            if data.ndim == 3:
-                num_classes = data.shape[0]
-                for class_id in range(num_classes):
-                    class_dets = data[class_id]
-                    for det in class_dets:
-                        score = det[4]
-                        if score < conf_threshold:
-                            continue
+                # class_dets is a numpy array of shape (N, 5)
+                # where N = number of detections for this class
+                if class_dets is None or len(class_dets) == 0:
+                    continue
 
-                        y_min, x_min, y_max, x_max = det[0], det[1], det[2], det[3]
+                class_dets = np.array(class_dets)
+                if class_dets.ndim == 1:
+                    # Single detection: reshape to (1, 5)
+                    class_dets = class_dets.reshape(1, -1)
 
-                        # Scale normalised coords to original frame size
-                        x1 = int(x_min * orig_w)
-                        y1 = int(y_min * orig_h)
-                        x2 = int(x_max * orig_w)
-                        y2 = int(y_max * orig_h)
+                for det in class_dets:
+                    if len(det) < 5:
+                        continue
 
-                        # Clamp
-                        x1, y1 = max(0, x1), max(0, y1)
-                        x2, y2 = min(orig_w, x2), min(orig_h, y2)
+                    score = float(det[4])
+                    if score < conf_threshold:
+                        continue
 
-                        w = x2 - x1
-                        h = y2 - y1
-                        if w <= 0 or h <= 0:
-                            continue
+                    y_min, x_min, y_max, x_max = det[0], det[1], det[2], det[3]
 
-                        label = (COCO_CLASSES[class_id]
-                                 if class_id < len(COCO_CLASSES)
-                                 else f"class_{class_id}")
+                    # Scale normalised coords to original frame size
+                    x1 = int(x_min * orig_w)
+                    y1 = int(y_min * orig_h)
+                    x2 = int(x_max * orig_w)
+                    y2 = int(y_max * orig_h)
 
-                        detections.append({
-                            'label': label,
-                            'class_id': class_id,
-                            'confidence': float(score),
-                            'bbox': (x1, y1, x2, y2),
-                            'center': ((x1 + x2) // 2, (y1 + y2) // 2),
-                            'width_px': w,
-                            'height_px': h,
-                        })
+                    # Clamp
+                    x1, y1 = max(0, x1), max(0, y1)
+                    x2, y2 = min(orig_w, x2), min(orig_h, y2)
 
-            # --- Handle raw YOLO output (no on-chip NMS) ---
-            # Shape: (num_proposals, 5+num_classes)  or  (5+C, num_proposals)
-            elif data.ndim == 2:
-                # If shape is (5+C, N) transpose to (N, 5+C)
-                if data.shape[0] < data.shape[1]:
-                    data = data.T
+                    w = x2 - x1
+                    h = y2 - y1
+                    if w <= 0 or h <= 0:
+                        continue
 
-                for row in data:
-                    if len(row) >= 5:
-                        # First check: raw format [cx, cy, w, h, conf, cls_scores...]
-                        if len(row) > 5:
-                            obj_conf = row[4]
-                            class_scores = row[5:]
-                            class_id = int(np.argmax(class_scores))
-                            score = obj_conf * class_scores[class_id]
-                        else:
-                            # [y_min, x_min, y_max, x_max, score]
-                            score = row[4]
-                            class_id = 0
+                    label = (COCO_CLASSES[class_id]
+                             if class_id < len(COCO_CLASSES)
+                             else f"class_{class_id}")
 
-                        if score < conf_threshold:
-                            continue
-
-                        if len(row) > 5:
-                            # cx, cy, w, h format
-                            cx, cy, bw, bh = row[0], row[1], row[2], row[3]
-                            x1 = int((cx - bw / 2))
-                            y1 = int((cy - bh / 2))
-                            x2 = int((cx + bw / 2))
-                            y2 = int((cy + bh / 2))
-                        else:
-                            y_min, x_min, y_max, x_max = row[0], row[1], row[2], row[3]
-                            x1 = int(x_min * orig_w)
-                            y1 = int(y_min * orig_h)
-                            x2 = int(x_max * orig_w)
-                            y2 = int(y_max * orig_h)
-
-                        x1, y1 = max(0, x1), max(0, y1)
-                        x2, y2 = min(orig_w, x2), min(orig_h, y2)
-                        w = x2 - x1
-                        h = y2 - y1
-                        if w <= 0 or h <= 0:
-                            continue
-
-                        label = (COCO_CLASSES[class_id]
-                                 if class_id < len(COCO_CLASSES)
-                                 else f"class_{class_id}")
-
-                        detections.append({
-                            'label': label,
-                            'class_id': class_id,
-                            'confidence': float(score),
-                            'bbox': (x1, y1, x2, y2),
-                            'center': ((x1 + x2) // 2, (y1 + y2) // 2),
-                            'width_px': w,
-                            'height_px': h,
-                        })
+                    detections.append({
+                        'label': label,
+                        'class_id': class_id,
+                        'confidence': score,
+                        'bbox': (x1, y1, x2, y2),
+                        'center': ((x1 + x2) // 2, (y1 + y2) // 2),
+                        'width_px': w,
+                        'height_px': h,
+                    })
 
         return detections
 
