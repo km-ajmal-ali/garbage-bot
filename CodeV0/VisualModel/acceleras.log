@@ -54,3 +54,11 @@
 2026-02-17 19:33:59,818 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
 2026-02-17 19:35:08,710 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
 2026-02-17 19:36:12,635 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-18 19:54:09,772 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-18 19:56:33,372 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-18 19:57:50,722 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-18 20:01:40,847 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-18 20:04:22,864 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-18 20:04:59,146 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-18 20:05:50,382 - INFO - __init__.py:28 - No GPU chosen and no suitable GPU found, falling back to CPU.
+2026-02-18 20:06:49,999 - INFO - activation_op.py:1813 - activation fitting started for yolov11n/reduce_sum_softmax1/act_op

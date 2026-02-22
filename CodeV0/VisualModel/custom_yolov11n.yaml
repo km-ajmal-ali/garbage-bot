@@ -1,0 +1,18 @@
+base:
+- yolov11n.yaml
+network:
+  network_name: yolov11n_custom
+paths:
+  network_path: ./model.onnx
+  url: 
+  metadata_path: 
+parser:
+  nodes:
+  - images
+  - /model.23/cv2.0/cv2.0.2/Conv
+  - /model.23/cv2.1/cv2.1.2/Conv
+  - /model.23/cv2.2/cv2.2.2/Conv
+postprocessing:
+  meta_arch: yolov8 # YOLO11 uses the same head structure as v8
+  device_pre_post_setting:
+    class_expectation: 2

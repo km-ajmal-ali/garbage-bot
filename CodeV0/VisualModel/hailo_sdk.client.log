@@ -935,3 +935,53 @@ Changing the values is possible using the nms_postprocess model script command.
 2026-02-17 19:47:33,976 - INFO - compiler_cli.py:86 - Compilation complete
 2026-02-17 19:47:34,170 - INFO - compiler_cli.py:91 - Saved HEF to: /workspace/yolo11n.hef
 2026-02-17 19:47:36,665 - INFO - client_runner.py:1881 - Saved HAR to: /workspace/yolo11n_compiled.har
+2026-02-18 19:58:00,723 - INFO - parser.py:158 - Translation started on ONNX model yolov11n
+2026-02-18 19:58:01,327 - INFO - parser.py:193 - Restored ONNX model yolov11n (completion time: 00:00:00.60)
+2026-02-18 19:58:01,719 - INFO - parser.py:216 - Extracted ONNXRuntime meta-data for Hailo model (completion time: 00:00:01.00)
+2026-02-18 19:58:02,805 - INFO - parser.py:366 - Start nodes mapped from original model: 'images': 'yolov11n/input_layer1'.
+2026-02-18 19:58:02,807 - INFO - parser.py:367 - End nodes mapped from original model: '/model.23/cv2.0/cv2.0.2/Conv', '/model.23/cv3.0/cv3.0.2/Conv', '/model.23/cv2.1/cv2.1.2/Conv', '/model.23/cv3.1/cv3.1.2/Conv', '/model.23/cv2.2/cv2.2.2/Conv', '/model.23/cv3.2/cv3.2.2/Conv'.
+2026-02-18 19:58:02,949 - INFO - parser.py:288 - Translation completed on ONNX model yolov11n (completion time: 00:00:02.23)
+2026-02-18 19:58:04,495 - INFO - client_runner.py:1881 - Saved HAR to: /workspace/yolov11n.har
+2026-02-18 20:01:45,819 - INFO - parser.py:158 - Translation started on ONNX model yolov11n
+2026-02-18 20:01:46,323 - INFO - parser.py:193 - Restored ONNX model yolov11n (completion time: 00:00:00.50)
+2026-02-18 20:01:46,618 - INFO - parser.py:216 - Extracted ONNXRuntime meta-data for Hailo model (completion time: 00:00:00.80)
+2026-02-18 20:01:47,577 - INFO - parser.py:366 - Start nodes mapped from original model: 'images': 'yolov11n/input_layer1'.
+2026-02-18 20:01:47,579 - INFO - parser.py:367 - End nodes mapped from original model: '/model.23/cv2.0/cv2.0.2/Conv', '/model.23/cv3.0/cv3.0.2/Conv', '/model.23/cv2.1/cv2.1.2/Conv', '/model.23/cv3.1/cv3.1.2/Conv', '/model.23/cv2.2/cv2.2.2/Conv', '/model.23/cv3.2/cv3.2.2/Conv'.
+2026-02-18 20:01:47,722 - INFO - parser.py:288 - Translation completed on ONNX model yolov11n (completion time: 00:00:01.90)
+2026-02-18 20:01:49,176 - INFO - client_runner.py:1881 - Saved HAR to: /workspace/yolov11n.har
+2026-02-18 20:01:50,028 - INFO - client_runner.py:501 - Loading model script commands to yolov11n from /local/workspace/hailo_model_zoo/hailo_model_zoo/cfg/alls/generic/yolov11n.alls
+2026-02-18 20:01:50,113 - INFO - client_runner.py:504 - Loading model script commands to yolov11n from string
+2026-02-18 20:01:51,440 - INFO - calib_set_generator.py:130 - Found model with 3 input channels, using real RGB images for calibration instead of sampling random data.
+2026-02-18 20:01:51,885 - IMPORTANT - sdk_backend.py:1133 - Starting Model Optimization
+2026-02-18 20:01:54,109 - WARNING - mo_config.py:168 - Reducing optimization level to 0 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024), and there's no available GPU
+2026-02-18 20:01:54,110 - WARNING - mo_config.py:233 - Running model optimization with zero level of optimization is not recommended for production use and might lead to suboptimal accuracy results
+2026-02-18 20:01:54,112 - INFO - mo_script_parser.py:91 - Model received quantization params from the hn
+2026-02-18 20:05:57,059 - INFO - calib_set_generator.py:130 - Found model with 3 input channels, using real RGB images for calibration instead of sampling random data.
+2026-02-18 20:05:57,587 - IMPORTANT - sdk_backend.py:1133 - Starting Model Optimization
+2026-02-18 20:05:57,956 - WARNING - mo_config.py:168 - Reducing optimization level to 0 (the accuracy won't be optimized and compression won't be used) because there's less data than the recommended amount (1024), and there's no available GPU
+2026-02-18 20:05:57,956 - WARNING - mo_config.py:233 - Running model optimization with zero level of optimization is not recommended for production use and might lead to suboptimal accuracy results
+2026-02-18 20:05:57,958 - INFO - mo_script_parser.py:91 - Model received quantization params from the hn
+2026-02-18 20:06:02,828 - INFO - algorithm_base.py:149 - MatmulDecompose skipped
+2026-02-18 20:06:03,014 - INFO - algorithm_base.py:152 - Starting Mixed Precision
+2026-02-18 20:06:04,072 - INFO - algorithm_base.py:168 - Model Optimization Algorithm Mixed Precision is done (completion time is 00:00:01.06)
+2026-02-18 20:06:04,468 - INFO - algorithm_base.py:149 - LayerNorm Decomposition skipped
+2026-02-18 20:06:05,670 - INFO - algorithm_base.py:152 - Starting Statistics Collector
+2026-02-18 20:06:05,674 - INFO - stats_collection.py:89 - Using dataset with 6 entries for calibration
+2026-02-18 20:06:45,080 - INFO - algorithm_base.py:168 - Model Optimization Algorithm Statistics Collector is done (completion time is 00:00:39.41)
+2026-02-18 20:06:47,033 - INFO - algorithm_base.py:152 - Starting Fix zp_comp Encoding
+2026-02-18 20:06:47,035 - INFO - algorithm_base.py:168 - Model Optimization Algorithm Fix zp_comp Encoding is done (completion time is 00:00:00.00)
+2026-02-18 20:06:47,036 - INFO - algorithm_base.py:152 - Starting Matmul Equalization
+2026-02-18 20:06:47,076 - INFO - algorithm_base.py:168 - Model Optimization Algorithm Matmul Equalization is done (completion time is 00:00:00.04)
+2026-02-18 20:06:47,077 - INFO - algorithm_base.py:152 - Starting MatmulDecomposeFix
+2026-02-18 20:06:47,077 - INFO - algorithm_base.py:168 - Model Optimization Algorithm MatmulDecomposeFix is done (completion time is 00:00:00.00)
+2026-02-18 20:07:34,954 - INFO - algorithm_base.py:149 - Finetune encoding skipped
+2026-02-18 20:07:34,961 - INFO - algorithm_base.py:149 - Bias Correction skipped
+2026-02-18 20:07:34,986 - INFO - algorithm_base.py:149 - Adaround skipped
+2026-02-18 20:07:35,008 - INFO - algorithm_base.py:149 - Quantization-Aware Fine-Tuning skipped
+2026-02-18 20:07:51,543 - INFO - algorithm_base.py:149 - Layer Noise Analysis skipped
+2026-02-18 20:08:05,870 - IMPORTANT - sdk_backend.py:1145 - Model Optimization is done
+2026-02-18 20:08:05,926 - INFO - hailo_tools_runner.py:510 - To achieve optimal performance, set the compiler_optimization_level to "max" by adding performance_param(compiler_optimization_level=max) to the model script. Note that this may increase compilation time.
+2026-02-18 21:29:54,024 - ERROR - hailo_tools_runner.py:582 - Failed to produce compiled graph
+2026-02-18 21:29:54,054 - ERROR - hailo_tools_runner.py:231 - BackendAllocatorException: Compilation failed: Resolver didn't find possible solution.
+Watchdog expired after 1h 0m 0s
+Mapping Failed (Timeout, allocation time: 1h 21m 33s)
