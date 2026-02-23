@@ -12,6 +12,9 @@ import numpy as np
 
 from test.bounding_box import draw_bounding_boxes, draw_hud
 from core.config import CAM_HEIGHT
+from core.logger import get_logger
+
+log = get_logger("display")
 
 
 class Display:
@@ -21,6 +24,7 @@ class Display:
         self.frame_count = 0
         self.fps = 0.0
         self._prev_time = time.time()
+        log.info("Display module initialised")
 
     def show(self, frame: np.ndarray, detections: list, state: str):
         """
@@ -40,6 +44,11 @@ class Display:
         # Smooth FPS with exponential moving average
         self.fps = 0.9 * self.fps + 0.1 * (1.0 / max(dt, 1e-6))
 
+        # Log FPS periodically (every 30 frames)
+        if self.frame_count % 30 == 0:
+            log.info("FPS: %.1f  |  total_frames: %d  |  state: %s",
+                     self.fps, self.frame_count, state)
+
         try:
             import cv2
 
@@ -54,5 +63,5 @@ class Display:
 
             cv2.imshow("WasteBot View", frame)
             cv2.waitKey(1)
-        except Exception:
-            pass  # headless / no display – silently skip
+        except Exception as e:
+            log.debug("Display error (headless?): %s", e)

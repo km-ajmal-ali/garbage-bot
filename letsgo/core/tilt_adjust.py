@@ -10,6 +10,9 @@ import time
 from core.config import MAX_TILT_DOWN, TILT_STEP, TILT_SETTLE, CAM_HEIGHT
 from core.states import STATE_COLLECT
 from core.detection import run_detection, pick_best_target
+from core.logger import get_logger
+
+log = get_logger("tilt")
 
 
 class TiltAdjuster:
@@ -20,6 +23,8 @@ class TiltAdjuster:
         self.camera     = camera
         self.tilt_servo = tilt_servo
         self.display    = display
+        log.info("TiltAdjuster initialised (max_down=%d°, step=%d°, settle=%.2fs)",
+                 MAX_TILT_DOWN, TILT_STEP, TILT_SETTLE)
 
     def execute(self, running_flag: callable) -> tuple[str, dict | None]:
         """
@@ -29,17 +34,22 @@ class TiltAdjuster:
         Returns:
             (next_state, last_target_detection_or_None)
         """
-        print("[TILT] Adjusting camera tilt to view nearby object …")
+        log.info("═══ TILT_ADJUST started ═══")
 
         tilt_angle = 0
         target = None
+        step_num = 0
 
         while tilt_angle >= MAX_TILT_DOWN and running_flag():
-            self.tilt_servo.servo.angle = tilt_angle   # direct set, skip 0.3s sleep
-            time.sleep(TILT_SETTLE)                    # short settle (0.10s)
+            step_num += 1
+            log.info("Tilt step %d: servo → %d°", step_num, tilt_angle)
+
+            self.tilt_servo.servo.angle = tilt_angle
+            time.sleep(TILT_SETTLE)
 
             ret, frame = self.camera.read()
             if not ret or frame is None:
+                log.warning("Camera read failed at tilt=%d°", tilt_angle)
                 tilt_angle += TILT_STEP
                 continue
 
@@ -49,13 +59,18 @@ class TiltAdjuster:
             target = pick_best_target(detections)
             if target:
                 cy_frac = target['center'][1] / CAM_HEIGHT
-                print(f"[TILT] tilt={tilt_angle}°  cy_frac={cy_frac:.2f}")
+                log.info("  target '%s' at tilt=%d°  cy_frac=%.2f  (want 0.30–0.70)",
+                         target['label'], tilt_angle, cy_frac)
 
                 if 0.3 <= cy_frac <= 0.7:
-                    print("[TILT] Object centred in frame → COLLECT.")
+                    log.info("✓ Object vertically centred (cy=%.2f) → COLLECT", cy_frac)
                     return STATE_COLLECT, target
+                else:
+                    log.debug("  object not centred (cy=%.2f) → tilting further", cy_frac)
+            else:
+                log.debug("  no target found at tilt=%d°", tilt_angle)
 
             tilt_angle += TILT_STEP
 
-        print("[TILT] Max tilt reached → COLLECT.")
+        log.warning("Max tilt (%d°) reached without centring → COLLECT anyway", MAX_TILT_DOWN)
         return STATE_COLLECT, target

@@ -9,6 +9,10 @@ import sys
 import os
 import numpy as np
 
+from core.logger import get_logger
+
+log = get_logger("detect")
+
 # Ensure the project root is importable
 SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if SCRIPT_DIR not in sys.path:
@@ -31,8 +35,10 @@ from core.config import MODEL_PATH, CONFIDENCE_THRESHOLD, CAM_WIDTH, CAM_HEIGHT
 
 def load_model(hef_path: str = MODEL_PATH) -> HailoYOLOv8:
     """Load the YOLOv8 HEF model onto the Hailo AI HAT+."""
-    print(f"[DETECT] Loading model: {hef_path}")
-    return HailoYOLOv8(hef_path)
+    log.info("Loading model: %s", hef_path)
+    model = HailoYOLOv8(hef_path)
+    log.info("Model loaded successfully. Input shape: %s", model.input_shape)
+    return model
 
 
 def init_camera(camera_index: int = 0,
@@ -45,8 +51,13 @@ def init_camera(camera_index: int = 0,
         Camera object with .read() / .release() / .isOpened(),
         or None on failure.
     """
-    print("[DETECT] Opening camera …")
-    return _open_camera(camera_index, width, height)
+    log.info("Opening camera (index=%d, %dx%d) …", camera_index, width, height)
+    cam = _open_camera(camera_index, width, height)
+    if cam:
+        log.info("Camera opened successfully")
+    else:
+        log.error("Failed to open camera on any backend!")
+    return cam
 
 
 # ───────────────────────────────────────────────────────────────────────────
@@ -61,7 +72,9 @@ def run_detection(model: HailoYOLOv8, frame: np.ndarray,
     Returns:
         List of detection dicts (see bounding_box.detect_objects).
     """
-    return _detect_objects(model, frame, conf)
+    detections = _detect_objects(model, frame, conf)
+    log.debug("Inference complete: %d detection(s) (conf≥%.2f)", len(detections), conf)
+    return detections
 
 
 def estimate_object_depth(bbox_width_px: int) -> float:
@@ -71,7 +84,9 @@ def estimate_object_depth(bbox_width_px: int) -> float:
     Returns:
         Depth in cm, or -1.0 if not calculable.
     """
-    return _estimate_depth(bbox_width_px)
+    depth = _estimate_depth(bbox_width_px)
+    log.debug("Depth estimate: bbox_w=%dpx → %.1f cm", bbox_width_px, depth)
+    return depth
 
 
 def pick_best_target(detections: list) -> dict | None:
@@ -91,4 +106,8 @@ def pick_best_target(detections: list) -> dict | None:
     if 'depth_cm' not in best:
         best['depth_cm'] = estimate_object_depth(best['width_px'])
 
+    area = best['width_px'] * best['height_px']
+    log.debug("Best target: '%s' conf=%.2f  bbox=%s  area=%dpx²  depth≈%.0fcm",
+              best['label'], best['confidence'], best['bbox'], area,
+              best.get('depth_cm', -1))
     return best

@@ -11,6 +11,8 @@ Hardware: Raspberry Pi 5 • Hailo AI HAT+ (26 TOPS)
 
 Usage:
     python3 main.py
+    python3 main.py --log=INFO      # less verbose
+    python3 main.py --log=DEBUG     # full diagnostic output (default)
 """
 
 import sys
@@ -21,6 +23,18 @@ import time
 # ── Ensure project root is on the path ────────────────────────────────────
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, SCRIPT_DIR)
+
+# ── Logging (must be set up BEFORE any other core imports) ────────────────
+from core.logger import setup_logging, get_logger
+
+# Parse --log=LEVEL from command line
+_log_level = "DEBUG"
+for arg in sys.argv[1:]:
+    if arg.startswith("--log="):
+        _log_level = arg.split("=", 1)[1].upper()
+setup_logging(level=_log_level)
+
+log = get_logger("main")
 
 # ── Core modules ──────────────────────────────────────────────────────────
 from core.config import MOTOR_PINS, PAN_SERVO_PIN, TILT_SERVO_PIN
@@ -55,9 +69,10 @@ class WasteBot:
     """
 
     def __init__(self):
-        print("=" * 60)
-        print("  WasteBot – Autonomous Garbage Collector")
-        print("=" * 60)
+        log.info("=" * 60)
+        log.info("  WasteBot – Autonomous Garbage Collector")
+        log.info("=" * 60)
+        log.info("Log level: %s", _log_level)
 
         # ── AI model ──────────────────────────────────────────────────
         self.model = load_model()
@@ -65,20 +80,22 @@ class WasteBot:
         # ── Camera ────────────────────────────────────────────────────
         self.camera = init_camera()
         if self.camera is None:
+            log.error("Could not open any camera backend!")
             raise RuntimeError("Could not open any camera backend.")
 
         # ── Motors ────────────────────────────────────────────────────
-        print("[INIT] Initialising motors …")
+        log.info("Initialising motors on pins %s", MOTOR_PINS)
         self.motors = MotorControl(MOTOR_PINS)
 
         # ── Servos (pan = X, tilt = Y) ───────────────────────────────
-        print("[INIT] Initialising pan servo (X-axis) …")
+        log.info("Initialising pan servo (X-axis) on GPIO %d", PAN_SERVO_PIN)
         self.pan_servo = CameraServo(pin=PAN_SERVO_PIN)
 
-        print("[INIT] Initialising tilt servo (Y-axis) …")
+        log.info("Initialising tilt servo (Y-axis) on GPIO %d", TILT_SERVO_PIN)
         self.tilt_servo = CameraServo(pin=TILT_SERVO_PIN)
 
         # Centre servos on startup
+        log.info("Centring both servos")
         self.pan_servo.center()
         self.tilt_servo.center()
 
@@ -103,22 +120,36 @@ class WasteBot:
         self.target  = None
         self.running = True
 
-        print("[INIT] WasteBot ready.  State → SCANNING\n")
+        log.info("WasteBot ready.  Initial state → %s\n", self.state)
 
     # ──────────────────────────────────────────────────────────────────
     # Graceful shutdown
     # ──────────────────────────────────────────────────────────────────
     def shutdown(self, signum=None, frame=None):
         """Stop all hardware and release resources."""
-        print("\n[SHUTDOWN] Cleaning up …")
+        log.info("SHUTDOWN signal received")
         self.running = False
+
+        log.info("Stopping motors")
         self.motors.stop()
+
+        log.info("Centring servos")
         self.pan_servo.center()
         self.tilt_servo.center()
         time.sleep(0.3)
+
+        log.info("Releasing camera")
         self.camera.release()
+
+        log.info("Cleaning up motor GPIO")
         self.motors.cleanup()
-        print("[SHUTDOWN] Done.")
+
+        # Close Hailo pipeline if model supports it
+        if hasattr(self.model, 'close'):
+            log.info("Closing Hailo inference pipeline")
+            self.model.close()
+
+        log.info("SHUTDOWN complete ✓")
 
     # ──────────────────────────────────────────────────────────────────
     # State-machine loop
@@ -131,10 +162,13 @@ class WasteBot:
         signal.signal(signal.SIGINT,  self.shutdown)
         signal.signal(signal.SIGTERM, self.shutdown)
 
-        print("🤖  WasteBot is awake!  Beginning scan …\n")
+        log.info("🤖  WasteBot is awake!  Beginning scan …\n")
 
         try:
+            loop_count = 0
             while self.running:
+                loop_count += 1
+                prev_state = self.state
 
                 # ── SCANNING ──────────────────────────────────────────
                 if self.state == STATE_SCANNING:
@@ -181,11 +215,16 @@ class WasteBot:
                         self.scanner.reset()
 
                 else:
-                    print(f"[ERROR] Unknown state '{self.state}' → resetting.")
+                    log.error("Unknown state '%s' → resetting to SCANNING", self.state)
                     self.state = STATE_SCANNING
 
+                # Log state transitions
+                if self.state != prev_state:
+                    log.info("━━━ STATE TRANSITION: %s → %s  (loop #%d) ━━━",
+                             prev_state, self.state, loop_count)
+
         except KeyboardInterrupt:
-            pass
+            log.info("KeyboardInterrupt received")
         finally:
             self.shutdown()
 

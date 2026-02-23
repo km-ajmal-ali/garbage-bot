@@ -10,6 +10,9 @@ import time
 from core.config import COLLECT_SPEED, DEPTH_COLLECT_DONE, MAX_LOST_COLLECT
 from core.states import STATE_SCANNING
 from core.detection import run_detection, pick_best_target, estimate_object_depth
+from core.logger import get_logger
+
+log = get_logger("collect")
 
 
 class Collector:
@@ -22,6 +25,8 @@ class Collector:
         self.pan_servo  = pan_servo
         self.tilt_servo = tilt_servo
         self.display    = display
+        log.info("Collector initialised (speed=%d%%, depth_done=%dcm, max_lost=%d)",
+                 COLLECT_SPEED, DEPTH_COLLECT_DONE, MAX_LOST_COLLECT)
 
     def execute(self, running_flag: callable) -> str:
         """
@@ -31,16 +36,20 @@ class Collector:
         Returns:
             Next state (always STATE_SCANNING).
         """
-        print("[COLLECT] Driving over object to collect …")
+        log.info("═══ COLLECT started ═══")
+        log.info("Driving FORWARD at %d%% speed", COLLECT_SPEED)
         self.motors.move("forward", COLLECT_SPEED)
 
         lost_count = 0
+        frame_num = 0
 
         while running_flag():
             ret, frame = self.camera.read()
             if not ret or frame is None:
+                log.warning("Camera read failed during collection")
                 continue
 
+            frame_num += 1
             detections = run_detection(self.model, frame)
             self.display.show(frame, detections, "COLLECT")
 
@@ -48,25 +57,29 @@ class Collector:
 
             if target is None:
                 lost_count += 1
+                log.debug("Frame %d: target lost (lost_count=%d/%d)",
+                          frame_num, lost_count, MAX_LOST_COLLECT)
                 if lost_count >= MAX_LOST_COLLECT:
-                    print("[COLLECT] Object no longer visible – collected!")
+                    log.info("✓ Object not visible for %d frames – COLLECTED!", lost_count)
                     break
                 continue
 
             lost_count = 0
             depth = estimate_object_depth(target['width_px'])
 
+            log.info("Frame %d: '%s' still visible  depth≈%.0fcm  (done at ≤%dcm)",
+                     frame_num, target['label'], depth, DEPTH_COLLECT_DONE)
+
             if 0 < depth <= DEPTH_COLLECT_DONE:
-                print(f"[COLLECT] Object very close ({depth:.0f} cm) – collected!")
+                log.info("✓ Object very close (%.0fcm ≤ %dcm) – COLLECTED!", depth, DEPTH_COLLECT_DONE)
                 break
 
-            # No sleep – camera.read() + inference naturally paces the loop
-
         # ── Reset hardware ────────────────────────────────────────────
+        log.info("Stopping motors and resetting servos to centre")
         self.motors.stop()
         self.tilt_servo.servo.angle = 0
         self.pan_servo.servo.angle = 0
         time.sleep(0.15)
 
-        print("[COLLECT] Done.  Returning to SCANNING.\n")
+        log.info("═══ COLLECT done (processed %d frames) → SCANNING ═══\n", frame_num)
         return STATE_SCANNING
