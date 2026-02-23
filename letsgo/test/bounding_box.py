@@ -140,8 +140,22 @@ class HailoYOLOv8:
         # Number of classes from the output info
         self.num_classes = len(COCO_CLASSES)
 
+        # ── Persistent pipeline (created ONCE, reused every frame) ────
+        # Creating InferVStreams + activating the network per-frame
+        # causes ~1.5-2 s overhead and kills FPS.  Keep them alive.
+        self._pipeline_ctx = InferVStreams(
+            self.network_group,
+            self.input_vstream_params,
+            self.output_vstream_params,
+        )
+        self.pipeline = self._pipeline_ctx.__enter__()
+
+        self._ng_ctx = self.network_group.activate()
+        self._ng_ctx.__enter__()
+
         print(f"[INFO] Hailo device ready. Input shape: {self.input_shape}")
         print(f"[INFO] Output layers: {[o.name for o in self.output_vstream_info]}")
+        print(f"[INFO] Persistent inference pipeline activated.")
 
     def preprocess(self, frame: np.ndarray) -> np.ndarray:
         """
@@ -158,7 +172,8 @@ class HailoYOLOv8:
 
     def infer(self, preprocessed: np.ndarray) -> dict:
         """
-        Run inference on the Hailo accelerator.
+        Run inference on the Hailo accelerator using the persistent
+        pipeline (no per-frame setup/teardown overhead).
 
         Args:
             preprocessed: Pre-processed image matching input shape.
@@ -170,14 +185,22 @@ class HailoYOLOv8:
             self.input_vstream_info[0].name:
                 np.expand_dims(preprocessed, axis=0)
         }
+        return self.pipeline.infer(input_data)
 
-        with InferVStreams(self.network_group,
-                          self.input_vstream_params,
-                          self.output_vstream_params) as pipeline:
-            with self.network_group.activate():
-                results = pipeline.infer(input_data)
-
-        return results
+    def close(self):
+        """
+        Tear down the persistent inference pipeline and release
+        the Hailo device.  Call this when you are done with the model.
+        """
+        try:
+            self._ng_ctx.__exit__(None, None, None)
+        except Exception:
+            pass
+        try:
+            self._pipeline_ctx.__exit__(None, None, None)
+        except Exception:
+            pass
+        print("[INFO] Hailo inference pipeline closed.")
 
     def postprocess(self, raw_output: dict,
                     orig_w: int, orig_h: int,
