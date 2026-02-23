@@ -1,0 +1,77 @@
+"""
+WasteBot Configuration
+======================
+All tunable constants for the robot live here.
+Edit this file to calibrate for your exact hardware setup.
+"""
+
+import os
+
+# ═══════════════════════════════════════════════════════════════════════════
+# PATHS
+# ═══════════════════════════════════════════════════════════════════════════
+PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MODEL_PATH  = os.path.join(PROJECT_DIR, "models", "yolov10s.hef")
+
+# ═══════════════════════════════════════════════════════════════════════════
+# GPIO PINS
+# ═══════════════════════════════════════════════════════════════════════════
+
+# Motor driver (L298N)  [IN1, IN2, IN3, IN4, EN_A, EN_B]
+MOTOR_PINS = [17, 27, 22, 23, 18, 24]
+
+# Servo GPIO pins
+PAN_SERVO_PIN  = 25   # X-axis (horizontal sweep)
+TILT_SERVO_PIN = 12   # Y-axis (vertical / look-up-down)
+
+# ═══════════════════════════════════════════════════════════════════════════
+# MOTOR SPEEDS  (PWM duty cycle 0-100)
+# ═══════════════════════════════════════════════════════════════════════════
+APPROACH_SPEED      = 40   # driving toward an object
+COLLECT_SPEED       = 30   # slow crawl over the object
+SEARCH_ROTATE_SPEED = 35   # in-place rotation during search
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SCANNING
+# ═══════════════════════════════════════════════════════════════════════════
+SCAN_POSITIONS = [-90, -60, -30, 0, 30, 60, 90]   # pan angles (degrees)
+SCAN_DWELL     = 0.6   # seconds at each scan position
+
+# ═══════════════════════════════════════════════════════════════════════════
+# DEPTH THRESHOLDS  (centimetres)
+# ═══════════════════════════════════════════════════════════════════════════
+DEPTH_APPROACH_STOP = 25   # stop approaching at this distance
+DEPTH_COLLECT_START = 20   # begin collect drive-over
+DEPTH_COLLECT_DONE  = 8    # object is under the chassis
+
+# ═══════════════════════════════════════════════════════════════════════════
+# ALIGNMENT TOLERANCES  (fraction of frame dimension, 0–1)
+# ═══════════════════════════════════════════════════════════════════════════
+CENTER_TOLERANCE_X = 0.12   # horizontal dead zone before steering
+CENTER_TOLERANCE_Y = 0.15   # vertical dead zone before tilt correction
+
+# ═══════════════════════════════════════════════════════════════════════════
+# TIMING
+# ═══════════════════════════════════════════════════════════════════════════
+ROTATE_STEP_TIME = 0.8     # seconds per search rotation step
+MAX_SEARCH_STEPS = 12      # rotations for a full circle
+FRAME_SKIP       = 2       # display every Nth frame
+
+# ═══════════════════════════════════════════════════════════════════════════
+# DETECTION
+# ═══════════════════════════════════════════════════════════════════════════
+CONFIDENCE_THRESHOLD = 0.5
+MAX_LOST_FRAMES      = 10   # lost frames before giving up during approach
+MAX_LOST_COLLECT     = 15   # lost frames before considering object collected
+
+# ═══════════════════════════════════════════════════════════════════════════
+# TILT
+# ═══════════════════════════════════════════════════════════════════════════
+MAX_TILT_DOWN  = -60   # maximum downward tilt angle (degrees)
+TILT_STEP      = -10   # tilt increment per adjustment step
+
+# ═══════════════════════════════════════════════════════════════════════════
+# CAMERA
+# ═══════════════════════════════════════════════════════════════════════════
+CAM_WIDTH  = 640
+CAM_HEIGHT = 480
