@@ -6,8 +6,9 @@ numpy>=1.24.0
 picamera2
 
 # ─── GPIO & Servo Control ───────────────────────────────────────
-RPi.GPIO
+# NOTE: RPi.GPIO is NOT compatible with Pi 5 (BCM2712 / RP1 chip)
 gpiozero
+lgpio
 pigpio
 
 # ─── Dataset / Model Download ───────────────────────────────────
