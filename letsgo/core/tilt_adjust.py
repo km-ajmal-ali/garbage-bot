@@ -7,7 +7,7 @@ the nearby object remains visible in the frame before collection.
 
 import time
 
-from core.config import MAX_TILT_DOWN, TILT_STEP, CAM_HEIGHT
+from core.config import MAX_TILT_DOWN, TILT_STEP, TILT_SETTLE, CAM_HEIGHT
 from core.states import STATE_COLLECT
 from core.detection import run_detection, pick_best_target
 
@@ -35,8 +35,8 @@ class TiltAdjuster:
         target = None
 
         while tilt_angle >= MAX_TILT_DOWN and running_flag():
-            self.tilt_servo.set_angle(tilt_angle)
-            time.sleep(0.3)
+            self.tilt_servo.servo.angle = tilt_angle   # direct set, skip 0.3s sleep
+            time.sleep(TILT_SETTLE)                    # short settle (0.10s)
 
             ret, frame = self.camera.read()
             if not ret or frame is None:

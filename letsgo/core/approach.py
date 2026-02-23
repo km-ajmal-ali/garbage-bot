@@ -12,6 +12,8 @@ from core.config import (
     CENTER_TOLERANCE_X,
     DEPTH_APPROACH_STOP,
     MAX_LOST_FRAMES,
+    STEER_PULSE_TIME,
+    DRIVE_PULSE_TIME,
     CAM_WIDTH,
 )
 from core.states import STATE_SCANNING, STATE_TILT_ADJUST
@@ -61,33 +63,34 @@ class Approacher:
 
             lost_count = 0
 
-            # ── Horizontal alignment ──────────────────────────────────
-            cx_frac  = target['center'][0] / CAM_WIDTH
-            offset_x = cx_frac - 0.5
-
-            if offset_x < -CENTER_TOLERANCE_X:
-                self.motors.move("left", APPROACH_SPEED)
-                time.sleep(0.15)
-                self.motors.stop()
-            elif offset_x > CENTER_TOLERANCE_X:
-                self.motors.move("right", APPROACH_SPEED)
-                time.sleep(0.15)
-                self.motors.stop()
-
-            # ── Depth check ───────────────────────────────────────────
+            # ── Depth check (do this first so we don't steer unnecessarily) ─
             depth = estimate_object_depth(target['width_px'])
             target['depth_cm'] = depth
-            print(f"[APPROACH] '{target['label']}'  depth≈{depth:.0f} cm  "
-                  f"offset_x={offset_x:+.2f}")
 
             if 0 < depth <= DEPTH_APPROACH_STOP:
                 print("[APPROACH] Close enough → TILT_ADJUST.")
                 self.motors.stop()
                 return STATE_TILT_ADJUST, target
 
-            # ── Drive forward ─────────────────────────────────────────
-            self.motors.move("forward", APPROACH_SPEED)
-            time.sleep(0.10)
+            # ── Horizontal alignment ──────────────────────────────────
+            cx_frac  = target['center'][0] / CAM_WIDTH
+            offset_x = cx_frac - 0.5
+
+            if offset_x < -CENTER_TOLERANCE_X:
+                self.motors.move("left", APPROACH_SPEED)
+                time.sleep(STEER_PULSE_TIME)
+                self.motors.stop()
+            elif offset_x > CENTER_TOLERANCE_X:
+                self.motors.move("right", APPROACH_SPEED)
+                time.sleep(STEER_PULSE_TIME)
+                self.motors.stop()
+            else:
+                # Aligned – drive forward
+                self.motors.move("forward", APPROACH_SPEED)
+                time.sleep(DRIVE_PULSE_TIME)
+
+            # No extra sleep – the next camera.read() + inference
+            # naturally paces the loop at ~15 FPS
 
         self.motors.stop()
         return STATE_SCANNING, target

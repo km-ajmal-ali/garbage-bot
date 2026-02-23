@@ -21,6 +21,7 @@ class Scanner:
         self.pan_servo = pan_servo
         self.display   = display
         self.scan_index = 0
+        self._last_angle = None
 
     def reset(self):
         """Restart the sweep from the first position."""
@@ -39,8 +40,12 @@ class Scanner:
             return STATE_SEARCH_ROTATE, None
 
         angle = SCAN_POSITIONS[self.scan_index]
-        self.pan_servo.set_angle(angle)
-        time.sleep(SCAN_DWELL)
+
+        # Only sleep if the servo actually needs to move
+        if angle != self._last_angle:
+            self.pan_servo.servo.angle = angle   # direct set, skip the 0.3s sleep in set_angle
+            self._last_angle = angle
+            time.sleep(SCAN_DWELL)               # short settle (0.15s)
 
         ret, frame = self.camera.read()
         if not ret or frame is None:

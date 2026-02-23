@@ -60,13 +60,13 @@ class Collector:
                 print(f"[COLLECT] Object very close ({depth:.0f} cm) – collected!")
                 break
 
-            time.sleep(0.05)
+            # No sleep – camera.read() + inference naturally paces the loop
 
         # ── Reset hardware ────────────────────────────────────────────
         self.motors.stop()
-        self.tilt_servo.center()
-        self.pan_servo.center()
-        time.sleep(0.3)
+        self.tilt_servo.servo.angle = 0
+        self.pan_servo.servo.angle = 0
+        time.sleep(0.15)
 
         print("[COLLECT] Done.  Returning to SCANNING.\n")
         return STATE_SCANNING

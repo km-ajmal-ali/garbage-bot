@@ -11,7 +11,7 @@ import time
 import numpy as np
 
 from test.bounding_box import draw_bounding_boxes, draw_hud
-from core.config import CAM_HEIGHT, FRAME_SKIP
+from core.config import CAM_HEIGHT
 
 
 class Display:
@@ -25,7 +25,7 @@ class Display:
     def show(self, frame: np.ndarray, detections: list, state: str):
         """
         Draw overlays and show the frame in an OpenCV window.
-        Only processes every FRAME_SKIP-th frame to reduce overhead.
+        Called every frame – no skipping.
 
         Args:
             frame:      BGR image (numpy array).
@@ -33,12 +33,12 @@ class Display:
             state:      Current FSM state string (shown on screen).
         """
         self.frame_count += 1
-        if self.frame_count % FRAME_SKIP != 0:
-            return
 
         now = time.time()
-        self.fps = 1.0 / max(now - self._prev_time, 1e-6)
+        dt = now - self._prev_time
         self._prev_time = now
+        # Smooth FPS with exponential moving average
+        self.fps = 0.9 * self.fps + 0.1 * (1.0 / max(dt, 1e-6))
 
         try:
             import cv2

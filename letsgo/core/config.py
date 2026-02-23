@@ -35,7 +35,7 @@ SEARCH_ROTATE_SPEED = 35   # in-place rotation during search
 # SCANNING
 # ═══════════════════════════════════════════════════════════════════════════
 SCAN_POSITIONS = [-90, -60, -30, 0, 30, 60, 90]   # pan angles (degrees)
-SCAN_DWELL     = 0.6   # seconds at each scan position
+SCAN_DWELL     = 0.15   # seconds to wait after servo move (just enough to settle)
 
 # ═══════════════════════════════════════════════════════════════════════════
 # DEPTH THRESHOLDS  (centimetres)
@@ -55,7 +55,8 @@ CENTER_TOLERANCE_Y = 0.15   # vertical dead zone before tilt correction
 # ═══════════════════════════════════════════════════════════════════════════
 ROTATE_STEP_TIME = 0.8     # seconds per search rotation step
 MAX_SEARCH_STEPS = 12      # rotations for a full circle
-FRAME_SKIP       = 2       # display every Nth frame
+STEER_PULSE_TIME = 0.05    # seconds for a steering correction pulse
+DRIVE_PULSE_TIME = 0.02    # seconds for a forward drive pulse
 
 # ═══════════════════════════════════════════════════════════════════════════
 # DETECTION
@@ -67,8 +68,9 @@ MAX_LOST_COLLECT     = 15   # lost frames before considering object collected
 # ═══════════════════════════════════════════════════════════════════════════
 # TILT
 # ═══════════════════════════════════════════════════════════════════════════
-MAX_TILT_DOWN  = -60   # maximum downward tilt angle (degrees)
-TILT_STEP      = -10   # tilt increment per adjustment step
+MAX_TILT_DOWN  = -60    # maximum downward tilt angle (degrees)
+TILT_STEP      = -10    # tilt increment per adjustment step
+TILT_SETTLE    = 0.10   # seconds to wait after tilt move
 
 # ═══════════════════════════════════════════════════════════════════════════
 # CAMERA
