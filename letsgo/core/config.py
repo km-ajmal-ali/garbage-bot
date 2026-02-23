@@ -35,7 +35,7 @@ SEARCH_ROTATE_SPEED = 35   # in-place rotation during search
 # SCANNING
 # ═══════════════════════════════════════════════════════════════════════════
 SCAN_POSITIONS = [-90, -60, -30, 0, 30, 60, 90]   # pan angles (degrees)
-SCAN_DWELL     = 0.15   # seconds to wait after servo move (just enough to settle)
+SCAN_DWELL     = 0.25   # seconds to wait after servo move (physical settle time)
 
 # ═══════════════════════════════════════════════════════════════════════════
 # DEPTH THRESHOLDS  (centimetres)

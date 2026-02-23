@@ -11,6 +11,15 @@ from core.config import SCAN_POSITIONS, SCAN_DWELL
 from core.states import STATE_APPROACH, STATE_SEARCH_ROTATE
 from core.detection import run_detection, pick_best_target
 
+# Number of stale frames to discard after moving the servo.
+# The CSI camera (Picamera2) buffers frames internally, so the first
+# frames after a servo move were actually captured BEFORE the move.
+BUFFER_FLUSH_FRAMES = 3
+
+# Number of detection attempts per scan position.
+# Taking multiple samples increases reliability.
+SAMPLES_PER_POSITION = 3
+
 
 class Scanner:
     """Controls the camera-pan scanning sweep."""
@@ -21,11 +30,18 @@ class Scanner:
         self.pan_servo = pan_servo
         self.display   = display
         self.scan_index = 0
-        self._last_angle = None
 
     def reset(self):
         """Restart the sweep from the first position."""
         self.scan_index = 0
+
+    def _flush_camera_buffer(self):
+        """
+        Discard stale buffered frames so the next read() returns
+        a frame captured AFTER the servo has finished moving.
+        """
+        for _ in range(BUFFER_FLUSH_FRAMES):
+            self.camera.read()
 
     def step(self, current_state: str) -> tuple[str, dict | None]:
         """
@@ -41,27 +57,32 @@ class Scanner:
 
         angle = SCAN_POSITIONS[self.scan_index]
 
-        # Only sleep if the servo actually needs to move
-        if angle != self._last_angle:
-            self.pan_servo.servo.angle = angle   # direct set, skip the 0.3s sleep in set_angle
-            self._last_angle = angle
-            time.sleep(SCAN_DWELL)               # short settle (0.15s)
+        # Move servo and let it settle
+        self.pan_servo.servo.angle = angle
+        time.sleep(SCAN_DWELL)
 
-        ret, frame = self.camera.read()
-        if not ret or frame is None:
-            self.scan_index += 1
-            return current_state, None
+        # Flush stale camera buffer frames from BEFORE the servo move
+        self._flush_camera_buffer()
 
-        detections = run_detection(self.model, frame)
-        self.display.show(frame, detections, current_state)
+        # Take multiple detection samples at this position
+        for attempt in range(SAMPLES_PER_POSITION):
+            ret, frame = self.camera.read()
+            if not ret or frame is None:
+                continue
 
-        if detections:
-            target = pick_best_target(detections)
-            if target:
-                depth = target.get('depth_cm', -1)
-                print(f"[SCAN] Object '{target['label']}' detected at "
-                      f"pan={angle}°  depth≈{depth:.0f} cm")
-                return STATE_APPROACH, target
+            detections = run_detection(self.model, frame)
+            self.display.show(frame, detections, current_state)
+
+            print(f"[SCAN] pan={angle}°  attempt={attempt+1}/{SAMPLES_PER_POSITION}  "
+                  f"detections={len(detections)}")
+
+            if detections:
+                target = pick_best_target(detections)
+                if target:
+                    depth = target.get('depth_cm', -1)
+                    print(f"[SCAN] ✓ Object '{target['label']}' detected at "
+                          f"pan={angle}°  depth≈{depth:.0f} cm")
+                    return STATE_APPROACH, target
 
         self.scan_index += 1
         return current_state, None
