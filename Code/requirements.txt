@@ -1,6 +1,20 @@
+# ─── Computer Vision & AI ────────────────────────────────────────
 opencv-python>=4.8.0
 numpy>=1.24.0
+
+# ─── Raspberry Pi Camera ────────────────────────────────────────
 picamera2
+
+# ─── GPIO & Servo Control ───────────────────────────────────────
+RPi.GPIO
+gpiozero
+pigpio
+
+# ─── Dataset / Model Download ───────────────────────────────────
 kagglehub
-# hailort is installed system-wide via: sudo apt install hailort
-# hailo_platform Python bindings come with hailort
+
+# ─── Hailo AI HAT+ (system packages, not pip-installable) ───────
+# Install via:  sudo apt install hailort
+# hailo_platform Python bindings are bundled with hailort
+# libhailort and the PCIe driver must also be installed:
+#   sudo apt install hailort-pcie-driver
