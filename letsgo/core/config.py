@@ -21,7 +21,7 @@ MODEL_PATH  = os.path.join(PROJECT_DIR, "models", "yolov10s.hef")
 MOTOR_PINS = [17, 27, 22, 23, 18, 24]
 
 # Servo GPIO pins
-PAN_SERVO_PIN  = 25   # X-axis (horizontal sweep)
+PAN_SERVO_PIN  = 13   # X-axis (horizontal sweep)
 TILT_SERVO_PIN = 12   # Y-axis (vertical / look-up-down)
 
 # ═══════════════════════════════════════════════════════════════════════════
