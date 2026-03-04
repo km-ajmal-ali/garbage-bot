@@ -18,7 +18,7 @@ MODEL_PATH  = os.path.join(PROJECT_DIR, "models", "yolov10s.hef")
 # ═══════════════════════════════════════════════════════════════════════════
 
 # Motor driver (L298N)  [IN1, IN2, IN3, IN4, EN_A, EN_B]
-MOTOR_PINS = [17, 27, 22, 23, 18, 24]
+MOTOR_PINS = [17, 27, 22, 23, 24, 25]
 
 # Servo GPIO pins
 PAN_SERVO_PIN  = 13   # X-axis (horizontal sweep)
