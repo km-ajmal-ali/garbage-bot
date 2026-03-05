@@ -181,6 +181,14 @@ class HailoYOLOv8:
         print(f"[INFO] Output layers: {[o.name for o in self.output_vstream_info]}")
         print(f"[INFO] Persistent inference pipeline activated.")
 
+        # Warm up the Hailo AI chip with a dummy inference.
+        # This prevents a massive power-surge from Hailo compiling
+        # its first pipeline concurrently with other hardware (like servos).
+        print(f"[INFO] Warming up Hailo AI model with dummy inference...")
+        dummy_input = np.zeros((1, self.input_h, self.input_w, 3), dtype=np.uint8)
+        self.pipeline.infer({self.input_vstream_info[0].name: dummy_input})
+        print(f"[INFO] AI warm-up complete.")
+
     def preprocess(self, frame: np.ndarray) -> np.ndarray:
         """
         Resize and format the frame to match the model's expected input.
