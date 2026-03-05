@@ -49,6 +49,8 @@ class Scanner:
         log.debug("Flushing %d stale camera buffer frames", BUFFER_FLUSH_FRAMES)
         for _ in range(BUFFER_FLUSH_FRAMES):
             self.camera.read()
+            
+        log.debug("[DEBUG-SCANNER] _flush_camera_buffer complete")
 
     def step(self, current_state: str) -> tuple[str, dict | None]:
         """
@@ -77,12 +79,17 @@ class Scanner:
 
         # Take multiple detection samples at this position
         for attempt in range(SAMPLES_PER_POSITION):
+            log.debug("[DEBUG-SCANNER] About to read attempt %d", attempt + 1)
             ret, frame = self.camera.read()
+            log.debug("[DEBUG-SCANNER] Read complete: ret=%s", ret)
+            
             if not ret or frame is None:
                 log.warning("Camera read failed at pan=%d°  attempt=%d", angle, attempt + 1)
                 continue
 
+            log.debug("[DEBUG-SCANNER] About to run_detection")
             detections = run_detection(self.model, frame)
+            log.debug("[DEBUG-SCANNER] run_detection complete")
             self.display.show(frame, detections, current_state)
 
             log.info("SCAN pan=%d°  sample=%d/%d  detections=%d",

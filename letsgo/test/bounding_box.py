@@ -202,7 +202,10 @@ class HailoYOLOv8:
             self.input_vstream_info[0].name:
                 np.expand_dims(preprocessed, axis=0)
         }
-        return self.pipeline.infer(input_data)
+        #print("[DEBUG-HAILO] About to start pipeline.infer(input_data)")
+        res = self.pipeline.infer(input_data)
+        #print("[DEBUG-HAILO] pipeline.infer(input_data) completed")
+        return res
 
     def close(self):
         """
@@ -474,7 +477,9 @@ def _try_picamera2(width: int = 640, height: int = 480):
 
             def read(self):
                 try:
+                    #print("[DEBUG-CAMERA] About to call picam2.capture_array()")
                     frame = self.picam2.capture_array()
+                    #print("[DEBUG-CAMERA] capture_array() returned")
                     return True, frame
                 except Exception as e:
                     print(f"[WARN] Picamera2 read error: {e}")
@@ -569,7 +574,9 @@ class ThreadedCamera:
     def _update(self):
         while self.running:
             try:
+                #print("[DEBUG-THREAD] Grabbing next frame...")
                 ret, frame = self.camera.read()
+                #print("[DEBUG-THREAD] Frame grabbed from hardware.")
             except Exception as e:
                 print(f"[WARN] ThreadedCamera read exception: {e}")
                 ret, frame = False, None
