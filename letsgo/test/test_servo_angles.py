@@ -28,22 +28,17 @@ def main():
         print("Invalid pin.")
         return
 
-    # Initialize servo with initial_angle=None so it doesn't jump to 0
-    print(f"Initializing servo on GPIO {pin} with initial_angle=None...")
-    servo = AngularServo(pin,
-                         min_angle=-90,
-                         max_angle=90,
-                         min_pulse_width=0.0005,
-                         max_pulse_width=0.0025,
-                         initial_angle=None)
+    from common.servos import CameraServo
     
-    print("Servo initialized. It will not move until you enter an angle.")
+    # Initialize using the CameraServo wrapper which has the jitter fix built-in
+    print(f"Initializing servo on GPIO {pin} (PWM will only be active during movement)...")
+    servo = CameraServo(pin)
+    
+    print("Servo ready. It will not move until you enter an angle.")
     
     while True:
         angle_str = input("Enter angle (-90 to 90) or 'q' to quit: ")
         if angle_str.lower() == 'q':
-            print("Turning off servo PWM...")
-            servo.detach()
             break
             
         try:
@@ -52,9 +47,8 @@ def main():
                 print("Angle out of range. Please enter a value between -90 and 90.")
                 continue
                 
-            servo.angle = angle
-            print(f"Servo set to {angle}°")
-            sleep(0.3)
+            servo.set_angle(angle)
+            print(f"Servo set to {angle}° and PWM turned off.")
         except ValueError:
             print("Invalid input. Please enter a number.")
             
