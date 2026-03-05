@@ -22,6 +22,7 @@ import cv2
 import numpy as np
 import os
 import time
+import threading
 
 from hailo_platform import (
     HEF,
@@ -541,10 +542,70 @@ def _try_opencv_v4l2(camera_index: int = 0, width: int = 640, height: int = 480)
     return None
 
 
+class ThreadedCamera:
+    """
+    Constantly reads frames from the camera in a background thread.
+    This prevents buffer exhaustion (which causes libcamera/picamera2 to hang)
+    when the main thread is busy doing inference or sleeping for servos.
+    """
+    def __init__(self, camera):
+        self.camera = camera
+        self.ret = False
+        self.frame = None
+        self.running = True
+        self.lock = threading.Lock()
+        self.last_update_time = time.time()
+        
+        # Read the first frame to ensure it's working
+        self.ret, self.frame = self.camera.read()
+        if self.ret:
+            self.last_update_time = time.time()
+        
+        # Start the background thread
+        self.thread = threading.Thread(target=self._update, daemon=True)
+        self.thread.start()
+        print("[INFO] ThreadedCamera background stream started.")
+
+    def _update(self):
+        while self.running:
+            try:
+                ret, frame = self.camera.read()
+            except Exception as e:
+                print(f"[WARN] ThreadedCamera read exception: {e}")
+                ret, frame = False, None
+                
+            with self.lock:
+                self.ret = ret
+                if ret and frame is not None:
+                    self.frame = frame
+                    self.last_update_time = time.time()
+            # Small sleep to yield CPU slightly, though read() is blocking.
+            time.sleep(0.001)
+
+    def read(self):
+        with self.lock:
+            # If we haven't received a new frame in 2 seconds, consider the stream dead/frozen
+            if time.time() - self.last_update_time > 2.0:
+                self.ret = False
+            
+            # Return a copy to avoid race conditions if the drawing thread modifies it
+            frame = self.frame.copy() if self.frame is not None else None
+            return self.ret, frame
+
+    def release(self):
+        self.running = False
+        self.thread.join(timeout=1.0)
+        self.camera.release()
+        print("[INFO] ThreadedCamera stream stopped.")
+
+    def isOpened(self):
+        return self.camera.isOpened()
+
+
 def open_camera(camera_index: int = 0, width: int = 640, height: int = 480):
     """
     Try every available camera backend in priority order and return
-    the first one that works.
+    the first one that works, wrapped in a ThreadedCamera to prevent hangs.
 
     Priority:
         1. Picamera2  (native CSI – IMX219, etc.)
@@ -552,23 +613,20 @@ def open_camera(camera_index: int = 0, width: int = 640, height: int = 480):
         3. OpenCV V4L2 / generic (USB webcams)
 
     Returns:
-        An object with .read(), .release(), .isOpened() methods,
+        A ThreadedCamera object with .read(), .release(), .isOpened() methods,
         or None if nothing works.
     """
     print("[INFO] Probing camera backends...")
 
     cap = _try_picamera2(width, height)
-    if cap:
-        return cap
+    if not cap:
+        cap = _try_gstreamer_libcamera(width, height)
+    if not cap:
+        cap = _try_opencv_v4l2(camera_index, width, height)
 
-    cap = _try_gstreamer_libcamera(width, height)
     if cap:
-        return cap
-
-    cap = _try_opencv_v4l2(camera_index, width, height)
-    if cap:
-        return cap
-
+        return ThreadedCamera(cap)
+        
     return None
 
 

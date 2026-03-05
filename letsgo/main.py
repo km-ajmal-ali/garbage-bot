@@ -127,6 +127,10 @@ class WasteBot:
     # ──────────────────────────────────────────────────────────────────
     def shutdown(self, signum=None, frame=None):
         """Stop all hardware and release resources."""
+        if getattr(self, '_shutdown_executed', False):
+            return
+        self._shutdown_executed = True
+
         log.info("SHUTDOWN signal received")
         self.running = False
 
@@ -159,8 +163,12 @@ class WasteBot:
         Main loop – dispatches to the active state handler.
         Press Ctrl-C to exit gracefully.
         """
-        signal.signal(signal.SIGINT,  self.shutdown)
-        signal.signal(signal.SIGTERM, self.shutdown)
+        def handle_sigterm(signum, frame):
+            log.info("SIGTERM received, raising KeyboardInterrupt")
+            raise KeyboardInterrupt
+
+        # By NOT overriding SIGINT, python natively raises KeyboardInterrupt on Ctrl+C!
+        signal.signal(signal.SIGTERM, handle_sigterm)
 
         log.info("🤖  WasteBot is awake!  Beginning scan …\n")
 
