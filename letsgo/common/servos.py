@@ -29,23 +29,28 @@ class CameraServo:
         """
         log.info("Init servo on GPIO %d  range=[%d°, %d°]", pin, min_angle, max_angle)
         self.pin = pin
-        self.servo = AngularServo(pin,
-                                  min_angle=min_angle,
-                                  max_angle=max_angle,
-                                  min_pulse_width=0.0005,
-                                  max_pulse_width=0.0025)
+        self.min_angle = min_angle
+        self.max_angle = max_angle
         self.current_angle = 0
-        self.servo.angle = self.current_angle
-        log.info("Servo GPIO %d initialised at 0°", pin)
+        log.info("Servo GPIO %d initialised (PWM off)", pin)
 
     def set_angle(self, angle):
         """Sets the servo to a specific angle (includes 0.3s settle sleep, then disables PWM to prevent jitter)."""
         if -90 <= angle <= 90:
-            self.servo.angle = angle
             self.current_angle = angle
             log.debug("Servo GPIO %d → %d°  (settling 0.3s)", self.pin, angle)
+            
+            # Instantiate the servo specifically to move it, then close it entirely.
+            # This completely releases the GPIO pin, perfectly mimicking the behavior
+            # of the Python script exiting, shutting down the PWM completely.
+            servo = AngularServo(self.pin,
+                                 min_angle=self.min_angle,
+                                 max_angle=self.max_angle,
+                                 min_pulse_width=0.0005,
+                                 max_pulse_width=0.0025,
+                                 initial_angle=angle)
             sleep(0.3)  # Give time for physical movement
-            self.servo.value = None  # Explicitly disable PWM signal to stop jittering
+            servo.close() # Free the pin and kill the signal
         else:
             log.warning("Servo GPIO %d: angle %d° out of range [-90, 90]", self.pin, angle)
 
