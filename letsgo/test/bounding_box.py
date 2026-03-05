@@ -24,6 +24,13 @@ import os
 import time
 import threading
 
+import sys
+SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, SCRIPT_DIR)
+from core.logger import get_logger
+log = get_logger("ha_test")
+
 from hailo_platform import (
     HEF,
     VDevice,
@@ -202,9 +209,9 @@ class HailoYOLOv8:
             self.input_vstream_info[0].name:
                 np.expand_dims(preprocessed, axis=0)
         }
-        #print("[DEBUG-HAILO] About to start pipeline.infer(input_data)")
+        log.debug("[DEBUG-HAILO] About to start pipeline.infer(input_data)")
         res = self.pipeline.infer(input_data)
-        #print("[DEBUG-HAILO] pipeline.infer(input_data) completed")
+        log.debug("[DEBUG-HAILO] pipeline.infer(input_data) completed")
         return res
 
     def close(self):
@@ -335,10 +342,14 @@ def detect_objects(model: HailoYOLOv8, frame: np.ndarray,
             - 'width_px'   : bounding box width in pixels (int)
             - 'height_px'  : bounding box height in pixels (int)
     """
+    log.debug("[DEBUG-DETECT] Starting preprocessing")
     orig_h, orig_w = frame.shape[:2]
     preprocessed = model.preprocess(frame)
+    log.debug("[DEBUG-DETECT] Preprocessing complete. Starting infer()")
     raw_output = model.infer(preprocessed)
+    log.debug("[DEBUG-DETECT] infer() complete. Starting postprocess()")
     detections = model.postprocess(raw_output, orig_w, orig_h, conf_threshold)
+    log.debug("[DEBUG-DETECT] postprocess() complete. Returning detections.")
     return detections
 
 

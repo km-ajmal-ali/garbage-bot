@@ -45,8 +45,7 @@ from core.states import (
     STATE_COLLECT,
     STATE_SEARCH_ROTATE,
 )
-from core.detection import load_model, init_camera, run_detection
-import numpy as np
+from core.detection import load_model, init_camera
 from core.display    import Display
 from core.scanner    import Scanner
 from core.approach   import Approacher
@@ -77,14 +76,6 @@ class WasteBot:
 
         # ── AI model ──────────────────────────────────────────────────
         self.model = load_model()
-
-        # Warm up the Hailo AI chip with a dummy inference.
-        # This prevents a massive power-surge from Hailo compiling
-        # its first pipeline concurrently with the servos moving.
-        log.info("Warming up Hailo AI model with dummy frame...")
-        dummy_frame = np.zeros((480, 640, 3), dtype=np.uint8)
-        run_detection(self.model, dummy_frame)
-        log.info("AI warm-up complete.")
 
         # ── Camera ────────────────────────────────────────────────────
         self.camera = init_camera()

@@ -67,15 +67,22 @@ class Scanner:
 
         angle = SCAN_POSITIONS[self.scan_index]
 
-        # Move servo and let it settle
+        # Move servo and let it settle by pumping camera frames
         log.info("SCAN step %d/%d → pan servo to %d°",
                  self.scan_index + 1, len(SCAN_POSITIONS), angle)
         self.pan_servo.servo.angle = angle
-        time.sleep(SCAN_DWELL)
-        log.debug("Servo settled after %.2fs dwell", SCAN_DWELL)
-
-        # Flush stale camera buffer frames from BEFORE the servo move
-        self._flush_camera_buffer()
+        
+        # ACTIVE WAIT: Instead of blocking with time.sleep(), we continuously 
+        # ingest camera frames to ensure no underlying driver buffers overload
+        # while the physical servo settles into position.
+        start_time = time.time()
+        flush_count = 0
+        while (time.time() - start_time) < SCAN_DWELL:
+            self.camera.read()
+            flush_count += 1
+            time.sleep(0.005)  # Let CPU breathe
+            
+        log.debug("Servo settled after %.2fs dwell. Pumped %d frames.", SCAN_DWELL, flush_count)
 
         # Take multiple detection samples at this position
         for attempt in range(SAMPLES_PER_POSITION):
