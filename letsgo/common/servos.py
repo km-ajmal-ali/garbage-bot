@@ -39,13 +39,13 @@ class CameraServo:
         log.info("Servo GPIO %d initialised at 0°", pin)
 
     def set_angle(self, angle):
-        """Sets the servo to a specific angle (includes 0.3s settle sleep, then detaches to prevent jitter)."""
+        """Sets the servo to a specific angle (includes 0.3s settle sleep, then disables PWM to prevent jitter)."""
         if -90 <= angle <= 90:
             self.servo.angle = angle
             self.current_angle = angle
             log.debug("Servo GPIO %d → %d°  (settling 0.3s)", self.pin, angle)
             sleep(0.3)  # Give time for physical movement
-            self.servo.detach()  # Turn off PWM signal to prevent jittering/buzzing
+            self.servo.value = None  # Explicitly disable PWM signal to stop jittering
         else:
             log.warning("Servo GPIO %d: angle %d° out of range [-90, 90]", self.pin, angle)
 
