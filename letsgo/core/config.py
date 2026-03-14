@@ -70,10 +70,11 @@ MAX_LOST_COLLECT     = 15   # lost frames before considering object collected
 PAN_MIN_ANGLE    = -90   # maximum left pan angle (degrees)
 PAN_MAX_ANGLE    =  90   # maximum right pan angle (degrees)
 PAN_CENTER_ANGLE =   0   # neutral / forward-facing angle (degrees)
+PAN_SCAN_STEP    =  10   # degrees per scan sweep increment
 
 # Auto-generate scan positions from the pan limits
-# Sweep from PAN_MIN_ANGLE to PAN_MAX_ANGLE in 30° steps
-SCAN_POSITIONS = list(range(PAN_MIN_ANGLE, PAN_MAX_ANGLE + 1, 30))
+# Sweep from PAN_MIN_ANGLE to PAN_MAX_ANGLE in PAN_SCAN_STEP° steps
+SCAN_POSITIONS = list(range(PAN_MIN_ANGLE, PAN_MAX_ANGLE + 1, PAN_SCAN_STEP))
 
 # ═══════════════════════════════════════════════════════════════════════════
 # TILT SERVO LIMITS  (Y-axis / vertical look up-down)
