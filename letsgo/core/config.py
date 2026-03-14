@@ -77,3 +77,9 @@ TILT_SETTLE    = 0.10   # seconds to wait after tilt move
 # ═══════════════════════════════════════════════════════════════════════════
 CAM_WIDTH  = 640
 CAM_HEIGHT = 480
+
+# ═══════════════════════════════════════════════════════════════════════════
+# HAILO INFERENCE
+# ═══════════════════════════════════════════════════════════════════════════
+INFER_TIMEOUT     = 10    # seconds to wait for a single inference call
+INFER_MAX_RETRIES = 2     # retry count before giving up on a frame

@@ -23,6 +23,7 @@ import numpy as np
 import os
 import time
 import threading
+import concurrent.futures
 
 import sys
 SCRIPT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -167,6 +168,29 @@ class HailoYOLOv8:
         # ── Persistent pipeline (created ONCE, reused every frame) ────
         # Creating InferVStreams + activating the network per-frame
         # causes ~1.5-2 s overhead and kills FPS.  Keep them alive.
+        self._open_pipeline()
+
+        print(f"[INFO] Hailo device ready. Input shape: {self.input_shape}")
+        print(f"[INFO] Output layers: {[o.name for o in self.output_vstream_info]}")
+        print(f"[INFO] Persistent inference pipeline activated.")
+
+        # Thread pool for timeout-protected inference
+        self._executor = concurrent.futures.ThreadPoolExecutor(
+            max_workers=1, thread_name_prefix="hailo-infer"
+        )
+
+        # Warm up the Hailo AI chip with a dummy inference.
+        # This prevents a massive power-surge from Hailo compiling
+        # its first pipeline concurrently with other hardware (like servos).
+        print(f"[INFO] Warming up Hailo AI model with dummy inference...")
+        dummy_input = np.zeros((1, self.input_h, self.input_w, 3), dtype=np.uint8)
+        self.pipeline.infer({self.input_vstream_info[0].name: dummy_input})
+        print(f"[INFO] AI warm-up complete.")
+
+    # ── Pipeline management ────────────────────────────────────────────
+
+    def _open_pipeline(self):
+        """Create (or re-create) the persistent inference pipeline."""
         self._pipeline_ctx = InferVStreams(
             self.network_group,
             self.input_vstream_params,
@@ -176,18 +200,32 @@ class HailoYOLOv8:
 
         self._ng_ctx = self.network_group.activate()
         self._ng_ctx.__enter__()
+        log.debug("[HAILO] Pipeline opened / re-opened.")
 
-        print(f"[INFO] Hailo device ready. Input shape: {self.input_shape}")
-        print(f"[INFO] Output layers: {[o.name for o in self.output_vstream_info]}")
-        print(f"[INFO] Persistent inference pipeline activated.")
+    def _close_pipeline(self):
+        """Tear down the inference pipeline (safe to call multiple times)."""
+        for ctx in ("_ng_ctx", "_pipeline_ctx"):
+            try:
+                getattr(self, ctx).__exit__(None, None, None)
+            except Exception:
+                pass
+        log.debug("[HAILO] Pipeline closed.")
 
-        # Warm up the Hailo AI chip with a dummy inference.
-        # This prevents a massive power-surge from Hailo compiling
-        # its first pipeline concurrently with other hardware (like servos).
-        print(f"[INFO] Warming up Hailo AI model with dummy inference...")
-        dummy_input = np.zeros((1, self.input_h, self.input_w, 3), dtype=np.uint8)
-        self.pipeline.infer({self.input_vstream_info[0].name: dummy_input})
-        print(f"[INFO] AI warm-up complete.")
+    def _reset_pipeline(self):
+        """
+        Close and re-open the pipeline.  Used to recover after a
+        deadlocked infer() call.
+        """
+        log.warning("[HAILO] Resetting inference pipeline after timeout …")
+        self._close_pipeline()
+        time.sleep(0.5)          # let the Hailo device settle
+        self._open_pipeline()
+        # Re-warm with dummy frame
+        dummy = np.zeros((1, self.input_h, self.input_w, 3), dtype=np.uint8)
+        self.pipeline.infer({self.input_vstream_info[0].name: dummy})
+        log.info("[HAILO] Pipeline reset complete.")
+
+    # ── Preprocessing ──────────────────────────────────────────────────
 
     def preprocess(self, frame: np.ndarray) -> np.ndarray:
         """
@@ -202,39 +240,73 @@ class HailoYOLOv8:
         resized = cv2.resize(frame, (self.input_w, self.input_h))
         return resized
 
-    def infer(self, preprocessed: np.ndarray) -> dict:
+    # ── Inference (timeout-protected) ──────────────────────────────────
+
+    def infer(self, preprocessed: np.ndarray,
+              timeout: float = 10.0, max_retries: int = 2) -> dict:
         """
-        Run inference on the Hailo accelerator using the persistent
-        pipeline (no per-frame setup/teardown overhead).
+        Run inference on the Hailo accelerator with **timeout protection**.
+
+        If ``pipeline.infer()`` does not return within *timeout* seconds
+        the pipeline is automatically torn down, recreated, and the
+        inference is retried (up to *max_retries* times).
 
         Args:
             preprocessed: Pre-processed image matching input shape.
+            timeout:      Seconds to wait before declaring a deadlock.
+            max_retries:  Number of retries after a timeout.
 
         Returns:
             Raw output dict from the Hailo device.
+
+        Raises:
+            RuntimeError: If inference fails after all retries.
         """
         input_data = {
             self.input_vstream_info[0].name:
                 np.expand_dims(preprocessed, axis=0)
         }
-        log.debug("[DEBUG-HAILO] About to start pipeline.infer(input_data)")
-        res = self.pipeline.infer(input_data)
-        log.debug("[DEBUG-HAILO] pipeline.infer(input_data) completed")
-        return res
+
+        for attempt in range(1 + max_retries):
+            log.debug("[HAILO] infer() attempt %d/%d",
+                      attempt + 1, 1 + max_retries)
+            future = self._executor.submit(self.pipeline.infer, input_data)
+            try:
+                res = future.result(timeout=timeout)
+                log.debug("[HAILO] pipeline.infer() completed")
+                return res
+            except concurrent.futures.TimeoutError:
+                log.warning(
+                    "[HAILO] pipeline.infer() TIMED OUT after %.1fs "
+                    "(attempt %d/%d)",
+                    timeout, attempt + 1, 1 + max_retries,
+                )
+                # The stuck thread cannot be killed, but we can
+                # recreate the pipeline so the NEXT call works.
+                # We also need a fresh executor because the old
+                # worker is still blocked.
+                self._executor.shutdown(wait=False)
+                self._executor = concurrent.futures.ThreadPoolExecutor(
+                    max_workers=1, thread_name_prefix="hailo-infer"
+                )
+                self._reset_pipeline()
+
+        raise RuntimeError(
+            f"Hailo inference failed after {1 + max_retries} attempts "
+            f"(timeout={timeout}s each)"
+        )
 
     def close(self):
         """
         Tear down the persistent inference pipeline and release
         the Hailo device.  Call this when you are done with the model.
         """
+        # Shut down the thread pool
         try:
-            self._ng_ctx.__exit__(None, None, None)
+            self._executor.shutdown(wait=False)
         except Exception:
             pass
-        try:
-            self._pipeline_ctx.__exit__(None, None, None)
-        except Exception:
-            pass
+        self._close_pipeline()
         print("[INFO] Hailo inference pipeline closed.")
 
     def postprocess(self, raw_output: dict,
@@ -350,14 +422,18 @@ def detect_objects(model: HailoYOLOv8, frame: np.ndarray,
             - 'width_px'   : bounding box width in pixels (int)
             - 'height_px'  : bounding box height in pixels (int)
     """
-    log.debug("[DEBUG-DETECT] Starting preprocessing")
+    log.debug("[DETECT] Starting preprocessing")
     orig_h, orig_w = frame.shape[:2]
     preprocessed = model.preprocess(frame)
-    log.debug("[DEBUG-DETECT] Preprocessing complete. Starting infer()")
-    raw_output = model.infer(preprocessed)
-    log.debug("[DEBUG-DETECT] infer() complete. Starting postprocess()")
+    log.debug("[DETECT] Preprocessing complete. Starting infer()")
+    try:
+        raw_output = model.infer(preprocessed)
+    except RuntimeError as exc:
+        log.error("[DETECT] Inference failed: %s  → returning empty", exc)
+        return []
+    log.debug("[DETECT] infer() complete. Starting postprocess()")
     detections = model.postprocess(raw_output, orig_w, orig_h, conf_threshold)
-    log.debug("[DEBUG-DETECT] postprocess() complete. Returning detections.")
+    log.debug("[DETECT] postprocess() complete. %d detections.", len(detections))
     return detections
 
 
