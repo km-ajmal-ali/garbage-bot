@@ -1,7 +1,7 @@
 """
 Bounding Box & Depth Estimation Test Script (Hailo AI HAT+ Accelerated)
 ========================================================================
-Uses YOLOv8m HEF model on the Hailo-8L AI HAT+ (26 TOPS) for
+Uses YOLOv8m HEF model on the Hailo-8 AI HAT+ (26 TOPS) for
 real-time object detection at high FPS.
 
 Calculates bounding boxes, estimated depth, and displays all metrics
@@ -47,7 +47,7 @@ from hailo_platform import (
 # Configuration
 # ---------------------------------------------------------------------------
 MODEL_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                          "..", "models", "yolov10s.hef")
+                          "..", "models", "yolov8m.hef")
 CONFIDENCE_THRESHOLD = 0.5
 INPUT_SIZE = 640  # YOLOv8 input resolution (640x640)
 
