@@ -9,7 +9,7 @@ import time
 
 from core.config import TILT_MIN_ANGLE, TILT_CENTER_ANGLE, TILT_STEP, TILT_SETTLE, CAM_HEIGHT
 from core.states import STATE_COLLECT
-from core.detection import run_detection, pick_best_target
+from core.detection import run_detection, pick_best_target, read_frame
 from core.logger import get_logger
 
 log = get_logger("tilt")
@@ -49,7 +49,7 @@ class TiltAdjuster:
             log.info("Tilt step %d: servo → %d°", step_num, tilt_angle)
             self.tilt_servo.move_and_detach(tilt_angle, settle=TILT_SETTLE)
 
-            ret, frame = self.camera.read()
+            ret, frame = read_frame(self.camera)
             if not ret or frame is None:
                 log.warning("Camera read failed at tilt=%d°", tilt_angle)
                 tilt_angle += TILT_STEP

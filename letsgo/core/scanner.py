@@ -9,7 +9,7 @@ import time
 
 from core.config import SCAN_POSITIONS, SCAN_DWELL
 from core.states import STATE_APPROACH, STATE_SEARCH_ROTATE
-from core.detection import run_detection, pick_best_target
+from core.detection import run_detection, pick_best_target, read_frame
 from core.logger import get_logger
 
 log = get_logger("scanner")
@@ -48,7 +48,7 @@ class Scanner:
         """
         log.debug("Flushing %d stale camera buffer frames", BUFFER_FLUSH_FRAMES)
         for _ in range(BUFFER_FLUSH_FRAMES):
-            self.camera.read()
+            read_frame(self.camera)
             
         log.debug("[DEBUG-SCANNER] _flush_camera_buffer complete")
 
@@ -81,7 +81,7 @@ class Scanner:
         # Take multiple detection samples at this position
         for attempt in range(SAMPLES_PER_POSITION):
             log.debug("[DEBUG-SCANNER] About to read attempt %d", attempt + 1)
-            ret, frame = self.camera.read()
+            ret, frame = read_frame(self.camera)
             log.debug("[DEBUG-SCANNER] Read complete: ret=%s", ret)
             
             if not ret or frame is None:

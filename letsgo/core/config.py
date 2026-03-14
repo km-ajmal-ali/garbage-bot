@@ -70,7 +70,7 @@ MAX_LOST_COLLECT     = 15   # lost frames before considering object collected
 PAN_MIN_ANGLE    = -90   # maximum left pan angle (degrees)
 PAN_MAX_ANGLE    =  90   # maximum right pan angle (degrees)
 PAN_CENTER_ANGLE =   0   # neutral / forward-facing angle (degrees)
-PAN_SCAN_STEP    =  10   # degrees per scan sweep increment
+PAN_SCAN_STEP    =  30   # degrees per scan sweep increment
 
 # Auto-generate scan positions from the pan limits
 # Sweep from PAN_MIN_ANGLE to PAN_MAX_ANGLE in PAN_SCAN_STEP° steps
@@ -81,13 +81,18 @@ SCAN_POSITIONS = list(range(PAN_MIN_ANGLE, PAN_MAX_ANGLE + 1, PAN_SCAN_STEP))
 # ═══════════════════════════════════════════════════════════════════════════
 TILT_MIN_ANGLE    = -30   # maximum downward tilt angle (degrees)
 TILT_MAX_ANGLE    =  60   # maximum upward tilt angle (degrees)
-TILT_CENTER_ANGLE = -10   # neutral / level angle (degrees)
+TILT_CENTER_ANGLE = -20   # neutral / level angle (degrees)
 TILT_STEP         = 10   # tilt increment per adjustment step
 TILT_SETTLE       = 0.10  # seconds to wait after tilt move
 
 # ═══════════════════════════════════════════════════════════════════════════
 # CAMERA
 # ═══════════════════════════════════════════════════════════════════════════
-CAM_WIDTH  = 640
-CAM_HEIGHT = 480
+CAM_WIDTH        = 640
+CAM_HEIGHT       = 480
+CAMERA_ROTATE_180 = True   # True if the camera is mounted upside-down
 
+# ═══════════════════════════════════════════════════════════════════════════
+# SERVO MECHANICAL STABILISE
+# ═══════════════════════════════════════════════════════════════════════════
+SERVO_STABILIZE_DELAY = 1.0   # seconds to wait after servo stops for mount vibration to settle

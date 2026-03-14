@@ -7,6 +7,7 @@ and provides higher-level helpers for the state machine.
 
 import sys
 import os
+import cv2
 import numpy as np
 
 from core.logger import get_logger
@@ -26,7 +27,7 @@ from test.bounding_box import (
     FOCAL_LENGTH_PX,
     KNOWN_OBJECT_WIDTH_CM,
 )
-from core.config import MODEL_PATH, CONFIDENCE_THRESHOLD, CAM_WIDTH, CAM_HEIGHT
+from core.config import MODEL_PATH, CONFIDENCE_THRESHOLD, CAM_WIDTH, CAM_HEIGHT, CAMERA_ROTATE_180
 
 
 # ───────────────────────────────────────────────────────────────────────────
@@ -58,6 +59,20 @@ def init_camera(camera_index: int = 0,
     else:
         log.error("Failed to open camera on any backend!")
     return cam
+
+
+def read_frame(camera):
+    """
+    Read a frame from the camera, applying 180° rotation if the
+    camera is mounted upside-down (controlled by CAMERA_ROTATE_180).
+
+    Returns:
+        (ret, frame) – same contract as cv2.VideoCapture.read().
+    """
+    ret, frame = camera.read()
+    if ret and frame is not None and CAMERA_ROTATE_180:
+        frame = cv2.rotate(frame, cv2.ROTATE_180)
+    return ret, frame
 
 
 # ───────────────────────────────────────────────────────────────────────────

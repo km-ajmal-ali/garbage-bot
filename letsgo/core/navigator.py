@@ -9,7 +9,7 @@ import time
 
 from core.config import SEARCH_ROTATE_SPEED, ROTATE_STEP_TIME, MAX_SEARCH_STEPS
 from core.states import STATE_SCANNING, STATE_APPROACH
-from core.detection import run_detection, pick_best_target
+from core.detection import run_detection, pick_best_target, read_frame
 from core.logger import get_logger
 
 log = get_logger("navigate")
@@ -68,10 +68,10 @@ class Navigator:
         # Flush stale camera frames after chassis rotation
         log.debug("Flushing %d stale camera frames after rotation", BUFFER_FLUSH_FRAMES)
         for _ in range(BUFFER_FLUSH_FRAMES):
-            self.camera.read()
+            read_frame(self.camera)
 
         # Quick detection check after rotation
-        ret, frame = self.camera.read()
+        ret, frame = read_frame(self.camera)
         if ret and frame is not None:
             detections = run_detection(self.model, frame, camera=self.camera)
             self.display.show(frame, detections, "SEARCH_ROTATE")

@@ -17,7 +17,7 @@ from core.config import (
     CAM_WIDTH,
 )
 from core.states import STATE_SCANNING, STATE_TILT_ADJUST
-from core.detection import run_detection, pick_best_target, estimate_object_depth
+from core.detection import run_detection, pick_best_target, estimate_object_depth, read_frame
 from core.logger import get_logger
 
 log = get_logger("approach")
@@ -48,7 +48,7 @@ class Approacher:
         frame_num = 0
 
         while running_flag():
-            ret, frame = self.camera.read()
+            ret, frame = read_frame(self.camera)
             if not ret or frame is None:
                 log.warning("Camera read failed in approach loop")
                 continue

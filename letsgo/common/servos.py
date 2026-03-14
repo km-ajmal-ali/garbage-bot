@@ -78,18 +78,28 @@ class CameraServo:
         it prevents jitter/vibration by turning off the PWM signal
         once the servo has reached its target position.
 
+        After detach, waits an additional SERVO_STABILIZE_DELAY for
+        the mechanical mount vibration to die down before returning.
+
         Args:
             angle:  Target angle in degrees (will be clamped to limits).
             settle: Seconds to wait for the servo to physically settle
                     before detaching PWM.  Shorter = faster sweep,
                     longer = more reliable positioning.
         """
+        from core.config import SERVO_STABILIZE_DELAY
+
         angle = self.clamp_angle(angle)
         self.servo.angle = angle
         self.current_angle = angle
         sleep(settle)
         self.servo.detach()
         log.debug("Servo GPIO %d → %d°  (settled %.2fs, PWM off)", self.pin, angle, settle)
+
+        # Wait for mechanical vibration to stop
+        if SERVO_STABILIZE_DELAY > 0:
+            log.debug("Servo GPIO %d: stabilise wait %.2fs", self.pin, SERVO_STABILIZE_DELAY)
+            sleep(SERVO_STABILIZE_DELAY)
 
     def look_around(self):
         """
