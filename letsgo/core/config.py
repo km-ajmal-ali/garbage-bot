@@ -79,9 +79,9 @@ SCAN_POSITIONS = list(range(PAN_MIN_ANGLE, PAN_MAX_ANGLE + 1, PAN_SCAN_STEP))
 # ═══════════════════════════════════════════════════════════════════════════
 # TILT SERVO LIMITS  (Y-axis / vertical look up-down)
 # ═══════════════════════════════════════════════════════════════════════════
-TILT_MIN_ANGLE    = -30   # maximum downward tilt angle (degrees)
-TILT_MAX_ANGLE    =  60   # maximum upward tilt angle (degrees)
-TILT_CENTER_ANGLE = -20   # neutral / level angle (degrees)
+TILT_MIN_ANGLE    = 30   # maximum downward tilt angle (degrees)
+TILT_MAX_ANGLE    =  -20   # maximum upward tilt angle (degrees)
+TILT_CENTER_ANGLE = -10   # neutral / level angle (degrees)
 TILT_STEP         = 10   # tilt increment per adjustment step
 TILT_SETTLE       = 0.10  # seconds to wait after tilt move
 
