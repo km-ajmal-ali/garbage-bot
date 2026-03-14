@@ -65,14 +65,18 @@ def init_camera(camera_index: int = 0,
 # ───────────────────────────────────────────────────────────────────────────
 
 def run_detection(model: HailoYOLOv8, frame: np.ndarray,
-                  conf: float = CONFIDENCE_THRESHOLD) -> list:
+                  conf: float = CONFIDENCE_THRESHOLD,
+                  camera=None) -> list:
     """
     Run YOLO inference on a single frame via the Hailo accelerator.
+
+    Args:
+        camera: Optional ThreadedCamera – paused during inference.
 
     Returns:
         List of detection dicts (see bounding_box.detect_objects).
     """
-    detections = _detect_objects(model, frame, conf)
+    detections = _detect_objects(model, frame, conf, camera=camera)
     log.debug("Inference complete: %d detection(s) (conf≥%.2f)", len(detections), conf)
     return detections
 

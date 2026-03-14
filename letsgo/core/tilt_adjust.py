@@ -53,7 +53,7 @@ class TiltAdjuster:
                 tilt_angle += TILT_STEP
                 continue
 
-            detections = run_detection(self.model, frame)
+            detections = run_detection(self.model, frame, camera=self.camera)
             self.display.show(frame, detections, "TILT_ADJUST")
 
             target = pick_best_target(detections)

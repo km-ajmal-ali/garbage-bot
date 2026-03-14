@@ -95,7 +95,7 @@ class Scanner:
                 continue
 
             log.debug("[DEBUG-SCANNER] About to run_detection")
-            detections = run_detection(self.model, frame)
+            detections = run_detection(self.model, frame, camera=self.camera)
             log.debug("[DEBUG-SCANNER] run_detection complete")
             self.display.show(frame, detections, current_state)
 

@@ -73,7 +73,7 @@ class Navigator:
         # Quick detection check after rotation
         ret, frame = self.camera.read()
         if ret and frame is not None:
-            detections = run_detection(self.model, frame)
+            detections = run_detection(self.model, frame, camera=self.camera)
             self.display.show(frame, detections, "SEARCH_ROTATE")
 
             log.info("Post-rotation check: %d detection(s)", len(detections))

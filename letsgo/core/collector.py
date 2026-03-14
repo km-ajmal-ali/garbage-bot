@@ -50,7 +50,7 @@ class Collector:
                 continue
 
             frame_num += 1
-            detections = run_detection(self.model, frame)
+            detections = run_detection(self.model, frame, camera=self.camera)
             self.display.show(frame, detections, "COLLECT")
 
             target = pick_best_target(detections)
