@@ -11,6 +11,9 @@ gpiozero
 lgpio
 pigpio
 
+# ─── Google Gemini API ──────────────────────────────────────────
+google-genai>=1.0.0
+
 # ─── Dataset / Model Download ───────────────────────────────────
 kagglehub
 
