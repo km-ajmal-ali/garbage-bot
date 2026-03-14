@@ -7,7 +7,7 @@ the nearby object remains visible in the frame before collection.
 
 import time
 
-from core.config import MAX_TILT_DOWN, TILT_STEP, TILT_SETTLE, CAM_HEIGHT
+from core.config import TILT_MIN_ANGLE, TILT_CENTER_ANGLE, TILT_STEP, TILT_SETTLE, CAM_HEIGHT
 from core.states import STATE_COLLECT
 from core.detection import run_detection, pick_best_target
 from core.logger import get_logger
@@ -23,8 +23,8 @@ class TiltAdjuster:
         self.camera     = camera
         self.tilt_servo = tilt_servo
         self.display    = display
-        log.info("TiltAdjuster initialised (max_down=%d°, step=%d°, settle=%.2fs)",
-                 MAX_TILT_DOWN, TILT_STEP, TILT_SETTLE)
+        log.info("TiltAdjuster initialised (min=%d°, center=%d°, step=%d°, settle=%.2fs)",
+                 TILT_MIN_ANGLE, TILT_CENTER_ANGLE, TILT_STEP, TILT_SETTLE)
 
     def execute(self, running_flag: callable) -> tuple[str, dict | None]:
         """
@@ -36,14 +36,17 @@ class TiltAdjuster:
         """
         log.info("═══ TILT_ADJUST started ═══")
 
-        tilt_angle = 0
+        tilt_angle = TILT_CENTER_ANGLE
         target = None
         step_num = 0
 
-        while tilt_angle >= MAX_TILT_DOWN and running_flag():
+        while tilt_angle >= TILT_MIN_ANGLE and running_flag():
             step_num += 1
-            log.info("Tilt step %d: servo → %d°", step_num, tilt_angle)
 
+            # Clamp to configured tilt limits to prevent over-rotation
+            tilt_angle = self.tilt_servo.clamp_angle(tilt_angle)
+
+            log.info("Tilt step %d: servo → %d°", step_num, tilt_angle)
             self.tilt_servo.servo.angle = tilt_angle
             time.sleep(TILT_SETTLE)
 
@@ -72,5 +75,5 @@ class TiltAdjuster:
 
             tilt_angle += TILT_STEP
 
-        log.warning("Max tilt (%d°) reached without centring → COLLECT anyway", MAX_TILT_DOWN)
+        log.warning("Max tilt (%d°) reached without centring → COLLECT anyway", TILT_MIN_ANGLE)
         return STATE_COLLECT, target

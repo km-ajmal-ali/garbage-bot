@@ -37,7 +37,11 @@ setup_logging(level=_log_level)
 log = get_logger("main")
 
 # ── Core modules ──────────────────────────────────────────────────────────
-from core.config import MOTOR_PINS, PAN_SERVO_PIN, TILT_SERVO_PIN
+from core.config import (
+    MOTOR_PINS, PAN_SERVO_PIN, TILT_SERVO_PIN,
+    PAN_MIN_ANGLE, PAN_MAX_ANGLE, PAN_CENTER_ANGLE,
+    TILT_MIN_ANGLE, TILT_MAX_ANGLE, TILT_CENTER_ANGLE,
+)
 from core.states import (
     STATE_SCANNING,
     STATE_APPROACH,
@@ -88,11 +92,23 @@ class WasteBot:
         self.motors = MotorControl(MOTOR_PINS)
 
         # ── Servos (pan = X, tilt = Y) ───────────────────────────────
-        log.info("Initialising pan servo (X-axis) on GPIO %d", PAN_SERVO_PIN)
-        self.pan_servo = CameraServo(pin=PAN_SERVO_PIN)
+        log.info("Initialising pan servo (X-axis) on GPIO %d  limits=[%d°, %d°]  center=%d°",
+                 PAN_SERVO_PIN, PAN_MIN_ANGLE, PAN_MAX_ANGLE, PAN_CENTER_ANGLE)
+        self.pan_servo = CameraServo(
+            pin=PAN_SERVO_PIN,
+            min_limit=PAN_MIN_ANGLE,
+            max_limit=PAN_MAX_ANGLE,
+            center_angle=PAN_CENTER_ANGLE,
+        )
 
-        log.info("Initialising tilt servo (Y-axis) on GPIO %d", TILT_SERVO_PIN)
-        self.tilt_servo = CameraServo(pin=TILT_SERVO_PIN)
+        log.info("Initialising tilt servo (Y-axis) on GPIO %d  limits=[%d°, %d°]  center=%d°",
+                 TILT_SERVO_PIN, TILT_MIN_ANGLE, TILT_MAX_ANGLE, TILT_CENTER_ANGLE)
+        self.tilt_servo = CameraServo(
+            pin=TILT_SERVO_PIN,
+            min_limit=TILT_MIN_ANGLE,
+            max_limit=TILT_MAX_ANGLE,
+            center_angle=TILT_CENTER_ANGLE,
+        )
 
         # Centre servos on startup
         log.info("Centring both servos")

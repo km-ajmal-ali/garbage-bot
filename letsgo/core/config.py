@@ -34,7 +34,6 @@ SEARCH_ROTATE_SPEED = 70   # in-place rotation during search
 # ═══════════════════════════════════════════════════════════════════════════
 # SCANNING
 # ═══════════════════════════════════════════════════════════════════════════
-SCAN_POSITIONS = [-90, -60, -30, 0, 30, 60, 90]   # pan angles (degrees)
 SCAN_DWELL     = 0.25   # seconds to wait after servo move (physical settle time)
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -66,11 +65,24 @@ MAX_LOST_FRAMES      = 10   # lost frames before giving up during approach
 MAX_LOST_COLLECT     = 15   # lost frames before considering object collected
 
 # ═══════════════════════════════════════════════════════════════════════════
-# TILT
+# PAN SERVO LIMITS  (X-axis / horizontal sweep)
 # ═══════════════════════════════════════════════════════════════════════════
-MAX_TILT_DOWN  = -60    # maximum downward tilt angle (degrees)
-TILT_STEP      = -10    # tilt increment per adjustment step
-TILT_SETTLE    = 0.10   # seconds to wait after tilt move
+PAN_MIN_ANGLE    = -90   # maximum left pan angle (degrees)
+PAN_MAX_ANGLE    =  90   # maximum right pan angle (degrees)
+PAN_CENTER_ANGLE =   0   # neutral / forward-facing angle (degrees)
+
+# Auto-generate scan positions from the pan limits
+# Sweep from PAN_MIN_ANGLE to PAN_MAX_ANGLE in 30° steps
+SCAN_POSITIONS = list(range(PAN_MIN_ANGLE, PAN_MAX_ANGLE + 1, 30))
+
+# ═══════════════════════════════════════════════════════════════════════════
+# TILT SERVO LIMITS  (Y-axis / vertical look up-down)
+# ═══════════════════════════════════════════════════════════════════════════
+TILT_MIN_ANGLE    = -30   # maximum downward tilt angle (degrees)
+TILT_MAX_ANGLE    =  60   # maximum upward tilt angle (degrees)
+TILT_CENTER_ANGLE = -10   # neutral / level angle (degrees)
+TILT_STEP         = 10   # tilt increment per adjustment step
+TILT_SETTLE       = 0.10  # seconds to wait after tilt move
 
 # ═══════════════════════════════════════════════════════════════════════════
 # CAMERA

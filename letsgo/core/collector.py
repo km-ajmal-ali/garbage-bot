@@ -7,7 +7,10 @@ over the detected object so the passive collector picks it up.
 
 import time
 
-from core.config import COLLECT_SPEED, DEPTH_COLLECT_DONE, MAX_LOST_COLLECT
+from core.config import (
+    COLLECT_SPEED, DEPTH_COLLECT_DONE, MAX_LOST_COLLECT,
+    PAN_CENTER_ANGLE, TILT_CENTER_ANGLE,
+)
 from core.states import STATE_SCANNING
 from core.detection import run_detection, pick_best_target, estimate_object_depth
 from core.logger import get_logger
@@ -77,8 +80,8 @@ class Collector:
         # ── Reset hardware ────────────────────────────────────────────
         log.info("Stopping motors and resetting servos to centre")
         self.motors.stop()
-        self.tilt_servo.servo.angle = 0
-        self.pan_servo.servo.angle = 0
+        self.tilt_servo.servo.angle = TILT_CENTER_ANGLE
+        self.pan_servo.servo.angle = PAN_CENTER_ANGLE
         time.sleep(0.15)
 
         log.info("═══ COLLECT done (processed %d frames) → SCANNING ═══\n", frame_num)

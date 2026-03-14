@@ -67,6 +67,9 @@ class Scanner:
 
         angle = SCAN_POSITIONS[self.scan_index]
 
+        # Clamp to configured pan limits to prevent over-rotation
+        angle = self.pan_servo.clamp_angle(angle)
+
         # Move servo and let it settle by pumping camera frames
         log.info("SCAN step %d/%d → pan servo to %d°",
                  self.scan_index + 1, len(SCAN_POSITIONS), angle)
