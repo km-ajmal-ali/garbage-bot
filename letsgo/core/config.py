@@ -88,8 +88,8 @@ TILT_SETTLE       = 0.10  # seconds to wait after tilt move
 # ═══════════════════════════════════════════════════════════════════════════
 # CAMERA
 # ═══════════════════════════════════════════════════════════════════════════
-CAM_WIDTH        = 640
-CAM_HEIGHT       = 480
+CAM_WIDTH        = 800
+CAM_HEIGHT       = 800
 CAMERA_ROTATE_180 = True   # True if the camera is mounted upside-down
 
 # ═══════════════════════════════════════════════════════════════════════════
