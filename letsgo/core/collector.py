@@ -80,9 +80,8 @@ class Collector:
         # ── Reset hardware ────────────────────────────────────────────
         log.info("Stopping motors and resetting servos to centre")
         self.motors.stop()
-        self.tilt_servo.servo.angle = TILT_CENTER_ANGLE
-        self.pan_servo.servo.angle = PAN_CENTER_ANGLE
-        time.sleep(0.15)
+        self.tilt_servo.move_and_detach(TILT_CENTER_ANGLE, settle=0.15)
+        self.pan_servo.move_and_detach(PAN_CENTER_ANGLE, settle=0.15)
 
         log.info("═══ COLLECT done (processed %d frames) → SCANNING ═══\n", frame_num)
         return STATE_SCANNING

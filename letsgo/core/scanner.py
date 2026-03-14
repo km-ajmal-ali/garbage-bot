@@ -70,22 +70,13 @@ class Scanner:
         # Clamp to configured pan limits to prevent over-rotation
         angle = self.pan_servo.clamp_angle(angle)
 
-        # Move servo and let it settle by pumping camera frames
+        # Move servo, settle, and detach PWM to prevent jitter
         log.info("SCAN step %d/%d → pan servo to %d°",
                  self.scan_index + 1, len(SCAN_POSITIONS), angle)
-        self.pan_servo.servo.angle = angle
-        
-        # ACTIVE WAIT: Instead of blocking with time.sleep(), we continuously 
-        # ingest camera frames to ensure no underlying driver buffers overload
-        # while the physical servo settles into position.
-        start_time = time.time()
-        flush_count = 0
-        while (time.time() - start_time) < SCAN_DWELL:
-            self.camera.read()
-            flush_count += 1
-            time.sleep(0.005)  # Let CPU breathe
-            
-        log.debug("Servo settled after %.2fs dwell. Pumped %d frames.", SCAN_DWELL, flush_count)
+        self.pan_servo.move_and_detach(angle, settle=SCAN_DWELL)
+
+        # Flush stale camera frames captured before/during the servo move
+        self._flush_camera_buffer()
 
         # Take multiple detection samples at this position
         for attempt in range(SAMPLES_PER_POSITION):

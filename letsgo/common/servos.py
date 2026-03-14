@@ -70,6 +70,27 @@ class CameraServo:
         sleep(0.5)  # Give time for physical movement
         self.servo.detach()  # Turn off PWM signal to prevent jittering/buzzing
 
+    def move_and_detach(self, angle, settle=0.25):
+        """
+        Move to a clamped angle, wait for it to settle, then detach PWM.
+
+        Use this instead of writing to self.servo.angle directly —
+        it prevents jitter/vibration by turning off the PWM signal
+        once the servo has reached its target position.
+
+        Args:
+            angle:  Target angle in degrees (will be clamped to limits).
+            settle: Seconds to wait for the servo to physically settle
+                    before detaching PWM.  Shorter = faster sweep,
+                    longer = more reliable positioning.
+        """
+        angle = self.clamp_angle(angle)
+        self.servo.angle = angle
+        self.current_angle = angle
+        sleep(settle)
+        self.servo.detach()
+        log.debug("Servo GPIO %d → %d°  (settled %.2fs, PWM off)", self.pin, angle, settle)
+
     def look_around(self):
         """
         A routine for the robot to scan its environment.

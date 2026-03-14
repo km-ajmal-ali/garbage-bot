@@ -47,8 +47,7 @@ class TiltAdjuster:
             tilt_angle = self.tilt_servo.clamp_angle(tilt_angle)
 
             log.info("Tilt step %d: servo → %d°", step_num, tilt_angle)
-            self.tilt_servo.servo.angle = tilt_angle
-            time.sleep(TILT_SETTLE)
+            self.tilt_servo.move_and_detach(tilt_angle, settle=TILT_SETTLE)
 
             ret, frame = self.camera.read()
             if not ret or frame is None:
