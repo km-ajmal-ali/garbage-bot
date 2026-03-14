@@ -11,7 +11,7 @@ import os
 # PATHS
 # ═══════════════════════════════════════════════════════════════════════════
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MODEL_PATH  = os.path.join(PROJECT_DIR, "models", "yolov10s.hef")
+MODEL_PATH  = os.path.join(PROJECT_DIR, "models", "yolov8m.hef")
 
 # ═══════════════════════════════════════════════════════════════════════════
 # GPIO PINS
