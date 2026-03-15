@@ -65,6 +65,13 @@ MAX_LOST_FRAMES      = 10   # lost frames before giving up during approach
 MAX_LOST_COLLECT     = 15   # lost frames before considering object collected
 
 # ═══════════════════════════════════════════════════════════════════════════
+# CAMERA
+# ═══════════════════════════════════════════════════════════════════════════
+CAM_WIDTH        = 800
+CAM_HEIGHT       = 800
+CAMERA_ROTATE_180 = True   # True if the camera is mounted upside-down
+
+# ═══════════════════════════════════════════════════════════════════════════
 # PAN SERVO LIMITS  (X-axis / horizontal sweep)
 # ═══════════════════════════════════════════════════════════════════════════
 PAN_MIN_ANGLE    = -90   # maximum left pan angle (degrees)
@@ -91,12 +98,7 @@ TILT_CENTER_ANGLE = -10   # neutral / level angle (degrees)
 TILT_STEP         = 10   # tilt increment per adjustment step
 TILT_SETTLE       = 0.10  # seconds to wait after tilt move
 
-# ═══════════════════════════════════════════════════════════════════════════
-# CAMERA
-# ═══════════════════════════════════════════════════════════════════════════
-CAM_WIDTH        = 800
-CAM_HEIGHT       = 800
-CAMERA_ROTATE_180 = True   # True if the camera is mounted upside-down
+
 
 # ═══════════════════════════════════════════════════════════════════════════
 # SERVO MECHANICAL STABILISE
