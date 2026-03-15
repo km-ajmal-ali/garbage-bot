@@ -27,9 +27,9 @@ TILT_SERVO_PIN = 12   # Y-axis (vertical / look-up-down)
 # ═══════════════════════════════════════════════════════════════════════════
 # MOTOR SPEEDS  (PWM duty cycle 0-100)
 # ═══════════════════════════════════════════════════════════════════════════
-APPROACH_SPEED      = 70   # driving toward an object
-COLLECT_SPEED       = 70   # slow crawl over the object
-SEARCH_ROTATE_SPEED = 70   # in-place rotation during search
+APPROACH_SPEED      = 75   # driving toward an object
+COLLECT_SPEED       = 75   # slow crawl over the object
+SEARCH_ROTATE_SPEED = 75   # in-place rotation during search
 
 # ═══════════════════════════════════════════════════════════════════════════
 # SCANNING
