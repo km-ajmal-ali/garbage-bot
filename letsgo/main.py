@@ -41,6 +41,8 @@ from core.config import (
     MOTOR_PINS, PAN_SERVO_PIN, TILT_SERVO_PIN,
     PAN_MIN_ANGLE, PAN_MAX_ANGLE, PAN_CENTER_ANGLE,
     TILT_MIN_ANGLE, TILT_MAX_ANGLE, TILT_CENTER_ANGLE,
+    SCAN_DWELL, CAMERA_ROTATE_180,
+    CHASSIS_TURN_SPEED, CHASSIS_DEGREES_PER_SEC, PAN_ALIGN_THRESHOLD,
 )
 from core.states import (
     STATE_SCANNING,
@@ -49,7 +51,7 @@ from core.states import (
     STATE_COLLECT,
     STATE_SEARCH_ROTATE,
 )
-from core.detection import load_model, init_camera
+from core.detection import load_model, init_camera, read_frame
 from core.display    import Display
 from core.scanner    import Scanner
 from core.approach   import Approacher
@@ -139,6 +141,56 @@ class WasteBot:
         log.info("WasteBot ready.  Initial state → %s\n", self.state)
 
     # ──────────────────────────────────────────────────────────────────
+    # Chassis alignment (rotate body to face scanned target)
+    # ──────────────────────────────────────────────────────────────────
+    def _align_chassis_to_pan(self, pan_angle: float):
+        """
+        Rotate the chassis so it faces the direction the camera was
+        pointing when the scanner found the target, then centre the
+        pan servo so the approach module can steer normally.
+
+        Args:
+            pan_angle: Pan servo angle (degrees) where the target was found.
+        """
+        offset = abs(pan_angle - PAN_CENTER_ANGLE)
+        if offset <= PAN_ALIGN_THRESHOLD:
+            log.info("Pan offset %d° ≤ threshold %d° – skipping chassis alignment",
+                     offset, PAN_ALIGN_THRESHOLD)
+            return
+
+        # Calculate rotation time from calibrated rate
+        turn_time = offset / CHASSIS_DEGREES_PER_SEC
+
+        # Determine turn direction.
+        # When the camera is upside-down the servo's physical pan
+        # direction is inverted relative to the corrected image,
+        # so we flip the motor direction.
+        if pan_angle > PAN_CENTER_ANGLE:
+            direction = "left" if CAMERA_ROTATE_180 else "right"
+        else:
+            direction = "right" if CAMERA_ROTATE_180 else "left"
+
+        log.info("╔══ CHASSIS ALIGN: pan=%d° → rotating %s for %.2fs (%.0f°/s) ══╗",
+                 pan_angle, direction.upper(), turn_time, CHASSIS_DEGREES_PER_SEC)
+
+        self.motors.move(direction, CHASSIS_TURN_SPEED)
+        time.sleep(turn_time)
+        self.motors.stop()
+        time.sleep(0.2)   # let momentum settle
+
+        # Centre the pan servo so the approach module starts with a
+        # forward-facing camera
+        log.info("Centring pan servo → %d°", PAN_CENTER_ANGLE)
+        self.pan_servo.move_and_detach(PAN_CENTER_ANGLE, settle=SCAN_DWELL)
+
+        # Flush stale frames captured during the turn
+        log.debug("Flushing camera buffer after chassis alignment")
+        for _ in range(3):
+            read_frame(self.camera)
+
+        log.info("╚══ CHASSIS ALIGN complete ══╝")
+
+    # ──────────────────────────────────────────────────────────────────
     # Graceful shutdown
     # ──────────────────────────────────────────────────────────────────
     def shutdown(self, signum=None, frame=None):
@@ -200,6 +252,10 @@ class WasteBot:
                     if target:
                         self.target = target
                         self.navigator.reset()
+                        # Rotate chassis to face the direction the camera
+                        # was pointing before entering APPROACH
+                        pan_angle = target.get('pan_angle', PAN_CENTER_ANGLE)
+                        self._align_chassis_to_pan(pan_angle)
                     self.state = next_state
 
                 # ── APPROACH ──────────────────────────────────────────

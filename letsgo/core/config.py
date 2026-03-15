@@ -98,8 +98,13 @@ TILT_CENTER_ANGLE = -10   # neutral / level angle (degrees)
 TILT_STEP         = 10   # tilt increment per adjustment step
 TILT_SETTLE       = 0.10  # seconds to wait after tilt move
 
-
-
+# ═══════════════════════════════════════════════════════════════════════════
+# CHASSIS ALIGNMENT  (rotate body to face the scanned target)
+# ═══════════════════════════════════════════════════════════════════════════
+CHASSIS_TURN_SPEED     = SEARCH_ROTATE_SPEED  # PWM% used for alignment turns
+CHASSIS_DEGREES_PER_SEC = 37.5  # approx turn rate at CHASSIS_TURN_SPEED
+                                # calibrate: measure time for 360° turn, then 360/time
+PAN_ALIGN_THRESHOLD    = 15     # ignore pan offsets smaller than this (degrees)
 # ═══════════════════════════════════════════════════════════════════════════
 # SERVO MECHANICAL STABILISE
 # ═══════════════════════════════════════════════════════════════════════════

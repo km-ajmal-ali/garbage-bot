@@ -105,6 +105,7 @@ class Scanner:
             if detections:
                 target = pick_best_target(detections)
                 if target:
+                    target['pan_angle'] = angle   # remember where the servo was pointing
                     depth = target.get('depth_cm', -1)
                     log.info("✓ TARGET FOUND: '%s' conf=%.2f at pan=%d°  depth≈%.0fcm  → APPROACH",
                              target['label'], target['confidence'], angle, depth)
