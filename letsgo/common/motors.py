@@ -50,9 +50,9 @@ class MotorControl:
         if direction == "forward":
             self._set_direction(True, False, True, False)
         elif direction == "left":
-            self._set_direction(False, True, True, False)
+            self._set_direction(True, False, False, True)   # swapped to match physical wiring
         elif direction == "right":
-            self._set_direction(True, False, False, True)
+            self._set_direction(False, True, True, False)   # swapped to match physical wiring
         elif direction == "backward":
             self._set_direction(False, True, False, True)
         else:

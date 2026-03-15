@@ -166,9 +166,9 @@ class WasteBot:
         # direction is inverted relative to the corrected image,
         # so we flip the motor direction.
         if pan_angle > PAN_CENTER_ANGLE:
-            direction =  "right" if CAMERA_ROTATE_180 else "left"
-        else:
             direction = "left" if CAMERA_ROTATE_180 else "right"
+        else:
+            direction = "right" if CAMERA_ROTATE_180 else "left"
 
         log.info("╔══ CHASSIS ALIGN: pan=%d° → rotating %s for %.2fs (%.0f°/s) ══╗",
                  pan_angle, direction.upper(), turn_time, CHASSIS_DEGREES_PER_SEC)
