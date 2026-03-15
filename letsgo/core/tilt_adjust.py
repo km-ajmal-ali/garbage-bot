@@ -7,7 +7,10 @@ the nearby object remains visible in the frame before collection.
 
 import time
 
-from core.config import TILT_MIN_ANGLE, TILT_CENTER_ANGLE, TILT_STEP, TILT_SETTLE, CAM_HEIGHT
+from core.config import (
+    TILT_MIN_ANGLE, TILT_MAX_ANGLE, TILT_CENTER_ANGLE,
+    TILT_STEP, TILT_SETTLE, CAM_HEIGHT, CAMERA_ROTATE_180,
+)
 from core.states import STATE_COLLECT
 from core.detection import run_detection, pick_best_target, read_frame
 from core.logger import get_logger
@@ -23,8 +26,8 @@ class TiltAdjuster:
         self.camera     = camera
         self.tilt_servo = tilt_servo
         self.display    = display
-        log.info("TiltAdjuster initialised (min=%d°, center=%d°, step=%d°, settle=%.2fs)",
-                 TILT_MIN_ANGLE, TILT_CENTER_ANGLE, TILT_STEP, TILT_SETTLE)
+        log.info("TiltAdjuster initialised (min=%d°, max=%d°, center=%d°, step=%d°, settle=%.2fs, cam_rotate_180=%s)",
+                 TILT_MIN_ANGLE, TILT_MAX_ANGLE, TILT_CENTER_ANGLE, TILT_STEP, TILT_SETTLE, CAMERA_ROTATE_180)
 
     def execute(self, running_flag: callable) -> tuple[str, dict | None]:
         """
@@ -40,7 +43,25 @@ class TiltAdjuster:
         target = None
         step_num = 0
 
-        while tilt_angle >= TILT_MIN_ANGLE and running_flag():
+        # When the camera is upside-down (CAMERA_ROTATE_180), the servo's
+        # physical tilt direction is inverted relative to the corrected image.
+        # To tilt "down" in the corrected image, we must increase the angle
+        # toward TILT_MAX_ANGLE instead of decreasing toward TILT_MIN_ANGLE.
+        if CAMERA_ROTATE_180:
+            tilt_step = +TILT_STEP
+            tilt_limit = TILT_MAX_ANGLE
+        else:
+            tilt_step = -TILT_STEP
+            tilt_limit = TILT_MIN_ANGLE
+
+        def in_range(angle):
+            """Check whether the tilt is still within the sweep range."""
+            if CAMERA_ROTATE_180:
+                return angle <= tilt_limit
+            else:
+                return angle >= tilt_limit
+
+        while in_range(tilt_angle) and running_flag():
             step_num += 1
 
             # Clamp to configured tilt limits to prevent over-rotation
@@ -52,7 +73,7 @@ class TiltAdjuster:
             ret, frame = read_frame(self.camera)
             if not ret or frame is None:
                 log.warning("Camera read failed at tilt=%d°", tilt_angle)
-                tilt_angle += TILT_STEP
+                tilt_angle += tilt_step
                 continue
 
             detections = run_detection(self.model, frame, camera=self.camera)
@@ -72,7 +93,8 @@ class TiltAdjuster:
             else:
                 log.debug("  no target found at tilt=%d°", tilt_angle)
 
-            tilt_angle += TILT_STEP
+            tilt_angle += tilt_step
 
-        log.warning("Max tilt (%d°) reached without centring → COLLECT anyway", TILT_MIN_ANGLE)
+        log.warning("Max tilt (%d°) reached without centring → COLLECT anyway", tilt_limit)
         return STATE_COLLECT, target
+

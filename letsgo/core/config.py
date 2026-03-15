@@ -76,11 +76,17 @@ PAN_SCAN_STEP    =  30   # degrees per scan sweep increment
 # Sweep from PAN_MIN_ANGLE to PAN_MAX_ANGLE in PAN_SCAN_STEP° steps
 SCAN_POSITIONS = list(range(PAN_MIN_ANGLE, PAN_MAX_ANGLE + 1, PAN_SCAN_STEP))
 
+# When the camera is mounted upside-down (CAMERA_ROTATE_180), the pan servo's
+# physical direction is inverted relative to the corrected image.  Reverse the
+# scan order so the sweep matches the visual left-to-right direction.
+if CAMERA_ROTATE_180:
+    SCAN_POSITIONS = SCAN_POSITIONS[::-1]
+
 # ═══════════════════════════════════════════════════════════════════════════
 # TILT SERVO LIMITS  (Y-axis / vertical look up-down)
 # ═══════════════════════════════════════════════════════════════════════════
-TILT_MIN_ANGLE    = -20   # maximum downward tilt angle (degrees)
-TILT_MAX_ANGLE    =  30   # maximum upward tilt angle (degrees)
+TILT_MIN_ANGLE    = 30   # maximum downward tilt angle (degrees)
+TILT_MAX_ANGLE    =  -20   # maximum upward tilt angle (degrees)
 TILT_CENTER_ANGLE = -10   # neutral / level angle (degrees)
 TILT_STEP         = 10   # tilt increment per adjustment step
 TILT_SETTLE       = 0.10  # seconds to wait after tilt move
