@@ -27,9 +27,9 @@ TILT_SERVO_PIN = 12   # Y-axis (vertical / look-up-down)
 # ═══════════════════════════════════════════════════════════════════════════
 # MOTOR SPEEDS  (PWM duty cycle 0-100)
 # ═══════════════════════════════════════════════════════════════════════════
-APPROACH_SPEED      = 75   # driving toward an object
-COLLECT_SPEED       = 75   # slow crawl over the object
-SEARCH_ROTATE_SPEED = 75   # in-place rotation during search
+APPROACH_SPEED      = 72   # driving toward an object
+COLLECT_SPEED       = 72   # slow crawl over the object
+SEARCH_ROTATE_SPEED = 72   # in-place rotation during search
 
 # ═══════════════════════════════════════════════════════════════════════════
 # SCANNING
@@ -79,8 +79,8 @@ SCAN_POSITIONS = list(range(PAN_MIN_ANGLE, PAN_MAX_ANGLE + 1, PAN_SCAN_STEP))
 # ═══════════════════════════════════════════════════════════════════════════
 # TILT SERVO LIMITS  (Y-axis / vertical look up-down)
 # ═══════════════════════════════════════════════════════════════════════════
-TILT_MIN_ANGLE    = 30   # maximum downward tilt angle (degrees)
-TILT_MAX_ANGLE    =  -20   # maximum upward tilt angle (degrees)
+TILT_MIN_ANGLE    = -20   # maximum downward tilt angle (degrees)
+TILT_MAX_ANGLE    =  30   # maximum upward tilt angle (degrees)
 TILT_CENTER_ANGLE = -10   # neutral / level angle (degrees)
 TILT_STEP         = 10   # tilt increment per adjustment step
 TILT_SETTLE       = 0.10  # seconds to wait after tilt move
