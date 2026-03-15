@@ -218,14 +218,23 @@ class HailoYOLOv8:
         resized = cv2.resize(frame, (self.input_w, self.input_h))
         return resized
 
+    # Timeout (seconds) for a single inference call.  If the Hailo
+    # pipeline hasn't returned within this window we assume a DMA
+    # deadlock and recycle the pipeline.
+    INFER_TIMEOUT = 10.0
+
     def infer(self, preprocessed: np.ndarray) -> dict:
         """
-        Run inference on the Hailo accelerator.
+        Run inference on the Hailo accelerator with a timeout guard.
 
         IMPORTANT: The ThreadedCamera MUST be paused before calling
         this method, otherwise Picamera2's continuous capture_array()
         calls compete for system resources and cause a deadlock.
         The ``detect_objects()`` function handles this automatically.
+
+        If inference does not complete within INFER_TIMEOUT seconds
+        the pipeline is recycled and a RuntimeError is raised so the
+        caller can retry.
 
         Args:
             preprocessed: Pre-processed image matching input shape.
@@ -238,9 +247,32 @@ class HailoYOLOv8:
                 np.expand_dims(preprocessed, axis=0)
         }
         log.debug("[HAILO] pipeline.infer() start")
-        res = self.pipeline.infer(input_data)
+
+        result = [None]
+        error  = [None]
+
+        def _do_infer():
+            try:
+                result[0] = self.pipeline.infer(input_data)
+            except Exception as exc:
+                error[0] = exc
+
+        t = threading.Thread(target=_do_infer, daemon=True)
+        t.start()
+        t.join(timeout=self.INFER_TIMEOUT)
+
+        if t.is_alive():
+            log.error("[HAILO] pipeline.infer() TIMED OUT after %.0fs – recycling pipeline",
+                      self.INFER_TIMEOUT)
+            self._close_pipeline()
+            self._open_pipeline()
+            raise RuntimeError("Hailo inference timed out – pipeline recycled")
+
+        if error[0]:
+            raise error[0]
+
         log.debug("[HAILO] pipeline.infer() done")
-        return res
+        return result[0]
 
     def close(self):
         """
@@ -375,12 +407,32 @@ def detect_objects(model: HailoYOLOv8, frame: np.ndarray,
         camera.pause()
 
     log.debug("[DETECT] Preprocessing complete. Starting infer()")
-    try:
-        raw_output = model.infer(preprocessed)
-    finally:
-        # Always resume camera, even if inference fails
-        if camera is not None and hasattr(camera, 'resume'):
-            camera.resume()
+
+    raw_output = None
+    max_attempts = 2
+    for attempt in range(1, max_attempts + 1):
+        try:
+            raw_output = model.infer(preprocessed)
+            break  # success
+        except RuntimeError as exc:
+            log.warning("[DETECT] Inference attempt %d/%d failed: %s",
+                        attempt, max_attempts, exc)
+            if attempt < max_attempts:
+                log.info("[DETECT] Retrying inference after pipeline recycle …")
+                time.sleep(0.5)
+            else:
+                log.error("[DETECT] All inference attempts failed — returning empty")
+        finally:
+            # Always resume camera, even if inference fails
+            if camera is not None and hasattr(camera, 'resume'):
+                camera.resume()
+
+        # Re-pause camera before retrying
+        if attempt < max_attempts and camera is not None and hasattr(camera, 'pause'):
+            camera.pause()
+
+    if raw_output is None:
+        return []
 
     log.debug("[DETECT] infer() complete. Starting postprocess()")
     detections = model.postprocess(raw_output, orig_w, orig_h, conf_threshold)
@@ -616,6 +668,12 @@ class ThreadedCamera:
         self._run_event = threading.Event()
         self._run_event.set()      # start in "running" state
 
+        # Event is SET when the background thread is NOT inside a
+        # camera.read() call.  pause() waits on this so we are sure
+        # no DMA transfer is in-flight before Hailo inference starts.
+        self._idle_event = threading.Event()
+        self._idle_event.set()     # idle at construction time
+
         # Read the first frame to ensure it's working
         self.ret, self.frame = self.camera.read()
         if self.ret:
@@ -631,8 +689,12 @@ class ThreadedCamera:
     def pause(self):
         """Pause background frame capture (call before Hailo infer)."""
         self._run_event.clear()
-        # Wait briefly for any in-flight capture_array() to finish
-        time.sleep(0.05)
+        # Block until the background thread has finished any in-flight
+        # capture_array() call.  At 800×800 a single capture can take
+        # >100 ms, so a fixed 50 ms sleep is unreliable.
+        if not self._idle_event.wait(timeout=2.0):
+            print("[WARN] ThreadedCamera: timed out waiting for "
+                  "camera read to finish before pause")
 
     def resume(self):
         """Resume background frame capture (call after Hailo infer)."""
@@ -644,11 +706,15 @@ class ThreadedCamera:
         while self.running:
             # Block here while paused (no camera reads during inference)
             self._run_event.wait()
+
+            self._idle_event.clear()   # mark: capture in progress
             try:
                 ret, frame = self.camera.read()
             except Exception as e:
                 print(f"[WARN] ThreadedCamera read exception: {e}")
                 ret, frame = False, None
+            finally:
+                self._idle_event.set()  # mark: capture finished
 
             with self.lock:
                 self.ret = ret
