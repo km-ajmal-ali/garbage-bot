@@ -16,7 +16,7 @@ from core.config import (
     DRIVE_PULSE_TIME,
     CAM_WIDTH,
 )
-from core.states import STATE_SCANNING, STATE_TILT_ADJUST
+from core.states import STATE_SCANNING, STATE_COLLECT
 from core.detection import run_detection, pick_best_target, estimate_object_depth, read_frame
 from core.logger import get_logger
 
@@ -46,6 +46,8 @@ class Approacher:
         lost_count = 0
         target = None
         frame_num = 0
+        self.last_depth = 999.0
+        self.last_target = None
 
         while running_flag():
             ret, frame = read_frame(self.camera)
@@ -60,21 +62,29 @@ class Approacher:
             target = pick_best_target(detections)
 
             if target is None:
+                self.motors.stop()  # Stop immediately so bot does not drive blind!
                 lost_count += 1
-                log.debug("Frame %d: no target (lost_count=%d/%d)",
-                          frame_num, lost_count, MAX_LOST_FRAMES)
+                log.debug("Frame %d: no target (lost_count=%d/%d), last_depth=%.0f",
+                          frame_num, lost_count, MAX_LOST_FRAMES, self.last_depth)
                 if lost_count >= MAX_LOST_FRAMES:
+                    if self.last_depth <= DEPTH_APPROACH_STOP + 25:
+                        log.warning("Target lost, but was close (%.0fcm) → assuming reached & skipping to COLLECT", self.last_depth)
+                        return STATE_COLLECT, self.last_target
+                        
                     log.warning("Target lost for %d consecutive frames → SCANNING", lost_count)
-                    self.motors.stop()
                     return STATE_SCANNING, None
                 continue
 
+            # Update references for tracking drop-outs
             lost_count = 0
-
+            self.last_target = target
+            
             # ── Depth check (do this first so we don't steer unnecessarily) ─
             depth = estimate_object_depth(target['width_px'])
             target['depth_cm'] = depth
 
+            self.last_depth = depth
+            
             # ── Horizontal alignment ──────────────────────────────────
             cx_frac  = target['center'][0] / CAM_WIDTH
             offset_x = cx_frac - 0.5
@@ -84,9 +94,9 @@ class Approacher:
                      depth, offset_x, target['width_px'])
 
             if 0 < depth <= DEPTH_APPROACH_STOP:
-                log.info("✓ CLOSE ENOUGH (%.0fcm ≤ %dcm) → TILT_ADJUST", depth, DEPTH_APPROACH_STOP)
+                log.info("✓ CLOSE ENOUGH (%.0fcm ≤ %dcm) → COLLECT (skipping tilt)", depth, DEPTH_APPROACH_STOP)
                 self.motors.stop()
-                return STATE_TILT_ADJUST, target
+                return STATE_COLLECT, target
 
             if offset_x < -CENTER_TOLERANCE_X:
                 log.debug("Steering LEFT (offset=%.2f < -%.2f)", offset_x, CENTER_TOLERANCE_X)
