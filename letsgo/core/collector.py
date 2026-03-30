@@ -1,8 +1,7 @@
 """
 WasteBot Collector Module
 ==========================
-Handles the COLLECT state – slowly driving the chassis forward
-over the detected object so the passive collector picks it up.
+Handles the COLLECT state – moving forward to enclose, grip, push and release objects.
 """
 
 import time
@@ -30,83 +29,63 @@ class Collector:
         self.tilt_servo      = tilt_servo
         self.collector_servo = collector_servo
         self.display         = display
-        log.info("Collector initialised (speed=%d%%, depth_done=%dcm, max_lost=%d)",
-                 COLLECT_SPEED, DEPTH_COLLECT_DONE, MAX_LOST_COLLECT)
+        log.info("Collector initialised (speed=%d%%)", COLLECT_SPEED)
 
     def execute(self, running_flag: callable) -> str:
         """
-        Crawl forward until the object disappears from view
-        (collected) or is extremely close.
-
-        Returns:
-            Next state (always STATE_SCANNING).
+        Executes the timed collector sequence.
+        (Visual loop is replaced with timed movement because gripping happens 
+        at a rigid physical distance setup by the APPROACH logic.)
         """
         log.info("═══ COLLECT started ═══")
         log.info("Ensuring gripper is open")
         self.collector_servo.move_and_detach(MAX_OPEN_ANGLE, settle=0.3)
-        log.info("Driving FORWARD at %d%% speed", COLLECT_SPEED)
-        self.motors.move("forward", COLLECT_SPEED)
+        
+        def pump_frames(duration, text, direction=None, speed=COLLECT_SPEED):
+            """Helper to keep camera window alive during timed actions."""
+            if direction:
+                self.motors.move(direction, speed)
+            start_time = time.time()
+            frame_num = 0
+            while running_flag() and (time.time() - start_time < duration):
+                ret, frame = read_frame(self.camera)
+                if ret and frame is not None:
+                    # Show empty detections explicitly so UI updates immediately
+                    self.display.show(frame, [], text)
+                frame_num += 1
+            if direction:
+                self.motors.stop()
+            return frame_num
 
-        lost_count = 0
-        frame_num = 0
+        # Move forward slightly to put the bottle inside the physical gripper jaws
+        log.info("Driving FORWARD (0.8s) to enclose object")
+        frames_enc = pump_frames(0.8, "COLLECT (ENCLOSING)", direction="forward")
 
-        while running_flag():
-            ret, frame = read_frame(self.camera)
-            if not ret or frame is None:
-                log.warning("Camera read failed during collection")
-                continue
+        if not running_flag():
+            return STATE_SCANNING
 
-            frame_num += 1
-            detections = run_detection(self.model, frame, camera=self.camera)
-            self.display.show(frame, detections, "COLLECT")
-
-            target = pick_best_target(detections)
-
-            if target is None:
-                lost_count += 1
-                log.debug("Frame %d: target lost (lost_count=%d/%d)",
-                          frame_num, lost_count, MAX_LOST_COLLECT)
-                if lost_count >= MAX_LOST_COLLECT:
-                    log.info("✓ Object not visible for %d frames – COLLECTED!", lost_count)
-                    break
-                continue
-
-            lost_count = 0
-            depth = estimate_object_depth(target['width_px'])
-
-            log.info("Frame %d: '%s' still visible  depth≈%.0fcm  (done at ≤%dcm)",
-                     frame_num, target['label'], depth, DEPTH_COLLECT_DONE)
-
-            if 0 < depth <= DEPTH_COLLECT_DONE:
-                log.info("✓ Object very close (%.0fcm ≤ %dcm) – COLLECTED!", depth, DEPTH_COLLECT_DONE)
-                break
-
-        # ── Gripper sequence ──────────────────────────────────────────
-        log.info("Stopping motors, target collected or lost")
-        self.motors.stop()
+        # Wait a moment before clamping
         time.sleep(0.5)
 
         log.info("Closing gripper around object")
         self.collector_servo.move_and_detach(MAX_CLOSE_ANGLE, settle=1.0)
         
-        log.info("Driving forward softly with object")
-        self.motors.move("forward", COLLECT_SPEED)
-        time.sleep(1.5)
-        self.motors.stop()
+        log.info("Driving forward softly with object (1.5s)")
+        frames_push = pump_frames(1.5, "COLLECT (PUSHING)", direction="forward")
+
         time.sleep(0.5)
 
         log.info("Opening gripper to release")
         self.collector_servo.move_and_detach(MAX_OPEN_ANGLE, settle=1.0)
 
-        log.info("Moving backward slightly before search rotation")
-        self.motors.move("backward", COLLECT_SPEED)
-        time.sleep(1.0)
-        self.motors.stop()
+        log.info("Moving backward slightly before search rotation (1.0s)")
+        frames_rev = pump_frames(1.0, "COLLECT (REVERSING)", direction="backward")
 
         # ── Reset hardware ────────────────────────────────────────────
         log.info("Resetting servos to centre")
         self.tilt_servo.move_and_detach(TILT_CENTER_ANGLE, settle=0.15)
         self.pan_servo.move_and_detach(PAN_CENTER_ANGLE, settle=0.15)
 
-        log.info("═══ COLLECT done (processed %d frames) → SEARCH_ROTATE ═══\n", frame_num)
+        total_frames = frames_enc + frames_push + frames_rev
+        log.info("═══ COLLECT done (pumped %d frames) → SEARCH_ROTATE ═══\n", total_frames)
         return STATE_SEARCH_ROTATE
