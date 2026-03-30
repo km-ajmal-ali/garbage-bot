@@ -38,9 +38,10 @@ log = get_logger("main")
 
 # ── Core modules ──────────────────────────────────────────────────────────
 from core.config import (
-    MOTOR_PINS, PAN_SERVO_PIN, TILT_SERVO_PIN,
+    MOTOR_PINS, PAN_SERVO_PIN, TILT_SERVO_PIN, COLLECTOR_SERVO_PIN,
     PAN_MIN_ANGLE, PAN_MAX_ANGLE, PAN_CENTER_ANGLE,
     TILT_MIN_ANGLE, TILT_MAX_ANGLE, TILT_CENTER_ANGLE,
+    MAX_OPEN_ANGLE, MAX_CLOSE_ANGLE,
     SCAN_DWELL, CAMERA_ROTATE_180,
     CHASSIS_TURN_SPEED, CHASSIS_DEGREES_PER_SEC, PAN_ALIGN_THRESHOLD,
 )
@@ -112,10 +113,20 @@ class WasteBot:
             center_angle=TILT_CENTER_ANGLE,
         )
 
+        log.info("Initialising collector servo on GPIO %d  limits=[%d°, %d°]  center=%d°",
+                 COLLECTOR_SERVO_PIN, MAX_CLOSE_ANGLE, MAX_OPEN_ANGLE, MAX_OPEN_ANGLE)
+        self.collector_servo = CameraServo(
+            pin=COLLECTOR_SERVO_PIN,
+            min_limit=MAX_CLOSE_ANGLE,
+            max_limit=MAX_OPEN_ANGLE,
+            center_angle=MAX_OPEN_ANGLE,
+        )
+
         # Centre servos on startup
-        log.info("Centring both servos")
+        log.info("Centring all servos (starting gripper in open state)")
         self.pan_servo.center()
         self.tilt_servo.center()
+        self.collector_servo.center()
 
         # ── Display ───────────────────────────────────────────────────
         self.display = Display()
@@ -129,7 +140,7 @@ class WasteBot:
                                         self.tilt_servo, self.display)
         self.collector   = Collector(self.model, self.camera,
                                      self.motors, self.pan_servo,
-                                     self.tilt_servo, self.display)
+                                     self.tilt_servo, self.collector_servo, self.display)
         self.navigator   = Navigator(self.model, self.camera,
                                      self.motors, self.display)
 
@@ -205,9 +216,10 @@ class WasteBot:
         log.info("Stopping motors")
         self.motors.stop()
 
-        log.info("Centring servos")
+        log.info("Centring servos (opening gripper)")
         self.pan_servo.center()
         self.tilt_servo.center()
+        self.collector_servo.center()
         time.sleep(0.3)
 
         log.info("Releasing camera")
@@ -284,6 +296,7 @@ class WasteBot:
                         running_flag=lambda: self.running
                     )
                     self.scanner.reset()
+                    self.navigator.reset()
 
                 # ── SEARCH ROTATE ─────────────────────────────────────
                 elif self.state == STATE_SEARCH_ROTATE:

@@ -24,6 +24,11 @@ MOTOR_PINS = [17, 27, 22, 23, 24, 25]
 PAN_SERVO_PIN  = 13   # X-axis (horizontal sweep)
 TILT_SERVO_PIN = 12   # Y-axis (vertical / look-up-down)
 
+# Collector Servo GPIO Pins.
+COLLECTOR_SERVO_PIN = 16
+MAX_OPEN_ANGLE = 90
+MAX_CLOSE_ANGLE = -10
+
 # ═══════════════════════════════════════════════════════════════════════════
 # MOTOR SPEEDS  (PWM duty cycle 0-100)
 # ═══════════════════════════════════════════════════════════════════════════
