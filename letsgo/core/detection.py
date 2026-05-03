@@ -130,3 +130,58 @@ def pick_best_target(detections: list) -> dict | None:
               best['label'], best['confidence'], best['bbox'], area,
               best.get('depth_cm', -1))
     return best
+
+# ───────────────────────────────────────────────────────────────────────────
+# QR Code Detection Helpers
+# ───────────────────────────────────────────────────────────────────────────
+
+_qr_detector = cv2.QRCodeDetector()
+
+def detect_qr_code(frame: np.ndarray) -> dict | None:
+    """
+    Detect a QR code in the frame using OpenCV.
+    
+    Args:
+        frame: The image frame.
+        
+    Returns:
+        Detection dict formatted like YOLO detections, or None if not found.
+    """
+    retval, decoded_info, points, straight_qrcode = _qr_detector.detectAndDecodeMulti(frame)
+    if retval and len(points) > 0:
+        # Just pick the first QR code detected
+        pts = points[0]
+        # Calculate bounding box
+        x_min = int(np.min(pts[:, 0]))
+        x_max = int(np.max(pts[:, 0]))
+        y_min = int(np.min(pts[:, 1]))
+        y_max = int(np.max(pts[:, 1]))
+        
+        width = x_max - x_min
+        height = y_max - y_min
+        
+        # Avoid division by zero
+        if width <= 0 or height <= 0:
+            return None
+            
+        center_x = x_min + width // 2
+        center_y = y_min + height // 2
+        
+        det = {
+            'label': 'qr_code',
+            'confidence': 1.0,
+            'bbox': [x_min, y_min, width, height],
+            'width_px': width,
+            'height_px': height,
+            'center': (center_x, center_y),
+            'info': decoded_info[0] if len(decoded_info) > 0 else ""
+        }
+        
+        # Estimate depth (assuming QR code is printed at 15cm width)
+        # depth = (Focal Length * Real Object Width) / Object Width in Pixels
+        det['depth_cm'] = FOCAL_LENGTH_PX * 15.0 / width
+        
+        log.debug("Found QR Code! bbox=%s, depth≈%.0fcm", det['bbox'], det['depth_cm'])
+        return det
+        
+    return None

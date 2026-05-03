@@ -70,22 +70,11 @@ class Collector:
         log.info("Closing gripper around object")
         self.collector_servo.move_and_detach(MAX_CLOSE_ANGLE, settle=1.0)
         
-        log.info("Driving forward softly with object (1.5s)")
-        frames_push = pump_frames(1.5, "COLLECT (PUSHING)", direction="forward")
-
-        time.sleep(0.5)
-
-        log.info("Opening gripper to release")
-        self.collector_servo.move_and_detach(MAX_OPEN_ANGLE, settle=1.0)
-
-        log.info("Moving backward slightly before search rotation (1.0s)")
-        frames_rev = pump_frames(1.0, "COLLECT (REVERSING)", direction="backward")
-
-        # ── Reset hardware ────────────────────────────────────────────
-        log.info("Resetting servos to centre")
+        # ── Reset hardware for QR scan ────────────────────────────────
+        log.info("Resetting servos to centre to prepare for QR search")
         self.tilt_servo.move_and_detach(TILT_CENTER_ANGLE, settle=0.15)
         self.pan_servo.move_and_detach(PAN_CENTER_ANGLE, settle=0.15)
 
-        total_frames = frames_enc + frames_push + frames_rev
-        log.info("═══ COLLECT done (pumped %d frames) → SEARCH_ROTATE ═══\n", total_frames)
-        return STATE_SEARCH_ROTATE
+        total_frames = frames_enc
+        log.info("═══ COLLECT done (pumped %d frames) → SEARCH_QR ═══\n", total_frames)
+        return STATE_SEARCH_QR

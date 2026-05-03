@@ -51,6 +51,10 @@ from core.states import (
     STATE_TILT_ADJUST,
     STATE_COLLECT,
     STATE_SEARCH_ROTATE,
+    STATE_SEARCH_QR,
+    STATE_SEARCH_ROTATE_QR,
+    STATE_APPROACH_QR,
+    STATE_DROP_QR,
 )
 from core.detection import load_model, init_camera, read_frame
 from core.display    import Display
@@ -59,6 +63,10 @@ from core.approach   import Approacher
 from core.tilt_adjust import TiltAdjuster
 from core.collector  import Collector
 from core.navigator  import Navigator
+from core.qr_scanner import QRScanner
+from core.qr_navigator import QRNavigator
+from core.qr_approach import QRApproacher
+from core.qr_drop import QRDrop
 
 # ── Hardware drivers ──────────────────────────────────────────────────────
 from common.motors  import MotorControl
@@ -143,6 +151,11 @@ class WasteBot:
                                      self.tilt_servo, self.collector_servo, self.display)
         self.navigator   = Navigator(self.model, self.camera,
                                      self.motors, self.display)
+
+        self.qr_scanner  = QRScanner(self.camera, self.pan_servo, self.display)
+        self.qr_navigator = QRNavigator(self.camera, self.motors, self.display)
+        self.qr_approacher = QRApproacher(self.camera, self.motors, self.display)
+        self.qr_drop     = QRDrop(self.motors, self.collector_servo, self.display)
 
         # ── Runtime state ─────────────────────────────────────────────
         self.state   = STATE_SCANNING
@@ -306,6 +319,44 @@ class WasteBot:
                     self.state = next_state
                     if next_state == STATE_SCANNING:
                         self.scanner.reset()
+
+                # ── SEARCH QR ─────────────────────────────────────────
+                elif self.state == STATE_SEARCH_QR:
+                    next_state, target = self.qr_scanner.step(self.state)
+                    if target:
+                        self.target = target
+                        self.qr_navigator.reset()
+                        pan_angle = target.get('pan_angle', PAN_CENTER_ANGLE)
+                        self._align_chassis_to_pan(pan_angle)
+                    self.state = next_state
+
+                # ── SEARCH ROTATE QR ──────────────────────────────────
+                elif self.state == STATE_SEARCH_ROTATE_QR:
+                    next_state, target = self.qr_navigator.step()
+                    if target:
+                        self.target = target
+                    self.state = next_state
+                    if next_state == STATE_SEARCH_QR:
+                        self.qr_scanner.reset()
+
+                # ── APPROACH QR ───────────────────────────────────────
+                elif self.state == STATE_APPROACH_QR:
+                    next_state, target = self.qr_approacher.execute(
+                        running_flag=lambda: self.running
+                    )
+                    if target:
+                        self.target = target
+                    self.state = next_state
+                    if next_state == STATE_SEARCH_QR:
+                        self.qr_scanner.reset()
+
+                # ── DROP QR ───────────────────────────────────────────
+                elif self.state == STATE_DROP_QR:
+                    self.state = self.qr_drop.execute(
+                        running_flag=lambda: self.running
+                    )
+                    self.qr_scanner.reset()
+                    self.qr_navigator.reset()
 
                 else:
                     log.error("Unknown state '%s' → resetting to SCANNING", self.state)
