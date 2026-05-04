@@ -89,14 +89,14 @@ class WasteBot:
         log.info("=" * 60)
         log.info("Log level: %s", _log_level)
 
-        # ── AI model ──────────────────────────────────────────────────
-        self.model = load_model()
-
         # ── Camera ────────────────────────────────────────────────────
         self.camera = init_camera()
         if self.camera is None:
             log.error("Could not open any camera backend!")
             raise RuntimeError("Could not open any camera backend.")
+
+        # ── AI model ──────────────────────────────────────────────────
+        self.model = load_model()
 
         # ── Motors ────────────────────────────────────────────────────
         log.info("Initialising motors on pins %s", MOTOR_PINS)
