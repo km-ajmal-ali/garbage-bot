@@ -75,7 +75,7 @@ MAX_LOST_COLLECT     = 15   # lost frames before considering object collected
 # ═══════════════════════════════════════════════════════════════════════════
 CAM_WIDTH        = 800
 CAM_HEIGHT       = 800
-CAMERA_ROTATE_180 = True   # True if the camera is mounted upside-down
+CAMERA_ROTATE_180 = False   # True if the camera is mounted upside-down
 
 # ═══════════════════════════════════════════════════════════════════════════
 # PAN SERVO LIMITS  (X-axis / horizontal sweep)
