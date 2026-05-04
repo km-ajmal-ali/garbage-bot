@@ -14,6 +14,7 @@ from core.config import (
     STEER_PULSE_TIME,
     DRIVE_PULSE_TIME,
     CAM_WIDTH,
+    CHASSIS_DEGREES_PER_SEC,
 )
 from core.states import STATE_SEARCH_QR, STATE_DROP_QR
 from core.detection import detect_qr_code, read_frame
@@ -69,13 +70,16 @@ class QRApproacher:
                 self.motors.stop()
                 return STATE_DROP_QR, target
 
-            if offset_x < -CENTER_TOLERANCE_X:
-                self.motors.move("left", APPROACH_SPEED)
-                time.sleep(STEER_PULSE_TIME)
-                self.motors.stop()
-            elif offset_x > CENTER_TOLERANCE_X:
-                self.motors.move("right", APPROACH_SPEED)
-                time.sleep(STEER_PULSE_TIME)
+            if offset_x < -CENTER_TOLERANCE_X or offset_x > CENTER_TOLERANCE_X:
+                # Proportional steering: calculate turn time just like we do for pan angle!
+                angle = abs(offset_x) * 62.0  # Approximate horizontal FOV is 62 degrees
+                turn_time = angle / CHASSIS_DEGREES_PER_SEC
+                direction = "right" if offset_x > 0 else "left"
+                
+                log.debug("Steering %s proportionally for %.2fs (offset=%.2f, angle=%.1f°)", 
+                          direction, turn_time, offset_x, angle)
+                self.motors.move(direction, APPROACH_SPEED)
+                time.sleep(turn_time)
                 self.motors.stop()
             else:
                 self.motors.move("forward", APPROACH_SPEED)
