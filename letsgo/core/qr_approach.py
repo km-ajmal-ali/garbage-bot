@@ -74,7 +74,7 @@ class QRApproacher:
                 # Proportional steering: calculate turn time just like we do for pan angle!
                 angle = abs(offset_x) * 62.0  # Approximate horizontal FOV is 62 degrees
                 turn_time = angle / CHASSIS_DEGREES_PER_SEC
-                direction = "right" if offset_x > 0 else "left"
+                direction = "left" if offset_x > 0 else "right"
                 
                 log.debug("Steering %s proportionally for %.2fs (offset=%.2f, angle=%.1f°)", 
                           direction, turn_time, offset_x, angle)
