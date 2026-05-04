@@ -55,6 +55,12 @@ class QRApproacher:
                         return STATE_DROP_QR, self.last_target
                     log.warning("QR lost → SEARCH_QR")
                     return STATE_SEARCH_QR, None
+                
+                # Sleep briefly to allow the camera to capture a new frame.
+                # Since detect_qr_code is very fast when no QR code is found,
+                # without this sleep the loop runs instantly and processes the same 
+                # stale/blurry frame 10 times in 10ms!
+                time.sleep(0.05)
                 continue
 
             lost_count = 0

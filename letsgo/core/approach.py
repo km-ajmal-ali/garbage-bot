@@ -73,6 +73,11 @@ class Approacher:
                         
                     log.warning("Target lost for %d consecutive frames → SCANNING", lost_count)
                     return STATE_SCANNING, None
+                
+                # Sleep briefly to allow the camera to capture a new frame.
+                # Without this sleep, the loop runs too fast and processes the same 
+                # stale/blurry frame multiple times!
+                time.sleep(0.05)
                 continue
 
             # Update references for tracking drop-outs

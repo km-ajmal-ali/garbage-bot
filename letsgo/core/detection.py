@@ -152,8 +152,9 @@ def detect_qr_code(frame: np.ndarray) -> dict | None:
     h, w = frame.shape[:2]
     small_frame = cv2.resize(frame, (int(w * scale), int(h * scale)))
     
-    # Use detect to avoid the overhead of decoding the payload, as we only need the bounding box
-    retval, points = _qr_detector.detect(small_frame)
+    # Use detectAndDecodeMulti on the small frame. This is much faster than on the full frame,
+    # and is more reliable than the basic detect() method.
+    retval, decoded_info, points, straight_qrcode = _qr_detector.detectAndDecodeMulti(small_frame)
     
     if retval and points is not None and len(points) > 0:
         # Just pick the first QR code detected
