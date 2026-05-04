@@ -147,15 +147,28 @@ def detect_qr_code(frame: np.ndarray) -> dict | None:
     Returns:
         Detection dict formatted like YOLO detections, or None if not found.
     """
-    retval, decoded_info, points, straight_qrcode = _qr_detector.detectAndDecodeMulti(frame)
-    if retval and len(points) > 0:
+    # Resize frame to speed up CPU-bound QR detection (significant latency reduction)
+    scale = 0.5
+    h, w = frame.shape[:2]
+    small_frame = cv2.resize(frame, (int(w * scale), int(h * scale)))
+    
+    # Use detect to avoid the overhead of decoding the payload, as we only need the bounding box
+    retval, points = _qr_detector.detect(small_frame)
+    
+    if retval and points is not None and len(points) > 0:
         # Just pick the first QR code detected
         pts = points[0]
-        # Calculate bounding box
-        x_min = int(np.min(pts[:, 0]))
-        x_max = int(np.max(pts[:, 0]))
-        y_min = int(np.min(pts[:, 1]))
-        y_max = int(np.max(pts[:, 1]))
+        # Calculate bounding box on the small frame
+        x_min_s = int(np.min(pts[:, 0]))
+        x_max_s = int(np.max(pts[:, 0]))
+        y_min_s = int(np.min(pts[:, 1]))
+        y_max_s = int(np.max(pts[:, 1]))
+        
+        # Scale back to original frame size
+        x_min = int(x_min_s / scale)
+        x_max = int(x_max_s / scale)
+        y_min = int(y_min_s / scale)
+        y_max = int(y_max_s / scale)
         
         width = x_max - x_min
         height = y_max - y_min
@@ -174,14 +187,13 @@ def detect_qr_code(frame: np.ndarray) -> dict | None:
             'width_px': width,
             'height_px': height,
             'center': (center_x, center_y),
-            'info': decoded_info[0] if len(decoded_info) > 0 else ""
+            'info': ""
         }
         
         # Estimate depth (assuming QR code is printed at 15cm width)
         # depth = (Focal Length * Real Object Width) / Object Width in Pixels
         det['depth_cm'] = FOCAL_LENGTH_PX * 15.0 / width
         
-        log.debug("Found QR Code! bbox=%s, depth≈%.0fcm", det['bbox'], det['depth_cm'])
         return det
         
     return None
