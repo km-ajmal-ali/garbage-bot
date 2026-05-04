@@ -9,7 +9,7 @@ import time
 from core.config import (
     APPROACH_SPEED,
     CENTER_TOLERANCE_X,
-    DEPTH_APPROACH_STOP,
+    DEPTH_QR_APPROACH_STOP,
     MAX_LOST_FRAMES,
     STEER_PULSE_TIME,
     DRIVE_PULSE_TIME,
@@ -49,7 +49,7 @@ class QRApproacher:
                 self.motors.stop()
                 lost_count += 1
                 if lost_count >= MAX_LOST_FRAMES:
-                    if self.last_depth <= DEPTH_APPROACH_STOP + 25:
+                    if self.last_depth <= DEPTH_QR_APPROACH_STOP + 25:
                         log.warning("QR lost but close → DROP_QR")
                         return STATE_DROP_QR, self.last_target
                     log.warning("QR lost → SEARCH_QR")
@@ -64,7 +64,7 @@ class QRApproacher:
             cx_frac = target['center'][0] / CAM_WIDTH
             offset_x = cx_frac - 0.5
 
-            if 0 < depth <= DEPTH_APPROACH_STOP:
+            if 0 < depth <= DEPTH_QR_APPROACH_STOP:
                 log.info("✓ REACHED QR DESTINATION (%.0fcm) → DROP_QR", depth)
                 self.motors.stop()
                 return STATE_DROP_QR, target

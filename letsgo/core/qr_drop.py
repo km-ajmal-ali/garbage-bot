@@ -30,7 +30,7 @@ class QRDrop:
         if running_flag():
             log.info("Driving forward softly to push waste")
             self.motors.move("forward", COLLECT_SPEED)
-            time.sleep(1.0)
+            time.sleep(0.3)
             self.motors.stop()
 
         # 2. Open gripper

@@ -45,6 +45,7 @@ SCAN_DWELL     = 0.25   # seconds to wait after servo move (physical settle time
 # DEPTH THRESHOLDS  (centimetres)
 # ═══════════════════════════════════════════════════════════════════════════
 DEPTH_APPROACH_STOP = 25   # stop approaching at this distance
+DEPTH_QR_APPROACH_STOP = 45 # stop approaching QR code at this distance
 DEPTH_COLLECT_START = 20   # begin collect drive-over
 DEPTH_COLLECT_DONE  = 8    # object is under the chassis
 
