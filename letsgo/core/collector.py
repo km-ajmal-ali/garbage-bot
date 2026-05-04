@@ -11,7 +11,7 @@ from core.config import (
     PAN_CENTER_ANGLE, TILT_CENTER_ANGLE,
     MAX_OPEN_ANGLE, MAX_CLOSE_ANGLE,
 )
-from core.states import STATE_SCANNING, STATE_SEARCH_ROTATE
+from core.states import STATE_SCANNING, STATE_SEARCH_ROTATE, STATE_SEARCH_QR
 from core.detection import run_detection, pick_best_target, estimate_object_depth, read_frame
 from core.logger import get_logger
 
