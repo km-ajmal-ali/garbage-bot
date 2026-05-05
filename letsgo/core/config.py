@@ -26,8 +26,8 @@ TILT_SERVO_PIN = 12   # Y-axis (vertical / look-up-down)
 
 # Collector Servo GPIO Pins.
 COLLECTOR_SERVO_PIN = 16
-MAX_OPEN_ANGLE = 90
-MAX_CLOSE_ANGLE = -10
+MAX_OPEN_ANGLE = 40
+MAX_CLOSE_ANGLE = -35
 
 # ═══════════════════════════════════════════════════════════════════════════
 # MOTOR SPEEDS  (PWM duty cycle 0-100)
