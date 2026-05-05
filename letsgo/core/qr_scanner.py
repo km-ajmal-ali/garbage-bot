@@ -14,7 +14,7 @@ from core.logger import get_logger
 log = get_logger("qr_scanner")
 
 BUFFER_FLUSH_FRAMES = 3
-SAMPLES_PER_POSITION = 3
+SAMPLES_PER_POSITION = 5
 
 class QRScanner:
     def __init__(self, camera, pan_servo, display):
